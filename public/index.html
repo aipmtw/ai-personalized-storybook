@@ -9,20 +9,29 @@
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Noto Sans TC',sans-serif;background:#fafaf8;color:#212529;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
-    .header{text-align:center;margin-bottom:2.5rem}
-    .header h1{font-size:1.8rem;font-weight:900;color:#212529}
-    .header p{font-size:1rem;color:#6c757d;margin-top:.4rem}
-    .books{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;max-width:700px;width:100%}
-    .book-card{border-radius:20px;padding:2rem;text-align:center;color:#fff;text-decoration:none;transition:transform .2s,box-shadow .2s;display:block}
-    .book-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.15)}
-    .book-card .emoji{font-size:4rem;margin-bottom:1rem}
-    .book-card h2{font-size:1.4rem;font-weight:900;margin-bottom:.3rem}
-    .book-card .subtitle{font-size:1rem;opacity:.85;margin-bottom:.5rem}
-    .book-card .age{font-size:.82rem;opacity:.7;background:rgba(255,255,255,.2);display:inline-block;padding:.2rem .8rem;border-radius:12px}
+    .header{text-align:center;margin-bottom:3rem}
+    .header h1{font-size:3rem;font-weight:900;color:#212529}
+    .header p{font-size:1.4rem;color:#6c757d;margin-top:.6rem}
+    .books{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2rem;max-width:800px;width:100%}
+    .book-card{border-radius:24px;padding:3rem 2.5rem;text-align:center;color:#fff;text-decoration:none;transition:transform .2s,box-shadow .2s;display:block}
+    .book-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.18)}
+    .book-card .emoji{font-size:6rem;margin-bottom:1.2rem}
+    .book-card h2{font-size:2.2rem;font-weight:900;margin-bottom:.5rem}
+    .book-card .subtitle{font-size:1.3rem;opacity:.85;margin-bottom:.8rem}
+    .book-card .age{font-size:1.1rem;opacity:.8;background:rgba(255,255,255,.2);display:inline-block;padding:.4rem 1.2rem;border-radius:16px;font-weight:700}
     .card-mei{background:linear-gradient(135deg,#ff6f61,#ff8a65)}
     .card-max{background:linear-gradient(135deg,#1a237e,#311b92)}
-    .footer{margin-top:2.5rem;text-align:center;font-size:.9rem;color:#adb5bd}
+    .footer{margin-top:3rem;text-align:center;font-size:1.1rem;color:#adb5bd}
     .footer a{color:#6c757d;text-decoration:underline}
+    @media(max-width:480px){
+      .header h1{font-size:2rem}
+      .header p{font-size:1.1rem}
+      .books{grid-template-columns:1fr;gap:1.5rem}
+      .book-card{padding:2rem 1.5rem}
+      .book-card .emoji{font-size:4rem}
+      .book-card h2{font-size:1.6rem}
+      .book-card .subtitle{font-size:1rem}
+    }
   </style>
 </head>
 <body>
