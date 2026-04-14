@@ -3,10 +3,5 @@
   "outputDirectory": "public",
   "rewrites": [
     { "source": "/api/auth", "destination": "/api/auth.js" }
-  ],
-  "functions": {
-    "api/auth.js": {
-      "runtime": "@vercel/node@3"
-    }
-  }
+  ]
 }
