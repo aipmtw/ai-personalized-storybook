@@ -155,11 +155,13 @@ function renderPages() {
     wrapper.appendChild(div);
   });
 
-  // Render progress dots
+  // Render progress dots (clickable)
   dotsContainer.innerHTML = '';
   pages.forEach((_, i) => {
     const dot = document.createElement('div');
     dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
+    dot.title = 'Page ' + (i + 1);
+    dot.addEventListener('click', () => goToPage(i));
     dotsContainer.appendChild(dot);
   });
 }

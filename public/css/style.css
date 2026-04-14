@@ -358,17 +358,23 @@ html, body {
 }
 
 .progress-dot {
-  width: 6px;
-  height: 6px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: rgba(0,0,0,0.12);
   transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.progress-dot:hover {
+  background: rgba(0,0,0,0.3);
+  transform: scale(1.2);
 }
 
 .progress-dot.active {
   background: var(--primary);
-  width: 18px;
-  border-radius: 3px;
+  width: 24px;
+  border-radius: 6px;
 }
 
 /* Touch hint arrows */
