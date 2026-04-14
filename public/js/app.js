@@ -166,8 +166,34 @@ function renderPages() {
   });
 }
 
+// Page turn sound using Web Audio API
+let audioCtx = null;
+function playPageTurnSound() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const duration = 0.15;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + duration);
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch {}
+}
+
 function goToPage(index) {
   if (index < 0 || index >= pages.length) return;
+  const direction = index > currentPage ? 'right' : 'left';
+  if (index !== currentPage) {
+    playPageTurnSound();
+    wrapper.classList.add('turning-' + direction);
+    setTimeout(() => wrapper.classList.remove('turning-' + direction), 500);
+  }
   currentPage = index;
   wrapper.style.transform = `translateX(-${currentPage * 100}%)`;
   updateUI();
