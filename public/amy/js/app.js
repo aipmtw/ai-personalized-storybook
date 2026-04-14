@@ -14,7 +14,7 @@ const pages = [
     en: '',
     coverTitle: 'Amy 的故事魔法',
     coverSubtitle: "Amy's Story Magic",
-    coverCredits: '審閱：Audrey ｜ 共同編輯：Luce (AI)',
+    coverCredits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
     version: 'ver 1'
   },
   {
@@ -135,7 +135,7 @@ function renderPages() {
           <div class="text-en">${p.en}</div>
           <div class="end-divider">— 故事結束 —</div>
           <div class="end-credits">
-            故事由 Luce (AI) 共同編輯 · 審閱：Audrey<br>
+            故事由 Luce (AI) 共同編輯 · 審閱：Mark<br>
             <span class="end-brand">由 <a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a> 出品</span>
           </div>
         </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-amy-v1';
+const CACHE_NAME = 'storybook-amy-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
