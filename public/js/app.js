@@ -534,11 +534,51 @@ renderPages();
 initLangToggle();
 goToPage(0);
 
+// ============================================
+// Autoplay mode — play audio then advance page
+// ============================================
+let autoplayOn = false;
+const autoplayBtn = document.getElementById('autoplayBtn');
+
+function toggleAutoplay() {
+  autoplayOn = !autoplayOn;
+  if (autoplayBtn) autoplayBtn.classList.toggle('active', autoplayOn);
+  if (autoplayOn) {
+    // Start playing current page
+    if (!audioPlaying) toggleAudio();
+  } else {
+    // Just stop autoplay, keep current audio playing
+  }
+}
+
+// Override stopAudio to chain autoplay
+const _origStopAudio = stopAudio;
+stopAudio = function() {
+  const wasPlaying = audioPlaying;
+  _origStopAudio();
+  // If autoplay is on and audio finished naturally (not user-stopped via close button)
+  // We detect this by checking if it was called from ended event
+  if (autoplayOn && wasPlaying && currentPage < pages.length - 1) {
+    setTimeout(() => {
+      nextPage();
+      // After page turn, start playing the new page
+      setTimeout(() => {
+        if (autoplayOn) toggleAudio();
+      }, 600);
+    }, 1000);
+  } else if (autoplayOn && currentPage >= pages.length - 1) {
+    // Reached last page, stop autoplay
+    autoplayOn = false;
+    if (autoplayBtn) autoplayBtn.classList.remove('active');
+  }
+};
+
 // Expose for toolbar
 window.toggleFullscreen = toggleFullscreen;
 window.toggleAudio = toggleAudio;
 window.toggleAudioPlayPause = toggleAudioPlayPause;
 window.seekAudio = seekAudio;
-window.stopAudio = stopAudio;
+window.stopAudio = function() { autoplayOn = false; if(autoplayBtn) autoplayBtn.classList.remove('active'); _origStopAudio(); };
+window.toggleAutoplay = toggleAutoplay;
 window.installApp = installApp;
 window.dismissInstall = dismissInstall;

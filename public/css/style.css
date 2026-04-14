@@ -550,6 +550,16 @@ body.lang-en .cover-title { display: none !important; }
   animation: pulse-audio 1.5s ease-in-out infinite;
 }
 
+.toolbar-btn.autoplay-btn {
+  font-size: 0.7rem;
+  letter-spacing: -2px;
+}
+.toolbar-btn.autoplay-btn.active {
+  color: var(--primary);
+  background: rgba(255,111,97,0.15);
+  border-radius: 50%;
+}
+
 @keyframes pulse-audio {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
