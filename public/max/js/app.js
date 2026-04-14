@@ -221,6 +221,8 @@ function lineLoginFromGate() {
 function goToPage(index) {
   if (index < 0 || index >= pages.length) return;
   if (!isAuthenticated && index > DEMO_MAX_PAGE) {
+    stopAudio();
+    if (autoplayOn) { autoplayOn = false; if(autoplayBtn) autoplayBtn.classList.remove('active'); }
     showDemoGate();
     return;
   }
