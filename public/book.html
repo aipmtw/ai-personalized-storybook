@@ -14,6 +14,13 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <!-- Language toggle bar -->
+  <div class="lang-toggle" id="langToggle">
+    <button class="active" data-lang="both">中＋EN</button>
+    <button data-lang="zh">中文</button>
+    <button data-lang="en">English</button>
+  </div>
+
   <div class="book-container" id="bookContainer">
     <div class="pages-wrapper" id="pagesWrapper">
       <!-- Pages are rendered by JS -->
@@ -27,6 +34,7 @@
   <!-- Bottom toolbar -->
   <div class="toolbar">
     <a href="/" class="toolbar-btn" title="首頁">&#x1F3E0;</a>
+    <button class="toolbar-btn audio-btn" id="audioBtn" title="播放朗讀" onclick="toggleAudio()">&#x1F50A;</button>
     <div class="progress-dots" id="progressDots"></div>
     <button class="toolbar-btn" id="fullscreenBtn" title="全螢幕" onclick="toggleFullscreen()">&#x26F6;</button>
   </div>

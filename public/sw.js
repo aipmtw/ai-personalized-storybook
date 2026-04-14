@@ -1,4 +1,12 @@
-const CACHE_NAME = 'storybook-v1';
+const CACHE_NAME = 'storybook-v2';
+
+// Generate audio file URLs for all 10 pages
+const AUDIO_URLS = [];
+for (let i = 1; i <= 10; i++) {
+  AUDIO_URLS.push(`/audio/page-${i}-zh.mp3`);
+  AUDIO_URLS.push(`/audio/page-${i}-en.mp3`);
+}
+
 const PRECACHE_URLS = [
   '/',
   '/index.html',
@@ -6,7 +14,8 @@ const PRECACHE_URLS = [
   '/css/style.css',
   '/js/app.js',
   '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap'
+  'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
+  ...AUDIO_URLS
 ];
 
 // Install: precache all assets

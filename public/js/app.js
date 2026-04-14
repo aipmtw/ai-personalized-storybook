@@ -244,6 +244,118 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') prevPage();
 });
 
+// ============================================
+// Language toggle
+// ============================================
+let langMode = localStorage.getItem('storybook-lang') || 'both';
+
+function initLangToggle() {
+  const toggle = document.getElementById('langToggle');
+  if (!toggle) return;
+
+  applyLangMode(langMode);
+
+  toggle.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-lang]');
+    if (!btn) return;
+    langMode = btn.dataset.lang;
+    localStorage.setItem('storybook-lang', langMode);
+    applyLangMode(langMode);
+  });
+}
+
+function applyLangMode(mode) {
+  document.body.classList.remove('lang-zh', 'lang-en');
+  if (mode === 'zh') document.body.classList.add('lang-zh');
+  if (mode === 'en') document.body.classList.add('lang-en');
+
+  // Update active button
+  const btns = document.querySelectorAll('#langToggle button');
+  btns.forEach(b => b.classList.toggle('active', b.dataset.lang === mode));
+}
+
+// ============================================
+// Audio playback
+// ============================================
+let audioPlaying = false;
+let currentAudio = null;
+let audioQueue = [];
+const audioBtn = document.getElementById('audioBtn');
+
+function stopAudio() {
+  audioPlaying = false;
+  audioQueue = [];
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  if (audioBtn) audioBtn.classList.remove('playing');
+}
+
+function playAudioSequence(files) {
+  if (files.length === 0) {
+    stopAudio();
+    return;
+  }
+
+  const file = files.shift();
+  audioQueue = files;
+  currentAudio = new Audio(file);
+  audioPlaying = true;
+  if (audioBtn) audioBtn.classList.add('playing');
+
+  currentAudio.addEventListener('ended', () => {
+    if (audioQueue.length > 0) {
+      // Small pause between languages
+      setTimeout(() => {
+        if (audioPlaying) playAudioSequence(audioQueue);
+      }, 500);
+    } else {
+      stopAudio();
+    }
+  });
+
+  currentAudio.addEventListener('error', () => {
+    // Skip to next file if one fails
+    if (audioQueue.length > 0 && audioPlaying) {
+      playAudioSequence(audioQueue);
+    } else {
+      stopAudio();
+    }
+  });
+
+  currentAudio.play().catch(() => stopAudio());
+}
+
+function toggleAudio() {
+  if (audioPlaying) {
+    stopAudio();
+    return;
+  }
+
+  const pageNum = currentPage + 1;
+  const files = [];
+
+  if (langMode === 'both' || langMode === 'zh') {
+    files.push(`/audio/page-${pageNum}-zh.mp3`);
+  }
+  if (langMode === 'both' || langMode === 'en') {
+    files.push(`/audio/page-${pageNum}-en.mp3`);
+  }
+
+  if (files.length > 0) {
+    playAudioSequence(files);
+  }
+}
+
+// Stop audio on page turn
+const origGoToPage = goToPage;
+goToPage = function(index) {
+  stopAudio();
+  origGoToPage(index);
+};
+
 // Fullscreen
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
@@ -282,9 +394,11 @@ if ('serviceWorker' in navigator) {
 
 // Init
 renderPages();
+initLangToggle();
 goToPage(0);
 
 // Expose for toolbar
 window.toggleFullscreen = toggleFullscreen;
+window.toggleAudio = toggleAudio;
 window.installApp = installApp;
 window.dismissInstall = dismissInstall;
