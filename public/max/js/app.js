@@ -186,8 +186,44 @@ function playPageTurnSound() {
   } catch {}
 }
 
+// Auth check — demo users can only see pages 1-3 (index 0-2)
+const isAuthenticated = (function() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('ml_token')) return true;
+  if (document.cookie.includes('ml_auth=')) return true;
+  return false;
+})();
+const DEMO_MAX_PAGE = 2;
+
+function showDemoGate() {
+  let gate = document.getElementById('demoGate');
+  if (gate) { gate.style.display = 'flex'; return; }
+  gate = document.createElement('div');
+  gate.id = 'demoGate';
+  gate.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
+  gate.innerHTML = `<div style="background:#fff;border-radius:20px;padding:2.5rem;max-width:380px;text-align:center;margin:1rem">
+    <div style="font-size:2.5rem;margin-bottom:.8rem">🔒</div>
+    <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:.5rem;color:#212529">試閱結束</h2>
+    <p style="font-size:1rem;color:#6c757d;line-height:1.7;margin-bottom:1.5rem">免費試閱前 3 頁已結束。<br>用 LINE 登入即可閱讀完整繪本！</p>
+    <a href="#" onclick="lineLoginFromGate()" style="display:inline-block;background:#06C755;color:#fff;padding:.7rem 2rem;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none;margin-bottom:.8rem">用 LINE 登入繼續閱讀</a>
+    <br><a href="#" onclick="document.getElementById('demoGate').style.display='none';goToPage(0);return false" style="font-size:.85rem;color:#adb5bd;text-decoration:underline">返回第一頁</a>
+  </div>`;
+  document.body.appendChild(gate);
+}
+
+function lineLoginFromGate() {
+  const channelId = '2009738746';
+  const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
+  const returnUrl = encodeURIComponent(window.location.origin + window.location.pathname);
+  window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id='+channelId+'&redirect_uri='+redirectUri+'&state='+returnUrl+'&scope=profile%20openid';
+}
+
 function goToPage(index) {
   if (index < 0 || index >= pages.length) return;
+  if (!isAuthenticated && index > DEMO_MAX_PAGE) {
+    showDemoGate();
+    return;
+  }
   const direction = index > currentPage ? 'right' : 'left';
   if (index !== currentPage) {
     playPageTurnSound();
