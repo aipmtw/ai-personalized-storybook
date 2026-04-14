@@ -14,7 +14,8 @@ const pages = [
     en: '',
     coverTitle: '小美的恐龍冒險',
     coverSubtitle: "Mei's Dinosaur Adventure",
-    coverCredits: '審閱：Audrey ｜ 共同編輯：Luce (AI)'
+    coverCredits: '審閱：Audrey ｜ 共同編輯：Luce (AI)',
+    version: 'ver 2'
   },
   {
     type: 'story',
@@ -120,6 +121,7 @@ function renderPages() {
           <div class="cover-title">${p.coverTitle}</div>
           <div class="cover-subtitle">${p.coverSubtitle}</div>
           <div class="cover-credits">${p.coverCredits}</div>
+          ${p.version ? '<div class="cover-version">' + p.version + '</div>' : ''}
         </div>
       `;
     } else if (p.type === 'end') {
@@ -486,10 +488,115 @@ if (abSlider) {
   abSlider.addEventListener('touchend', () => { sliderDragging = false; });
 }
 
-// Stop audio on page turn
+// ============================================
+// Autoplay mode
+// ============================================
+let autoplayOn = false;
+let userStoppedAudio = false;
+const autoplayBtn = document.getElementById('autoplayBtn');
+
+function onAudioFinished() {
+  // Called when audio ends naturally (not user-stopped)
+  if (autoplayOn && currentPage < pages.length - 1) {
+    setTimeout(() => {
+      goToPage(currentPage + 1);
+      setTimeout(() => {
+        if (autoplayOn) playCurrentPage();
+      }, 600);
+    }, 1000);
+  } else if (autoplayOn && currentPage >= pages.length - 1) {
+    autoplayOn = false;
+    if (autoplayBtn) autoplayBtn.classList.remove('active');
+  }
+}
+
+function playCurrentPage() {
+  if (audioPlaying) return;
+  const pageNum = currentPage + 1;
+  const files = [];
+  if (langMode === 'both' || langMode === 'zh') files.push(`/audio/page-${pageNum}-zh.mp3`);
+  if (langMode === 'both' || langMode === 'en') files.push(`/audio/page-${pageNum}-en.mp3`);
+  if (files.length === 0) return;
+
+  totalDurations = new Array(files.length).fill(0);
+  files.forEach((f, i) => {
+    const a = new Audio(f);
+    a.addEventListener('loadedmetadata', () => { totalDurations[i] = a.duration; });
+  });
+
+  audioQueue = files.slice(1).map((f, i) => ({ file: f, index: i + 1 }));
+  showAudioBar();
+  userStoppedAudio = false;
+  playAudioFile(files[0], 0);
+}
+
+// Patch the ended handler in playAudioFile to call onAudioFinished
+const _origPlayAudioFile = playAudioFile;
+playAudioFile = function(file, index) {
+  currentFileIndex = index;
+  currentAudio = new Audio(file);
+  audioPlaying = true;
+  audioPaused = false;
+  if (audioBtn) audioBtn.classList.add('playing');
+  if (abPlayPause) abPlayPause.innerHTML = '&#9646;&#9646;';
+
+  currentAudio.addEventListener('loadedmetadata', () => {
+    totalDurations[index] = currentAudio.duration;
+    updateAudioUI();
+  });
+
+  currentAudio.addEventListener('ended', () => {
+    if (audioQueue.length > 0) {
+      const next = audioQueue.shift();
+      setTimeout(() => {
+        if (audioPlaying) playAudioFile(next.file, next.index);
+      }, 500);
+    } else {
+      // All files for this page done
+      audioPlaying = false;
+      audioPaused = false;
+      if (audioBtn) audioBtn.classList.remove('playing');
+      hideAudioBar();
+      if (currentAudio) { currentAudio = null; }
+      // Trigger autoplay chain
+      if (!userStoppedAudio) onAudioFinished();
+    }
+  });
+
+  currentAudio.addEventListener('error', () => {
+    if (audioQueue.length > 0 && audioPlaying) {
+      const next = audioQueue.shift();
+      playAudioFile(next.file, next.index);
+    } else {
+      audioPlaying = false;
+      hideAudioBar();
+      if (!userStoppedAudio) onAudioFinished();
+    }
+  });
+
+  currentAudio.play().then(() => {
+    rafId = requestAnimationFrame(updateAudioUI);
+  }).catch(() => { audioPlaying = false; hideAudioBar(); });
+};
+
+function toggleAutoplay() {
+  autoplayOn = !autoplayOn;
+  if (autoplayBtn) autoplayBtn.classList.toggle('active', autoplayOn);
+  if (autoplayOn && !audioPlaying) {
+    playCurrentPage();
+  }
+  if (!autoplayOn) {
+    // Keep current audio playing, just stop auto-advance
+  }
+}
+
+// Stop audio on page turn (manual only)
 const origGoToPage = goToPage;
 goToPage = function(index) {
-  stopAudio();
+  if (audioPlaying && !autoplayOn) {
+    userStoppedAudio = true;
+    stopAudio();
+  }
   origGoToPage(index);
 };
 
@@ -526,7 +633,7 @@ function dismissInstall() {
 
 // Service worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
+  navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
 }
 
 // Init
@@ -534,51 +641,15 @@ renderPages();
 initLangToggle();
 goToPage(0);
 
-// ============================================
-// Autoplay mode — play audio then advance page
-// ============================================
-let autoplayOn = false;
-const autoplayBtn = document.getElementById('autoplayBtn');
-
-function toggleAutoplay() {
-  autoplayOn = !autoplayOn;
-  if (autoplayBtn) autoplayBtn.classList.toggle('active', autoplayOn);
-  if (autoplayOn) {
-    // Start playing current page
-    if (!audioPlaying) toggleAudio();
-  } else {
-    // Just stop autoplay, keep current audio playing
-  }
-}
-
-// Override stopAudio to chain autoplay
-const _origStopAudio = stopAudio;
-stopAudio = function() {
-  const wasPlaying = audioPlaying;
-  _origStopAudio();
-  // If autoplay is on and audio finished naturally (not user-stopped via close button)
-  // We detect this by checking if it was called from ended event
-  if (autoplayOn && wasPlaying && currentPage < pages.length - 1) {
-    setTimeout(() => {
-      nextPage();
-      // After page turn, start playing the new page
-      setTimeout(() => {
-        if (autoplayOn) toggleAudio();
-      }, 600);
-    }, 1000);
-  } else if (autoplayOn && currentPage >= pages.length - 1) {
-    // Reached last page, stop autoplay
-    autoplayOn = false;
-    if (autoplayBtn) autoplayBtn.classList.remove('active');
-  }
-};
-
 // Expose for toolbar
 window.toggleFullscreen = toggleFullscreen;
-window.toggleAudio = toggleAudio;
+window.toggleAudio = function() {
+  if (audioPlaying) { userStoppedAudio = true; stopAudio(); return; }
+  playCurrentPage();
+};
 window.toggleAudioPlayPause = toggleAudioPlayPause;
 window.seekAudio = seekAudio;
-window.stopAudio = function() { autoplayOn = false; if(autoplayBtn) autoplayBtn.classList.remove('active'); _origStopAudio(); };
+window.stopAudio = function() { userStoppedAudio = true; autoplayOn = false; if(autoplayBtn) autoplayBtn.classList.remove('active'); stopAudio(); };
 window.toggleAutoplay = toggleAutoplay;
 window.installApp = installApp;
 window.dismissInstall = dismissInstall;
