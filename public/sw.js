@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-v2';
+const CACHE_NAME = 'storybook-v3';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -45,25 +45,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Network-first for HTML pages (get latest version)
+  if (event.request.mode === 'navigate' || event.request.url.endsWith('.html')) {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+        return response;
+      }).catch(() => caches.match(event.request) || caches.match('/book.html'))
+    );
+    return;
+  }
+
+  // Cache-first for assets (css, js, audio, fonts)
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
-
       return fetch(event.request).then((response) => {
-        // Don't cache bad responses
         if (!response || response.status !== 200) return response;
-
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseClone);
-        });
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
         return response;
-      }).catch(() => {
-        // Offline fallback for navigation
-        if (event.request.mode === 'navigate') {
-          return caches.match('/book.html');
-        }
-      });
+      }).catch(() => {});
     })
   );
 });
