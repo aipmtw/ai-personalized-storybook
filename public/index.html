@@ -209,16 +209,13 @@
 
     <!-- CTA -->
     <div class="cta-section">
-      <p>想為你的孩子或學生做一本專屬繪本嗎？<br>歡迎直接跟我們聊聊！</p>
-      <a class="cta-btn" href="https://lin.ee/markluce" target="_blank" style="background:#06C755;color:#fff">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-right:8px"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
-        加入 LINE 官方帳號聊聊
-      </a>
+      <p>想為你的孩子或學生做一本專屬繪本嗎？</p>
+      <a class="cta-btn" href="#" onclick="showInquiryForm();return false" style="background:#e91e63;color:#fff">留言給我們</a>
       <div class="cta-sub-actions">
         <a href="https://markluce.ai/mvp/builder" style="color:#e91e63;font-size:1rem;font-weight:600;text-decoration:underline">或先填寫需求表單</a>
         <a href="mailto:mark@aipm.com.tw" style="color:#6c757d;font-size:1rem;text-decoration:underline">Email 聯繫</a>
       </div>
-      <div class="cta-note">目前為 MVP（最小可行產品）早期體驗階段 — 功能持續開發中，核心的「描述→生成→審閱→交付」流程已可運作。<br>歡迎搶先體驗，提供回饋幫助我們做得更好。接受個人訂製，一對一討論需求與費用。</div>
+      <div class="cta-note">目前為 MVP（最小可行產品）早期體驗階段 — 功能持續開發中，核心的「描述→生成→審閱→交付」流程已可運作。<br>歡迎搶先體驗，提供回饋幫助我們做得更好。留言後我們會盡快回覆。</div>
     </div>
 
   </div>
@@ -227,11 +224,114 @@
     由 <a href="https://markluce.ai/">MarkLuce.ai</a> 出品 · Powered by Claude Opus 4.6
   </div>
 
+  <!-- Inquiry form modal -->
+  <div id="inquiryModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;backdrop-filter:blur(4px)">
+    <div style="background:#fff;border-radius:20px;padding:2.5rem;max-width:480px;width:calc(100% - 2rem);margin:1rem;max-height:90vh;overflow-y:auto">
+      <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:.3rem">留言給我們</h2>
+      <p style="font-size:.95rem;color:#6c757d;margin-bottom:1.5rem">用 LINE 登入後留言，我們會盡快回覆您。</p>
+
+      <div id="inquiryLogin" style="text-align:center;padding:1.5rem 0">
+        <a href="#" onclick="lineLoginForInquiry();return false" style="display:inline-block;background:#06C755;color:#fff;padding:.7rem 2rem;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none">用 LINE 登入</a>
+        <p style="font-size:.82rem;color:#adb5bd;margin-top:.8rem">登入後即可留言</p>
+      </div>
+
+      <form id="inquiryForm" style="display:none" onsubmit="submitInquiry(event)">
+        <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem;padding:.8rem;background:#f8f9fa;border-radius:10px">
+          <img id="inquiryAvatar" src="" style="width:36px;height:36px;border-radius:50%;display:none">
+          <span id="inquiryUserName" style="font-weight:700;font-size:1rem"></span>
+        </div>
+        <textarea id="inquiryMsg" required placeholder="請描述您的需求，例如：&#10;• 想為 5 歲女兒做一本恐龍主題的繪本&#10;• 想做一套 TOEIC 情境英語教材&#10;• 想了解合作方式與費用" style="width:100%;min-height:140px;padding:.8rem 1rem;border:1px solid #dee2e6;border-radius:10px;font-size:1rem;font-family:inherit;resize:vertical;line-height:1.7"></textarea>
+        <button type="submit" id="inquirySubmit" style="margin-top:1rem;width:100%;padding:.7rem;background:#e91e63;color:#fff;border:none;border-radius:10px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit">送出留言</button>
+      </form>
+
+      <div id="inquirySuccess" style="display:none;text-align:center;padding:2rem 0">
+        <div style="font-size:2.5rem;margin-bottom:.8rem">✅</div>
+        <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:.5rem">已收到您的留言！</h3>
+        <p style="font-size:1rem;color:#6c757d">我們會盡快回覆您。</p>
+      </div>
+
+      <div style="text-align:center;margin-top:1rem">
+        <a href="#" onclick="document.getElementById('inquiryModal').style.display='none';return false" style="font-size:.9rem;color:#adb5bd;text-decoration:underline">關閉</a>
+      </div>
+    </div>
+  </div>
+
   <script>
     function toggleReadMore(btn) {
       const content = document.getElementById('pitchContent');
       const isOpen = content.classList.toggle('open');
       btn.textContent = isOpen ? '收合 ▴' : '了解更多 ▾';
+    }
+
+    // Inquiry form
+    let inquiryUser = null;
+
+    function showInquiryForm() {
+      document.getElementById('inquiryModal').style.display = 'flex';
+      // Check if already logged in
+      const params = new URLSearchParams(location.search);
+      const token = params.get('ml_token');
+      const user = params.get('ml_user');
+      if (token && user) {
+        inquiryUser = { displayName: decodeURIComponent(user), token };
+        showLoggedInForm();
+        // Clean URL
+        history.replaceState(null, '', location.pathname);
+      } else if (document.cookie.includes('ml_auth=')) {
+        const userName = decodeURIComponent(document.cookie.match(/ml_user=([^;]+)/)?.[1] || 'User');
+        inquiryUser = { displayName: userName };
+        showLoggedInForm();
+      }
+    }
+
+    function showLoggedInForm() {
+      document.getElementById('inquiryLogin').style.display = 'none';
+      document.getElementById('inquiryForm').style.display = 'block';
+      document.getElementById('inquiryUserName').textContent = inquiryUser.displayName;
+    }
+
+    function lineLoginForInquiry() {
+      const channelId = '2009738746';
+      const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
+      const returnUrl = encodeURIComponent(window.location.origin + '/?inquiry=1');
+      window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id='+channelId+'&redirect_uri='+redirectUri+'&state='+returnUrl+'&scope=profile%20openid';
+    }
+
+    async function submitInquiry(e) {
+      e.preventDefault();
+      const msg = document.getElementById('inquiryMsg').value.trim();
+      if (!msg) return;
+      document.getElementById('inquirySubmit').disabled = true;
+      document.getElementById('inquirySubmit').textContent = '送出中...';
+
+      try {
+        const r = await fetch('https://markluce.ai/api/inquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_name: inquiryUser?.displayName || 'Anonymous',
+            message: msg,
+            source: 'app.markluce.ai'
+          })
+        });
+        if (r.ok) {
+          document.getElementById('inquiryForm').style.display = 'none';
+          document.getElementById('inquirySuccess').style.display = 'block';
+        } else {
+          alert('送出失敗，請稍後再試');
+          document.getElementById('inquirySubmit').disabled = false;
+          document.getElementById('inquirySubmit').textContent = '送出留言';
+        }
+      } catch {
+        alert('網路錯誤，請稍後再試');
+        document.getElementById('inquirySubmit').disabled = false;
+        document.getElementById('inquirySubmit').textContent = '送出留言';
+      }
+    }
+
+    // Auto-open inquiry if returning from LINE login
+    if (new URLSearchParams(location.search).get('inquiry') === '1' || new URLSearchParams(location.search).get('ml_token')) {
+      setTimeout(showInquiryForm, 300);
     }
   </script>
 
