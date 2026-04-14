@@ -31,6 +31,15 @@
     <div class="touch-hint right" id="hintRight">&#8250;</div>
   </div>
 
+  <!-- Audio player bar -->
+  <div class="audio-bar hidden" id="audioBar">
+    <button class="ab-btn" id="abPlayPause" onclick="toggleAudioPlayPause()">&#9654;</button>
+    <span class="ab-time" id="abCurrent">0:00</span>
+    <input type="range" class="ab-slider" id="abSlider" min="0" max="100" value="0" step="0.1" oninput="seekAudio(this.value)">
+    <span class="ab-time" id="abTotal">0:00</span>
+    <button class="ab-btn ab-close" onclick="stopAudio()">&#x2715;</button>
+  </div>
+
   <!-- Bottom toolbar -->
   <div class="toolbar">
     <a href="/" class="toolbar-btn" title="首頁">&#x1F3E0;</a>

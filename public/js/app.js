@@ -275,41 +275,97 @@ function applyLangMode(mode) {
 }
 
 // ============================================
-// Audio playback
+// Audio playback with player bar
 // ============================================
 let audioPlaying = false;
+let audioPaused = false;
 let currentAudio = null;
 let audioQueue = [];
+let totalDurations = [];
+let currentFileIndex = 0;
 const audioBtn = document.getElementById('audioBtn');
+const audioBar = document.getElementById('audioBar');
+const abPlayPause = document.getElementById('abPlayPause');
+const abSlider = document.getElementById('abSlider');
+const abCurrent = document.getElementById('abCurrent');
+const abTotal = document.getElementById('abTotal');
+let sliderDragging = false;
+let rafId = null;
+
+function fmtTime(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+function showAudioBar() {
+  if (audioBar) audioBar.classList.remove('hidden');
+}
+
+function hideAudioBar() {
+  if (audioBar) audioBar.classList.add('hidden');
+  if (abSlider) { abSlider.value = 0; }
+  if (abCurrent) abCurrent.textContent = '0:00';
+  if (abTotal) abTotal.textContent = '0:00';
+  if (abPlayPause) abPlayPause.innerHTML = '&#9654;';
+  cancelAnimationFrame(rafId);
+}
+
+function updateAudioUI() {
+  if (!currentAudio || sliderDragging) return;
+
+  // Calculate cumulative position across all files
+  let elapsed = 0;
+  for (let i = 0; i < currentFileIndex; i++) {
+    elapsed += totalDurations[i] || 0;
+  }
+  elapsed += currentAudio.currentTime || 0;
+
+  let total = 0;
+  for (const d of totalDurations) total += d || 0;
+
+  if (abCurrent) abCurrent.textContent = fmtTime(elapsed);
+  if (abTotal) abTotal.textContent = fmtTime(total);
+  if (abSlider && total > 0) abSlider.value = (elapsed / total) * 100;
+  if (abPlayPause) abPlayPause.innerHTML = audioPaused ? '&#9654;' : '&#9646;&#9646;';
+
+  if (audioPlaying) rafId = requestAnimationFrame(updateAudioUI);
+}
 
 function stopAudio() {
   audioPlaying = false;
+  audioPaused = false;
   audioQueue = [];
+  totalDurations = [];
+  currentFileIndex = 0;
   if (currentAudio) {
     currentAudio.pause();
     currentAudio.currentTime = 0;
     currentAudio = null;
   }
   if (audioBtn) audioBtn.classList.remove('playing');
+  hideAudioBar();
 }
 
-function playAudioSequence(files) {
-  if (files.length === 0) {
-    stopAudio();
-    return;
-  }
-
-  const file = files.shift();
-  audioQueue = files;
+function playAudioFile(file, index) {
+  currentFileIndex = index;
   currentAudio = new Audio(file);
   audioPlaying = true;
+  audioPaused = false;
   if (audioBtn) audioBtn.classList.add('playing');
+  if (abPlayPause) abPlayPause.innerHTML = '&#9646;&#9646;';
+
+  currentAudio.addEventListener('loadedmetadata', () => {
+    totalDurations[index] = currentAudio.duration;
+    updateAudioUI();
+  });
 
   currentAudio.addEventListener('ended', () => {
     if (audioQueue.length > 0) {
-      // Small pause between languages
+      const next = audioQueue.shift();
       setTimeout(() => {
-        if (audioPlaying) playAudioSequence(audioQueue);
+        if (audioPlaying) playAudioFile(next.file, next.index);
       }, 500);
     } else {
       stopAudio();
@@ -317,15 +373,17 @@ function playAudioSequence(files) {
   });
 
   currentAudio.addEventListener('error', () => {
-    // Skip to next file if one fails
     if (audioQueue.length > 0 && audioPlaying) {
-      playAudioSequence(audioQueue);
+      const next = audioQueue.shift();
+      playAudioFile(next.file, next.index);
     } else {
       stopAudio();
     }
   });
 
-  currentAudio.play().catch(() => stopAudio());
+  currentAudio.play().then(() => {
+    rafId = requestAnimationFrame(updateAudioUI);
+  }).catch(() => stopAudio());
 }
 
 function toggleAudio() {
@@ -344,9 +402,88 @@ function toggleAudio() {
     files.push(`/audio/page-${pageNum}-en.mp3`);
   }
 
-  if (files.length > 0) {
-    playAudioSequence(files);
+  if (files.length === 0) return;
+
+  // Preload durations
+  totalDurations = new Array(files.length).fill(0);
+  files.forEach((f, i) => {
+    const a = new Audio(f);
+    a.addEventListener('loadedmetadata', () => { totalDurations[i] = a.duration; });
+  });
+
+  // Build queue
+  audioQueue = files.slice(1).map((f, i) => ({ file: f, index: i + 1 }));
+  showAudioBar();
+  playAudioFile(files[0], 0);
+}
+
+function toggleAudioPlayPause() {
+  if (!currentAudio) return;
+  if (audioPaused) {
+    currentAudio.play();
+    audioPaused = false;
+    audioPlaying = true;
+    if (audioBtn) audioBtn.classList.add('playing');
+    rafId = requestAnimationFrame(updateAudioUI);
+  } else {
+    currentAudio.pause();
+    audioPaused = true;
+    if (audioBtn) audioBtn.classList.remove('playing');
+    if (abPlayPause) abPlayPause.innerHTML = '&#9654;';
+    cancelAnimationFrame(rafId);
   }
+}
+
+function seekAudio(val) {
+  let total = 0;
+  for (const d of totalDurations) total += d || 0;
+  if (total === 0) return;
+
+  const target = (val / 100) * total;
+
+  // Find which file and position
+  let cumulative = 0;
+  for (let i = 0; i < totalDurations.length; i++) {
+    const d = totalDurations[i] || 0;
+    if (cumulative + d >= target) {
+      const posInFile = target - cumulative;
+      if (i === currentFileIndex && currentAudio) {
+        currentAudio.currentTime = posInFile;
+      } else {
+        // Need to switch files
+        if (currentAudio) { currentAudio.pause(); }
+        const pageNum = currentPage + 1;
+        const files = [];
+        if (langMode === 'both' || langMode === 'zh') files.push(`/audio/page-${pageNum}-zh.mp3`);
+        if (langMode === 'both' || langMode === 'en') files.push(`/audio/page-${pageNum}-en.mp3`);
+        audioQueue = files.slice(i + 1).map((f, idx) => ({ file: f, index: i + 1 + idx }));
+        currentAudio = new Audio(files[i]);
+        currentFileIndex = i;
+        currentAudio.addEventListener('loadedmetadata', () => {
+          totalDurations[i] = currentAudio.duration;
+          currentAudio.currentTime = posInFile;
+          if (!audioPaused) currentAudio.play();
+        });
+        currentAudio.addEventListener('ended', () => {
+          if (audioQueue.length > 0) {
+            const next = audioQueue.shift();
+            setTimeout(() => { if (audioPlaying) playAudioFile(next.file, next.index); }, 500);
+          } else { stopAudio(); }
+        });
+        currentAudio.load();
+      }
+      break;
+    }
+    cumulative += d;
+  }
+}
+
+// Slider drag handling
+if (abSlider) {
+  abSlider.addEventListener('mousedown', () => { sliderDragging = true; });
+  abSlider.addEventListener('touchstart', () => { sliderDragging = true; }, { passive: true });
+  abSlider.addEventListener('mouseup', () => { sliderDragging = false; });
+  abSlider.addEventListener('touchend', () => { sliderDragging = false; });
 }
 
 // Stop audio on page turn
@@ -400,5 +537,8 @@ goToPage(0);
 // Expose for toolbar
 window.toggleFullscreen = toggleFullscreen;
 window.toggleAudio = toggleAudio;
+window.toggleAudioPlayPause = toggleAudioPlayPause;
+window.seekAudio = seekAudio;
+window.stopAudio = stopAudio;
 window.installApp = installApp;
 window.dismissInstall = dismissInstall;
