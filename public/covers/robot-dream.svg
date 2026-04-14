@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#546e7a"/><stop offset="100%" style="stop-color:#90a4ae"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <!-- Stars -->
+  <circle cx="60" cy="40" r="2" fill="#ffd54f"/><circle cx="140" cy="60" r="1.5" fill="#ffd54f" opacity="0.7"/><circle cx="300" cy="35" r="2.5" fill="#ffd54f"/><circle cx="350" cy="80" r="1.5" fill="#ffd54f" opacity="0.6"/><circle cx="40" cy="100" r="1" fill="white" opacity="0.5"/>
+  <!-- Robot body -->
+  <rect x="160" y="120" width="80" height="90" rx="10" fill="#b0bec5"/>
+  <rect x="170" y="135" width="60" height="30" rx="5" fill="#37474f"/>
+  <!-- Eyes on screen -->
+  <circle cx="188" cy="150" r="6" fill="#4fc3f7"/><circle cx="212" cy="150" r="6" fill="#4fc3f7"/>
+  <!-- Smile on screen -->
+  <path d="M190 160 Q200 168 210 160" stroke="#4fc3f7" stroke-width="2" fill="none"/>
+  <!-- Head/antenna -->
+  <rect x="175" y="105" width="50" height="20" rx="8" fill="#b0bec5"/>
+  <line x1="200" y1="105" x2="200" y2="85" stroke="#78909c" stroke-width="3"/>
+  <circle cx="200" cy="80" r="6" fill="#f44336"/>
+  <!-- Arms -->
+  <rect x="135" y="135" width="25" height="10" rx="5" fill="#90a4ae"/>
+  <rect x="240" y="135" width="25" height="10" rx="5" fill="#90a4ae"/>
+  <!-- Wings -->
+  <path d="M135 130 Q100 100 110 70" stroke="#ffd54f" stroke-width="3" fill="none" opacity="0.6"/>
+  <path d="M265 130 Q300 100 290 70" stroke="#ffd54f" stroke-width="3" fill="none" opacity="0.6"/>
+  <path d="M100 70 L110 70 L105 60 Z" fill="#ffd54f" opacity="0.6"/>
+  <path d="M290 70 L300 70 L295 60 Z" fill="#ffd54f" opacity="0.6"/>
+  <!-- Legs -->
+  <rect x="175" y="210" width="15" height="30" rx="5" fill="#90a4ae"/>
+  <rect x="210" y="210" width="15" height="30" rx="5" fill="#90a4ae"/>
+  <!-- Feet -->
+  <rect x="170" y="235" width="25" height="10" rx="5" fill="#78909c"/>
+  <rect x="205" y="235" width="25" height="10" rx="5" fill="#78909c"/>
+  <!-- Heart -->
+  <path d="M192 180 Q192 174 197 174 Q200 174 200 178 Q200 174 203 174 Q208 174 208 180 Q208 186 200 192 Q192 186 192 180Z" fill="#ef5350"/>
+</svg>

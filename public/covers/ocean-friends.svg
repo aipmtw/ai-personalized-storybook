@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#039be5"/><stop offset="100%" style="stop-color:#4fc3f7"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <!-- Bubbles -->
+  <circle cx="60" cy="80" r="8" fill="white" opacity="0.15"/><circle cx="100" cy="50" r="5" fill="white" opacity="0.1"/><circle cx="330" cy="60" r="6" fill="white" opacity="0.12"/><circle cx="280" cy="100" r="4" fill="white" opacity="0.1"/>
+  <!-- Coral -->
+  <path d="M50 280 Q60 240 55 220 Q65 230 70 210 Q75 240 80 280" fill="#ef5350" opacity="0.6"/>
+  <path d="M320 280 Q330 250 325 230 Q340 245 345 225 Q350 255 360 280" fill="#ff7043" opacity="0.5"/>
+  <!-- Fish -->
+  <ellipse cx="200" cy="160" rx="35" ry="22" fill="#ff9800"/>
+  <circle cx="220" cy="155" r="5" fill="white"/><circle cx="222" cy="155" r="2.5" fill="#333"/>
+  <path d="M165 160 L145 145 L145 175 Z" fill="#ff9800"/>
+  <path d="M190 148 Q200 142 210 148" stroke="#ffc107" stroke-width="3" fill="none"/>
+  <!-- Turtle -->
+  <ellipse cx="300" cy="200" rx="30" ry="22" fill="#388e3c"/>
+  <ellipse cx="300" cy="200" rx="25" ry="18" fill="#66bb6a"/>
+  <circle cx="330" cy="192" r="10" fill="#8bc34a"/>
+  <circle cx="334" cy="190" r="2" fill="#333"/>
+  <path d="M275 208 L265 218" stroke="#8bc34a" stroke-width="6" stroke-linecap="round"/>
+  <path d="M325 208 L335 218" stroke="#8bc34a" stroke-width="6" stroke-linecap="round"/>
+  <!-- Dolphin -->
+  <path d="M80 130 Q120 100 160 130 Q130 120 120 140 Z" fill="#90caf9"/>
+  <circle cx="145" cy="122" r="3" fill="#333"/>
+  <!-- Seaweed -->
+  <path d="M140 280 Q150 250 140 230 Q150 240 140 210" stroke="#4caf50" stroke-width="5" fill="none" opacity="0.5"/>
+  <path d="M250 280 Q260 255 250 235 Q260 245 250 220" stroke="#66bb6a" stroke-width="4" fill="none" opacity="0.4"/>
+</svg>

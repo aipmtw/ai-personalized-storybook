@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#66bb6a"/><stop offset="100%" style="stop-color:#a5d6a7"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <!-- School building -->
+  <rect x="220" y="80" width="150" height="140" rx="8" fill="#fff9c4"/>
+  <rect x="240" y="100" width="30" height="30" rx="2" fill="#81d4fa"/>
+  <rect x="320" y="100" width="30" height="30" rx="2" fill="#81d4fa"/>
+  <rect x="275" y="160" width="40" height="60" rx="3" fill="#8d6e63"/>
+  <circle cx="308" cy="192" r="3" fill="#ffd54f"/>
+  <!-- Roof -->
+  <path d="M210 80 L295 40 L380 80 Z" fill="#ef5350"/>
+  <!-- Bell -->
+  <circle cx="295" cy="55" r="6" fill="#ffd54f"/>
+  <!-- Baby dino with backpack -->
+  <ellipse cx="120" cy="190" rx="35" ry="30" fill="#4caf50"/>
+  <path d="M105 170 Q100 140 115 120" stroke="#4caf50" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <circle cx="118" cy="115" r="16" fill="#66bb6a"/>
+  <circle cx="112" cy="110" r="3" fill="white"/><circle cx="113" cy="111" r="1.5" fill="#333"/>
+  <circle cx="122" cy="110" r="3" fill="white"/><circle cx="123" cy="111" r="1.5" fill="#333"/>
+  <path d="M113 120 Q118 125 123 120" stroke="#333" stroke-width="1.5" fill="none"/>
+  <!-- Backpack -->
+  <rect x="140" y="170" width="25" height="30" rx="6" fill="#f44336"/>
+  <rect x="145" y="176" width="15" height="8" rx="2" fill="#ef9a9a"/>
+  <!-- Legs -->
+  <rect x="100" y="210" width="12" height="25" rx="5" fill="#388e3c"/>
+  <rect x="130" y="210" width="12" height="25" rx="5" fill="#388e3c"/>
+  <!-- Path -->
+  <path d="M160 250 Q200 240 240 220" stroke="#fff9c4" stroke-width="8" fill="none" stroke-dasharray="12,8" opacity="0.5"/>
+</svg>

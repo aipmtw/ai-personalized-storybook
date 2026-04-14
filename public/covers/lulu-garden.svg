@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ec407a"/><stop offset="100%" style="stop-color:#f48fb1"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <!-- Ground -->
+  <ellipse cx="200" cy="270" rx="190" ry="40" fill="#388e3c" opacity="0.3"/>
+  <!-- Flowers -->
+  <g transform="translate(80,200)"><circle r="12" fill="#fff176"/><circle cx="-10" cy="-8" r="8" fill="#ffb74d"/><circle cx="10" cy="-8" r="8" fill="#ffb74d"/><circle cx="-10" cy="8" r="8" fill="#ffb74d"/><circle cx="10" cy="8" r="8" fill="#ffb74d"/><rect x="-2" y="12" width="4" height="40" fill="#66bb6a"/></g>
+  <g transform="translate(200,180)"><circle r="14" fill="#e1bee7"/><circle cx="-12" cy="-8" r="9" fill="#ce93d8"/><circle cx="12" cy="-8" r="9" fill="#ce93d8"/><circle cx="-12" cy="8" r="9" fill="#ce93d8"/><circle cx="12" cy="8" r="9" fill="#ce93d8"/><rect x="-2" y="14" width="4" height="50" fill="#66bb6a"/></g>
+  <g transform="translate(310,210)"><circle r="10" fill="#fff9c4"/><circle cx="-8" cy="-6" r="7" fill="#ffcc80"/><circle cx="8" cy="-6" r="7" fill="#ffcc80"/><circle cx="-8" cy="6" r="7" fill="#ffcc80"/><circle cx="8" cy="6" r="7" fill="#ffcc80"/><rect x="-2" y="10" width="4" height="35" fill="#66bb6a"/></g>
+  <!-- Butterfly -->
+  <g transform="translate(150,100)"><ellipse cx="-10" cy="-5" rx="12" ry="8" fill="#ffab91" opacity="0.8"/><ellipse cx="10" cy="-5" rx="12" ry="8" fill="#ffab91" opacity="0.8"/><ellipse cx="-8" cy="5" rx="8" ry="6" fill="#ff8a65" opacity="0.7"/><ellipse cx="8" cy="5" rx="8" ry="6" fill="#ff8a65" opacity="0.7"/><rect x="-1" y="-10" width="2" height="20" rx="1" fill="#5d4037"/></g>
+  <!-- Door -->
+  <rect x="250" y="130" width="40" height="60" rx="20" fill="#8d6e63"/>
+  <circle cx="282" cy="162" r="3" fill="#ffd54f"/>
+  <!-- Girl -->
+  <circle cx="130" cy="160" r="14" fill="#ffe0b2"/>
+  <path d="M116 158 Q116 140 130 140 Q144 140 144 158" fill="#5d4037"/>
+  <circle cx="125" cy="157" r="2" fill="#333"/><circle cx="135" cy="157" r="2" fill="#333"/>
+  <path d="M126 165 Q130 169 134 165" stroke="#e91e63" stroke-width="1.5" fill="none"/>
+  <rect x="123" y="174" width="14" height="28" rx="5" fill="#f06292"/>
+</svg>
