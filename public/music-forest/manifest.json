@@ -2,7 +2,7 @@
   "name": "音樂森林 Music Forest",
   "short_name": "音樂森林",
   "description": "AI 個人化雙語兒童繪本 — Music Forest",
-  "start_url": "/music-forest/book.html",
+  "start_url": "/music-forest/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#66bb6a",

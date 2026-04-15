@@ -2,7 +2,7 @@
   "name": "歷史偵探社",
   "short_name": "歷史偵探社",
   "description": "AI 個人化雙語兒童繪本 — History Detective Club",
-  "start_url": "/history-detective/book.html",
+  "start_url": "/history-detective/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#795548",

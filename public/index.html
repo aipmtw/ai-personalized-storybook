@@ -277,7 +277,7 @@
       html += '<div class="books">';
       for (const b of groupBooks) {
         const s = BOOK_STYLES[b.slug] || DEFAULT_STYLE;
-        const href = '/' + b.slug + '/book.html';
+        const href = '/' + b.slug + '/';
         const dur = estMinutes(b.page_count);
         html += '<a class="book-card" href="' + href + '" style="background:' + s.gradient + '">' +
           '<div class="emoji">' + s.emoji + '</div>' +

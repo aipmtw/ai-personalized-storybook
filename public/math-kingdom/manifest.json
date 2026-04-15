@@ -2,7 +2,7 @@
   "name": "數學王國",
   "short_name": "數學王國",
   "description": "AI 個人化雙語兒童繪本 — Math Kingdom",
-  "start_url": "/math-kingdom/book.html",
+  "start_url": "/math-kingdom/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#6a1b9a",

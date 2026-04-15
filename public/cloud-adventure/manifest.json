@@ -2,7 +2,7 @@
   "name": "雲朵冒險記",
   "short_name": "雲朵冒險",
   "description": "AI 個人化雙語兒童繪本 — Cloud Adventure",
-  "start_url": "/cloud-adventure/book.html",
+  "start_url": "/cloud-adventure/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#42a5f5",

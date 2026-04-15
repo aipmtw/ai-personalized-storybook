@@ -2,7 +2,7 @@
   "name": "平行世界",
   "short_name": "平行世界",
   "description": "AI 個人化雙語兒童繪本 — Parallel Worlds",
-  "start_url": "/parallel-worlds/book.html",
+  "start_url": "/parallel-worlds/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#283593",

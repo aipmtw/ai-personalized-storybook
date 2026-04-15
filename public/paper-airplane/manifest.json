@@ -2,7 +2,7 @@
   "name": "紙飛機環遊世界",
   "short_name": "紙飛機",
   "description": "AI 個人化雙語兒童繪本 — Paper Airplane Around the World",
-  "start_url": "/paper-airplane/book.html",
+  "start_url": "/paper-airplane/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#29b6f6",

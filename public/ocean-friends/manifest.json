@@ -2,7 +2,7 @@
   "name": "海底好朋友",
   "short_name": "海底好朋友",
   "description": "AI 個人化雙語兒童繪本 — Ocean Friends",
-  "start_url": "/ocean-friends/book.html",
+  "start_url": "/ocean-friends/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#039be5",

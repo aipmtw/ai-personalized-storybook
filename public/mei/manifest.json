@@ -2,7 +2,7 @@
   "name": "小美的恐龍冒險",
   "short_name": "恐龍冒險",
   "description": "AI 個人化雙語兒童繪本 — Mei's Dinosaur Adventure",
-  "start_url": "/book.html",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#ff6f61",

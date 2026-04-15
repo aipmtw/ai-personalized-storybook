@@ -2,7 +2,7 @@
   "name": "未來城市",
   "short_name": "未來城市",
   "description": "AI 個人化雙語兒童繪本 — Future City",
-  "start_url": "/future-city/book.html",
+  "start_url": "/future-city/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#0a1a0f",

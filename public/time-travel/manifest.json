@@ -2,7 +2,7 @@
   "name": "時光旅行日記",
   "short_name": "時光旅行",
   "description": "AI 個人化雙語兒童繪本 — Time Travel Diary",
-  "start_url": "/time-travel/book.html",
+  "start_url": "/time-travel/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#8d6e63",

@@ -2,7 +2,7 @@
   "name": "Max 的太空探險",
   "short_name": "太空探險",
   "description": "AI 個人化雙語兒童繪本 — Max's Space Adventure",
-  "start_url": "/book.html",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#1a237e",

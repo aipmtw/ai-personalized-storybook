@@ -2,7 +2,7 @@
   "name": "小熊的魔法廚房",
   "short_name": "魔法廚房",
   "description": "AI 個人化雙語兒童繪本 — Bear's Magic Kitchen",
-  "start_url": "/bear-kitchen/book.html",
+  "start_url": "/bear-kitchen/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#f4845f",

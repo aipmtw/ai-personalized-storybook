@@ -2,7 +2,7 @@
   "name": "彩虹畫家",
   "short_name": "彩虹畫家",
   "description": "AI 個人化雙語兒童繪本 — Rainbow Painter",
-  "start_url": "/rainbow-painting/book.html",
+  "start_url": "/rainbow-painting/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#ff7043",

@@ -2,7 +2,7 @@
   "name": "偵探貓咪 Detective Cat",
   "short_name": "偵探貓咪",
   "description": "AI 個人化雙語兒童繪本 — Detective Cat",
-  "start_url": "/detective-cat/book.html",
+  "start_url": "/detective-cat/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#ff8f00",

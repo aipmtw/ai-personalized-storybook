@@ -2,7 +2,7 @@
   "name": "Amy 的故事魔法",
   "short_name": "故事魔法",
   "description": "AI 個人化雙語兒童繪本 — Amy's Story Magic",
-  "start_url": "/amy/book.html",
+  "start_url": "/amy/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#e91e63",

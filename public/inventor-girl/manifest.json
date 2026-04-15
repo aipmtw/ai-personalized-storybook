@@ -2,7 +2,7 @@
   "name": "發明家女孩",
   "short_name": "發明家女孩",
   "description": "AI 個人化雙語兒童繪本 — Inventor Girl",
-  "start_url": "/inventor-girl/book.html",
+  "start_url": "/inventor-girl/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#f57c00",

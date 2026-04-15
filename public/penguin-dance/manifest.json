@@ -2,7 +2,7 @@
   "name": "企鵝舞會",
   "short_name": "企鵝舞會",
   "description": "AI 個人化雙語兒童繪本 — Penguin Dance Party",
-  "start_url": "/penguin-dance/book.html",
+  "start_url": "/penguin-dance/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#26c6da",

@@ -2,7 +2,7 @@
   "name": "影子朋友 Shadow Friend",
   "short_name": "影子朋友",
   "description": "AI 個人化雙語兒童繪本 — Shadow Friend",
-  "start_url": "/shadow-friend/book.html",
+  "start_url": "/shadow-friend/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#7e57c2",

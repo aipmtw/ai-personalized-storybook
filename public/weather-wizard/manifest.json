@@ -2,7 +2,7 @@
   "name": "天氣魔法師",
   "short_name": "天氣魔法師",
   "description": "AI 個人化雙語兒童繪本 — Weather Wizard",
-  "start_url": "/weather-wizard/book.html",
+  "start_url": "/weather-wizard/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#5c6bc0",

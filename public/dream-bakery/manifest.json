@@ -2,7 +2,7 @@
   "name": "夢想麵包店",
   "short_name": "夢想麵包店",
   "description": "AI 個人化雙語兒童繪本 — Dream Bakery",
-  "start_url": "/dream-bakery/book.html",
+  "start_url": "/dream-bakery/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#8d6e63",

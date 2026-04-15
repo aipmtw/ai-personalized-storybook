@@ -2,7 +2,7 @@
   "name": "星球音樂家",
   "short_name": "星球音樂家",
   "description": "AI 個人化雙語兒童繪本 — Star Musician",
-  "start_url": "/star-musician/book.html",
+  "start_url": "/star-musician/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#7b1fa2",

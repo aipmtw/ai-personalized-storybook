@@ -2,7 +2,7 @@
   "name": "AI 夥伴日記",
   "short_name": "夥伴日記",
   "description": "AI 個人化雙語兒童繪本 — AI Partner Diary",
-  "start_url": "/ai-partner/book.html",
+  "start_url": "/ai-partner/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#1e88e5",

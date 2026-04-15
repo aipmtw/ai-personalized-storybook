@@ -2,7 +2,7 @@
   "name": "魔法種子",
   "short_name": "魔法種子",
   "description": "AI 個人化雙語兒童繪本 — Magic Seeds",
-  "start_url": "/magic-seeds/book.html",
+  "start_url": "/magic-seeds/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#43a047",

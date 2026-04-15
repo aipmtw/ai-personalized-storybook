@@ -2,7 +2,7 @@
   "name": "螢火蟲之夜",
   "short_name": "螢火蟲之夜",
   "description": "AI 個人化雙語兒童繪本 — Firefly Night",
-  "start_url": "/firefly-night/book.html",
+  "start_url": "/firefly-night/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#1b2a1b",

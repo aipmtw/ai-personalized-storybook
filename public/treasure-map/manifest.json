@@ -2,7 +2,7 @@
   "name": "寶藏地圖 — Treasure Map",
   "short_name": "寶藏地圖",
   "description": "AI 個人化雙語兒童繪本 — Treasure Map",
-  "start_url": "/treasure-map/book.html",
+  "start_url": "/treasure-map/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#d4a574",

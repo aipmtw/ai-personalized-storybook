@@ -2,11 +2,11 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#e91e63">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Amy 的故事魔法 — AI 個人化語言繪本</title>
+  <title>Amy 的故事魔法</title>
   <link rel="manifest" href="/amy/manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,49 +14,50 @@
   <link rel="stylesheet" href="/amy/css/style.css">
 </head>
 <body>
-  <main class="landing">
-    <!-- Book Cover -->
-    <div class="landing-cover">
-      <div class="emoji-art">🎤</div>
-      <h1>Amy 的故事魔法</h1>
-      <div class="subtitle">Amy's Story Magic</div>
+  <!-- Top bar: language toggle + autoplay -->
+  <div class="top-controls">
+    <div class="lang-toggle" id="langToggle">
+      <button class="active" data-lang="both">中＋EN</button>
+      <button data-lang="zh">中文</button>
+      <button data-lang="en">English</button>
+    </div>
+    <button class="autoplay-toggle" id="autoplayBtn" onclick="toggleAutoplay()">&#9654;&#9654; 自動播放</button>
+  </div>
+
+  <div class="book-container" id="bookContainer">
+    <div class="pages-wrapper" id="pagesWrapper">
+      <!-- Pages are rendered by JS -->
     </div>
 
-    <!-- Info -->
-    <div class="landing-info">
-      <h2>AI 個人化雙語兒童繪本</h2>
-      <p>為 8 歲的 Amy 量身打造的故事書</p>
-    </div>
+    <!-- Touch hint arrows -->
+    <div class="touch-hint left" id="hintLeft">&#8249;</div>
+    <div class="touch-hint right" id="hintRight">&#8250;</div>
+  </div>
 
-    <!-- Buttons -->
-    <div class="landing-actions">
-      <a href="#" class="btn btn-line" id="lineLoginBtn" onclick="lineLogin()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
-        用 LINE 登入來閱讀
-      </a>
-      <a href="/amy/book.html" class="btn btn-demo">
-        直接體驗 (Demo)
-      </a>
-    </div>
+  <!-- Audio player bar -->
+  <div class="audio-bar hidden" id="audioBar">
+    <button class="ab-btn" id="abPlayPause" onclick="toggleAudioPlayPause()">&#9654;</button>
+    <span class="ab-time" id="abCurrent">0:00</span>
+    <input type="range" class="ab-slider" id="abSlider" min="0" max="100" value="0" step="0.1" oninput="seekAudio(this.value)">
+    <span class="ab-time" id="abTotal">0:00</span>
+    <button class="ab-btn ab-close" onclick="stopAudio()">&#x2715;</button>
+  </div>
 
-    <div class="landing-footer">
-      <p>由 <a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a> 出品 &middot; Powered by Claude Opus 4.6</p>
-    </div>
-  </main>
+  <!-- Bottom toolbar -->
+  <div class="toolbar">
+    <a href="/" class="toolbar-btn" title="首頁">&#x1F3E0;</a>
+    <button class="toolbar-btn audio-btn" id="audioBtn" title="播放朗讀" onclick="toggleAudio()">&#x1F50A;</button>
+    <div class="progress-dots" id="progressDots"></div>
+    <button class="toolbar-btn" id="fullscreenBtn" title="全螢幕" onclick="toggleFullscreen()">&#x26F6;</button>
+  </div>
 
-  <script>
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/amy/sw.js', { updateViaCache: 'none' });
-    }
+  <!-- Install banner -->
+  <div class="install-banner hidden" id="installBanner">
+    <span>加入主畫面</span>
+    <button onclick="installApp()">安裝</button>
+    <button class="dismiss" onclick="dismissInstall()">&times;</button>
+  </div>
 
-    function lineLogin() {
-      const channelId = '2009738746';
-      const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
-      const returnUrl = encodeURIComponent(window.location.origin + '/amy/book.html');
-      const url = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${channelId}&redirect_uri=${redirectUri}&state=${returnUrl}&scope=profile%20openid`;
-      window.location.href = url;
-    }
-  </script>
+  <script src="/amy/js/app.js"></script>
 </body>
 </html>

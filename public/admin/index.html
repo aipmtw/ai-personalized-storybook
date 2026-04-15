@@ -355,7 +355,7 @@ function renderTable() {
         ${b.is_demo ? ' <span class="badge badge-demo">demo</span>' : ''}
       </td>
       <td>
-        <a href="${APP_BASE}/reader.html?book=${b.slug}" target="_blank">Read</a>
+        <a href="${APP_BASE}/${b.slug}/" target="_blank">Read</a>
         · <a href="#" onclick="viewPages('${b.slug}','${b.title_zh}');return false">Pages</a>
       </td>
     </tr>

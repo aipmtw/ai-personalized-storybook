@@ -2,7 +2,7 @@
   "name": "深海探險家",
   "short_name": "深海探險",
   "description": "AI 個人化雙語兒童繪本 — Deep Sea Explorer",
-  "start_url": "/ocean-explorer/book.html",
+  "start_url": "/ocean-explorer/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#0277bd",

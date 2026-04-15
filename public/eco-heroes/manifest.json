@@ -2,7 +2,7 @@
   "name": "環保小英雄",
   "short_name": "環保小英雄",
   "description": "AI 個人化雙語兒童繪本 — Eco Heroes",
-  "start_url": "/eco-heroes/book.html",
+  "start_url": "/eco-heroes/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#388e3c",

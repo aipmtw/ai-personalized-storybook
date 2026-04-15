@@ -2,7 +2,7 @@
   "name": "小貓逛市場",
   "short_name": "小貓市場",
   "description": "AI 個人化雙語兒童繪本 — Kitten Goes to Market",
-  "start_url": "/kitten-market/book.html",
+  "start_url": "/kitten-market/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#ffa726",
