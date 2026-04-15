@@ -294,7 +294,7 @@ let bookDurations = {}; // slug -> { zh, en, both }
 
 async function loadBooks() {
   try {
-    const r = await fetch(API_BASE + '/api/books?status=all');
+    const r = await fetch(API_BASE + '/api/books?status=all&_t=' + Date.now());
     const d = await r.json();
     if (d.ok) {
       allBooks = d.books || [];
