@@ -100,6 +100,17 @@
     .next-issue h4{font-size:1rem;color:#5d4037;margin-bottom:.3rem}
     .next-issue p{font-size:.85rem;color:#a1887f}
 
+    /* PWA install banner */
+    .pwa-install{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(135deg,#e91e63,#ff6f61);color:#fff;padding:.8rem 1rem;display:flex;align-items:center;justify-content:center;gap:.8rem;z-index:200;transform:translateY(100%);transition:transform .4s ease;font-size:.9rem;font-weight:600}
+    .pwa-install.show{transform:translateY(0)}
+    .pwa-install button{background:#fff;color:#e91e63;border:none;padding:.4rem 1.2rem;border-radius:20px;font-weight:800;font-size:.85rem;cursor:pointer;font-family:inherit}
+    .pwa-install .dismiss{background:none;color:rgba(255,255,255,.7);padding:.3rem;font-size:1.2rem;cursor:pointer;border:none}
+    /* iOS install guide */
+    .ios-guide{position:fixed;bottom:0;left:0;right:0;background:#fff;color:#212529;padding:1.2rem;border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.15);z-index:200;transform:translateY(100%);transition:transform .4s ease;text-align:center}
+    .ios-guide.show{transform:translateY(0)}
+    .ios-guide .steps{font-size:.85rem;color:#6c757d;line-height:2;margin:.8rem 0}
+    .ios-guide .dismiss{background:none;border:none;color:#adb5bd;font-size:.85rem;cursor:pointer;text-decoration:underline}
+
     .divider{border:none;border-top:1px solid #e9ecef;margin:1.5rem auto;max-width:800px}
 
     /* Read more toggle */
@@ -530,6 +541,66 @@
     if (new URLSearchParams(location.search).get('inquiry') === '1' || new URLSearchParams(location.search).get('ml_token')) {
       setTimeout(showInquiryForm, 300);
     }
+  </script>
+
+  <!-- PWA Install Banner -->
+  <div class="pwa-install" id="pwaBanner">
+    <span>安裝到手機，離線也能讀</span>
+    <button onclick="installPWA()">安裝</button>
+    <button class="dismiss" onclick="dismissPWA()">&times;</button>
+  </div>
+
+  <!-- iOS Install Guide -->
+  <div class="ios-guide" id="iosGuide">
+    <div style="font-size:1.1rem;font-weight:800">安裝到手機</div>
+    <div class="steps">
+      1. 點擊下方 <strong>分享</strong> 按鈕 ⬆<br>
+      2. 選擇 <strong>加入主畫面</strong><br>
+      3. 完成！離線也能閱讀繪本
+    </div>
+    <button class="dismiss" onclick="document.getElementById('iosGuide').classList.remove('show')">知道了</button>
+  </div>
+
+  <script>
+  // PWA Install
+  let deferredPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (!localStorage.getItem('pwa_dismissed')) {
+      document.getElementById('pwaBanner').classList.add('show');
+    }
+  });
+
+  function installPWA() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => {
+        deferredPrompt = null;
+        document.getElementById('pwaBanner').classList.remove('show');
+      });
+    }
+  }
+
+  function dismissPWA() {
+    document.getElementById('pwaBanner').classList.remove('show');
+    localStorage.setItem('pwa_dismissed', '1');
+  }
+
+  // iOS detection — show manual guide
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (isIOS && !isStandalone && !localStorage.getItem('pwa_dismissed')) {
+    setTimeout(() => {
+      document.getElementById('iosGuide').classList.add('show');
+    }, 3000);
+  }
+
+  // Register root service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
+  }
   </script>
 
 </body>
