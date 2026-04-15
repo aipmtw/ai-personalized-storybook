@@ -168,19 +168,15 @@ html, body {
    ============================================ */
 
 /* Single page container — one page at a time */
+/* Single page container */
 .page-container {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  transition: opacity 0.2s ease, transform 0.25s ease;
+  transition: opacity 0.15s ease;
 }
-
-.page-container.exit-left { opacity: 0; transform: translateX(-30px); }
-.page-container.exit-right { opacity: 0; transform: translateX(30px); }
-.page-container.enter-left { opacity: 0; transform: translateX(-30px); transition: none; }
-.page-container.enter-right { opacity: 0; transform: translateX(30px); transition: none; }
 
 .page {
   width: 100%;

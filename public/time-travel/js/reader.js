@@ -137,21 +137,13 @@ function goToPage(pageNum) {
   // Stop audio on manual nav (not autoplay)
   if (audioPlaying && !autoplayOn) stopAudio();
 
-  // Animate transition
-  const direction = pageNum > currentPage ? 'left' : 'right';
-  pageContainer.classList.add('exit-' + direction);
-
+  // Simple fade transition
+  pageContainer.style.opacity = '0';
   setTimeout(() => {
     renderPage(pageNum);
     updateURL(pageNum);
-    pageContainer.classList.remove('exit-' + direction);
-    pageContainer.classList.add('enter-' + (direction === 'left' ? 'right' : 'left'));
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        pageContainer.classList.remove('enter-right', 'enter-left');
-      });
-    });
-  }, 200);
+    pageContainer.style.opacity = '1';
+  }, 150);
 }
 
 function nextPage() { goToPage(currentPage + 1); }
