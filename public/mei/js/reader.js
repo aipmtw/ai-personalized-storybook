@@ -351,7 +351,9 @@ function showDemoGate() {
 
 function lineLoginFromGate() {
   const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
-  const returnUrl = encodeURIComponent(window.location.origin + '/' + SLUG + '/');
+  // Return to the page they were trying to access (DEMO_MAX + 1)
+  const nextPage = currentPage > DEMO_MAX ? currentPage : DEMO_MAX + 1;
+  const returnUrl = encodeURIComponent(window.location.origin + '/' + SLUG + '/' + nextPage);
   window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=' + LINE_CHANNEL_ID + '&redirect_uri=' + redirectUri + '&state=' + returnUrl + '&scope=profile%20openid';
 }
 
