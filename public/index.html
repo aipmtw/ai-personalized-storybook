@@ -139,31 +139,106 @@
 </head>
 <body>
 
-  <!-- Demo books — TOP -->
-  <div class="demo-section" style="padding-top:3rem">
-    <h2>Demo 繪本</h2>
-    <div class="demo-sub">點擊體驗範例繪本（前 3 頁免費試閱）</div>
-    <div class="books">
-      <a class="book-card card-mei" href="/mei/">
-        <div class="emoji">🦕</div>
-        <h3>小美的恐龍冒險</h3>
-        <div class="subtitle">Mei's Dinosaur Adventure</div>
-        <div class="age">4-6 歲</div>
-      </a>
-      <a class="book-card card-amy" href="/amy/">
-        <div class="emoji">🎤</div>
-        <h3>Amy 的故事魔法</h3>
-        <div class="subtitle">Amy's Story Magic</div>
-        <div class="age">7-9 歲</div>
-      </a>
-      <a class="book-card card-max" href="/max/">
-        <div class="emoji">🚀</div>
-        <h3>Max 的太空探險</h3>
-        <div class="subtitle">Max's Space Adventure</div>
-        <div class="age">10-12 歲</div>
-      </a>
+  <!-- Dynamic bookshelf — loads all books from API -->
+  <div class="demo-section" style="padding-top:2.5rem">
+    <h2 style="font-size:1.8rem">繪本書架</h2>
+    <div class="demo-sub">前 3 頁免費試閱 · 訂閱後無限閱讀</div>
+
+    <div id="bookshelf">
+      <div style="text-align:center;padding:2rem;color:#adb5bd">載入中...</div>
     </div>
   </div>
+
+  <script>
+  // Book visual config — emoji + gradient per slug
+  const BOOK_STYLES = {
+    mei: { emoji: '🦕', gradient: 'linear-gradient(135deg,#ff6f61,#ff8a65)' },
+    amy: { emoji: '🎤', gradient: 'linear-gradient(135deg,#e91e63,#f06292)' },
+    max: { emoji: '🚀', gradient: 'linear-gradient(135deg,#1a237e,#311b92)' },
+    'lulu-garden': { emoji: '🌸', gradient: 'linear-gradient(135deg,#e8a0bf,#f0c4d8)' },
+    'bear-kitchen': { emoji: '🧁', gradient: 'linear-gradient(135deg,#f4845f,#f7a98b)' },
+    'dino-school': { emoji: '🎒', gradient: 'linear-gradient(135deg,#66bb6a,#a5d6a7)' },
+    'ocean-friends': { emoji: '🐠', gradient: 'linear-gradient(135deg,#039be5,#4fc3f7)' },
+    'robot-dream': { emoji: '🤖', gradient: 'linear-gradient(135deg,#546e7a,#90a4ae)' },
+    'time-travel': { emoji: '⏰', gradient: 'linear-gradient(135deg,#8d6e63,#bcaaa4)' },
+    'star-musician': { emoji: '🎵', gradient: 'linear-gradient(135deg,#7b1fa2,#ba68c8)' },
+    'code-island': { emoji: '💻', gradient: 'linear-gradient(135deg,#00897b,#4db6ac)' },
+    'dragon-library': { emoji: '🐉', gradient: 'linear-gradient(135deg,#c62828,#ef5350)' },
+    'rainbow-painting': { emoji: '🎨', gradient: 'linear-gradient(135deg,#ff7043,#ffab91)' },
+    'bunny-moon': { emoji: '🐰', gradient: 'linear-gradient(135deg,#5c6bc0,#9fa8da)' },
+    'magic-seeds': { emoji: '🌱', gradient: 'linear-gradient(135deg,#43a047,#81c784)' },
+    'cloud-adventure': { emoji: '☁️', gradient: 'linear-gradient(135deg,#42a5f5,#90caf9)' },
+    'penguin-dance': { emoji: '🐧', gradient: 'linear-gradient(135deg,#26c6da,#80deea)' },
+    'kitten-market': { emoji: '🐱', gradient: 'linear-gradient(135deg,#ffa726,#ffcc80)' },
+    'firefly-night': { emoji: '✨', gradient: 'linear-gradient(135deg,#2e7d32,#1b5e20)' },
+    'detective-cat': { emoji: '🔍', gradient: 'linear-gradient(135deg,#ff8f00,#ffb74d)' },
+    'music-forest': { emoji: '🎶', gradient: 'linear-gradient(135deg,#66bb6a,#aed581)' },
+    'flying-bicycle': { emoji: '🚲', gradient: 'linear-gradient(135deg,#42a5f5,#64b5f6)' },
+    'dream-bakery': { emoji: '🍞', gradient: 'linear-gradient(135deg,#8d6e63,#a1887f)' },
+    'treasure-map': { emoji: '🗺️', gradient: 'linear-gradient(135deg,#d4a574,#c49464)' },
+    'shadow-friend': { emoji: '👤', gradient: 'linear-gradient(135deg,#7e57c2,#b39ddb)' },
+    'paper-airplane': { emoji: '✈️', gradient: 'linear-gradient(135deg,#29b6f6,#81d4fa)' },
+    'weather-wizard': { emoji: '⛅', gradient: 'linear-gradient(135deg,#5c6bc0,#7986cb)' },
+    'ai-partner': { emoji: '🤝', gradient: 'linear-gradient(135deg,#1e88e5,#64b5f6)' },
+    'ocean-explorer': { emoji: '🌊', gradient: 'linear-gradient(135deg,#0277bd,#4fc3f7)' },
+    'future-city': { emoji: '🏙️', gradient: 'linear-gradient(135deg,#00c853,#69f0ae)' },
+    'math-kingdom': { emoji: '🔢', gradient: 'linear-gradient(135deg,#6a1b9a,#ab47bc)' },
+    'space-garden': { emoji: '🌿', gradient: 'linear-gradient(135deg,#2e7d32,#66bb6a)' },
+    'history-detective': { emoji: '🏛️', gradient: 'linear-gradient(135deg,#795548,#a1887f)' },
+    'eco-heroes': { emoji: '🌍', gradient: 'linear-gradient(135deg,#388e3c,#81c784)' },
+    'inventor-girl': { emoji: '💡', gradient: 'linear-gradient(135deg,#f57c00,#ffb74d)' },
+    'parallel-worlds': { emoji: '🌀', gradient: 'linear-gradient(135deg,#283593,#5c6bc0)' },
+  };
+  const DEFAULT_STYLE = { emoji: '📖', gradient: 'linear-gradient(135deg,#78909c,#b0bec5)' };
+
+  // Age group mapping
+  const AGE_GROUPS = [
+    { label: '3–6 歲 幼兒繪本', tiers: ['3-5','4-6'] },
+    { label: '7–9 歲 兒童繪本', tiers: ['7-9','8-10'] },
+    { label: '10–12 歲 少年繪本', tiers: ['10-12'] },
+  ];
+
+  async function loadBookshelf() {
+    try {
+      const r = await fetch('https://markluce.ai/api/books');
+      const d = await r.json();
+      if (!d.ok || !d.books.length) { document.getElementById('bookshelf').innerHTML = '<p style="text-align:center;color:#adb5bd">暫無繪本</p>'; return; }
+
+      // Cache catalog for offline
+      localStorage.setItem('bookshelf_catalog', JSON.stringify(d.books));
+      renderBookshelf(d.books);
+    } catch (e) {
+      // Offline fallback
+      const cached = localStorage.getItem('bookshelf_catalog');
+      if (cached) { renderBookshelf(JSON.parse(cached)); }
+      else { document.getElementById('bookshelf').innerHTML = '<p style="text-align:center;color:#adb5bd">無法載入，請檢查網路</p>'; }
+    }
+  }
+
+  function renderBookshelf(books) {
+    let html = '';
+    for (const group of AGE_GROUPS) {
+      const groupBooks = books.filter(b => group.tiers.includes(b.age_tier));
+      if (!groupBooks.length) continue;
+      html += '<h3 style="font-size:1.2rem;font-weight:800;margin:1.8rem 0 .8rem;color:#5d4037">' + group.label + ' <span style="font-size:.85rem;font-weight:400;color:#a1887f">(' + groupBooks.length + '本)</span></h3>';
+      html += '<div class="books">';
+      for (const b of groupBooks) {
+        const s = BOOK_STYLES[b.slug] || DEFAULT_STYLE;
+        const href = '/' + b.slug + '/book.html';
+        html += '<a class="book-card" href="' + href + '" style="background:' + s.gradient + '">' +
+          '<div class="emoji">' + s.emoji + '</div>' +
+          '<h3>' + (b.title_zh || b.slug) + '</h3>' +
+          '<div class="subtitle">' + (b.title_en || '') + '</div>' +
+          '<div class="age">' + (b.age_tier || '') + ' 歲</div>' +
+          '</a>';
+      }
+      html += '</div>';
+    }
+    document.getElementById('bookshelf').innerHTML = html;
+  }
+
+  loadBookshelf();
+  </script>
 
   <!-- Pricing -->
   <div style="max-width:600px;margin:0 auto;padding:2rem 2rem 1rem">
