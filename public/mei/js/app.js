@@ -22,72 +22,88 @@ const pages = [
     bg: 'page-bg-2',
     illustBg: 'illust-bg-2',
     emoji: '🏠🌻🌳',
-    zh: '小美住在一棟有大花園的房子裡。她最喜歡在花園裡玩耍。',
-    en: 'Mei lives in a house with a big garden. She loves playing in the garden.'
+    zh: '小美住在一棟有大花園的房子裡。她最喜歡在花園裡玩耍，每天都會發現新東西。',
+    en: 'Mei lives in a house with a big garden. She loves playing there and finds something new every day.'
   },
   {
     type: 'story',
     bg: 'page-bg-3',
     illustBg: 'illust-bg-3',
     emoji: '🥚✨🌿',
-    zh: '有一天早上，小美在花園裡發現了一顆好大好大的蛋。「這是什麼呢？」她好奇地問。',
-    en: 'One morning, Mei found a very big egg in the garden. "What is this?" she asked curiously.'
+    zh: '有一天早上，小美在花園角落發現了一顆好大好大的蛋。「哇！這是什麼呢？」她好奇地蹲下來看。',
+    en: 'One morning, Mei found a very big egg in a corner of the garden. "Wow! What is this?" She knelt down to look.'
   },
   {
     type: 'story',
     bg: 'page-bg-4',
     illustBg: 'illust-bg-4',
     emoji: '🦕🎉💚',
-    zh: '忽然，蛋裂開了！一隻綠色的小恐龍從裡面跳出來。「嗨！我是小綠！」恐龍開心地說。',
-    en: 'Suddenly, the egg cracked open! A little green dinosaur jumped out. "Hi! I\'m Xiao Lü!" said the dinosaur happily.'
+    zh: '忽然，蛋裂開了！一隻綠色的小恐龍跳了出來，搖著尾巴說：「嗨！我是小綠！你是誰呀？」',
+    en: 'Suddenly, the egg cracked open! A little green dinosaur jumped out, wagging its tail. "Hi! I\'m Xiao Lu! Who are you?"'
   },
   {
     type: 'story',
     bg: 'page-bg-5',
     illustBg: 'illust-bg-5',
     emoji: '👧🦕💕',
-    zh: '小美和小綠很快就成為了好朋友。她們一起在花園裡跑來跑去。',
-    en: 'Mei and Xiao Lü quickly became best friends. They ran around the garden together.'
+    zh: '「我是小美！你要和我做朋友嗎？」小綠用力點頭。她們手牽手在花園裡跑來跑去。',
+    en: '"I\'m Mei! Do you want to be my friend?" Xiao Lu nodded happily. They held hands and ran around the garden.'
   },
   {
     type: 'story',
     bg: 'page-bg-6',
     illustBg: 'illust-bg-6',
     emoji: '☁️🦕✈️',
-    zh: '「我們去冒險吧！」小綠說。小美爬上小綠的背，她們飛上了天空！',
-    en: '"Let\'s go on an adventure!" said Xiao Lü. Mei climbed on Xiao Lü\'s back and they flew into the sky!'
+    zh: '「我們去冒險吧！」小綠張開翅膀。小美爬上小綠的背，她們一起飛上了藍藍的天空！',
+    en: '"Let\'s go on an adventure!" Xiao Lu spread its wings. Mei climbed on its back and they flew up into the blue sky!'
   },
   {
     type: 'story',
     bg: 'page-bg-7',
     illustBg: 'illust-bg-7',
     emoji: '🏔️🌈😍',
-    zh: '她們飛過高高的山，看到了美麗的彩虹。小美開心地大喊：「好漂亮啊！」',
-    en: 'They flew over tall mountains and saw a beautiful rainbow. Mei shouted happily: "So beautiful!"'
+    zh: '她們飛過高高的山，看到了一道七彩的彩虹。小美開心地大喊：「好漂亮啊！」',
+    en: 'They flew over tall mountains and saw a colorful rainbow. Mei shouted with joy: "So beautiful!"'
   },
   {
     type: 'story',
     bg: 'page-bg-8',
     illustBg: 'illust-bg-8',
     emoji: '🐬🌊🐳',
-    zh: '她們還飛到了大海邊，看到海豚在水裡跳舞。小美從來沒有看過這麼多海豚！',
-    en: 'They also flew to the ocean and saw dolphins dancing in the water. Mei had never seen so many dolphins!'
+    zh: '她們飛到了大海上，看到海豚在浪花裡跳舞。小美拍手說：「海豚好厲害！」',
+    en: 'They flew over the ocean and saw dolphins dancing in the waves. Mei clapped and said: "Dolphins are amazing!"'
   },
   {
     type: 'story',
     bg: 'page-bg-9',
     illustBg: 'illust-bg-9',
+    emoji: '🌸🦋🌺',
+    zh: '接著她們來到一片花田。五顏六色的蝴蝶飛來飛去，小綠伸出舌頭想舔蝴蝶，好好笑！',
+    en: 'Next they came to a flower field. Colorful butterflies flew all around. Xiao Lu stuck out its tongue to lick one. So funny!'
+  },
+  {
+    type: 'story',
+    bg: 'page-bg-10',
+    illustBg: 'illust-bg-10',
+    emoji: '🍎🧺🦕',
+    zh: '她們在大樹下野餐。小美分享蘋果，小綠分享樹葉。「你的樹葉好好吃嗎？」小美問。小綠笑了。',
+    en: 'They had a picnic under a big tree. Mei shared her apple and Xiao Lu shared some leaves. "Are your leaves yummy?" Mei asked. Xiao Lu smiled.'
+  },
+  {
+    type: 'story',
+    bg: 'page-bg-11',
+    illustBg: 'illust-bg-11',
     emoji: '🌅🤗💛',
-    zh: '天黑了，小綠帶小美飛回家。「謝謝你，小綠！今天是最棒的一天！」小美抱著小綠說。',
-    en: 'It got dark and Xiao Lü flew Mei back home. "Thank you, Xiao Lü! Today was the best day ever!" said Mei, hugging Xiao Lü.'
+    zh: '太陽下山了，小綠帶小美飛回家。「謝謝你，小綠！今天是最棒的一天！」小美緊緊抱著小綠。',
+    en: 'The sun went down and Xiao Lu flew Mei back home. "Thank you, Xiao Lu! Today was the best day ever!" Mei hugged Xiao Lu tightly.'
   },
   {
     type: 'end',
-    bg: 'page-bg-10',
-    illustBg: 'illust-bg-10',
+    bg: 'page-bg-12',
+    illustBg: 'illust-bg-12',
     emoji: '🌙⭐🦕',
-    zh: '小美帶著微笑入睡了，夢裡她和小綠又出發去新的冒險了…',
-    en: 'Mei fell asleep with a smile. In her dreams, she and Xiao Lü set off on a new adventure...'
+    zh: '小美帶著微笑入睡了。在夢裡，她和小綠又出發去新的冒險了……',
+    en: 'Mei fell asleep with a smile. In her dreams, she and Xiao Lu set off on a brand new adventure...'
   }
 ];
 
@@ -256,7 +272,7 @@ function updateUI() {
   hintRight.style.opacity = currentPage < pages.length - 1 ? '1' : '0';
 
   // Update theme color per page
-  const colors = ['#ff6f61','#a8e063','#ffb347','#56ccaa','#f48fb1','#64b5f6','#e57373','#00acc1','#ff8a65','#7e57c2'];
+  const colors = ['#ff6f61','#a8e063','#ffb347','#56ccaa','#f48fb1','#64b5f6','#e57373','#00acc1','#ff8a65','#ab47bc','#ffca28','#7e57c2'];
   document.querySelector('meta[name="theme-color"]').content = colors[currentPage] || '#ff6f61';
 }
 

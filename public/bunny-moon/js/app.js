@@ -15,79 +15,95 @@ const pages = [
     coverTitle: '小兔望月',
     coverSubtitle: 'Bunny and the Moon',
     coverCredits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-    version: 'ver 1'
+    version: 'ver 2'
   },
   {
     type: 'story',
     bg: 'page-bg-2',
     illustBg: 'illust-bg-2',
     emoji: '🐰🌗❓',
-    zh: '小兔每天晚上都會抬頭看月亮。她好奇地想：「為什麼月亮的形狀一直在變呢？」',
-    en: 'Every night, little bunny Xiao Tu looked up at the moon. She wondered: "Why does the moon keep changing shape?"'
+    zh: '小兔坐在草地上，抬頭望著天空。月亮彎彎的，像一條小船。她心想：「月亮為什麼不是圓的呢？」',
+    en: 'Little bunny sat on the grass and looked up at the sky. The moon was curved like a little boat. She wondered: "Why isn\'t the moon round?"'
   },
   {
     type: 'story',
     bg: 'page-bg-3',
     illustBg: 'illust-bg-3',
     emoji: '🐰🐇💬',
-    zh: '小兔跑去問媽媽。媽媽微笑著說：「月亮有很多面孔喔！」小兔決定自己去看看。',
-    en: 'Xiao Tu ran to ask Mama. Mama smiled and said: "The moon has many faces!" Xiao Tu decided to go see for herself.'
+    zh: '她跑去問媽媽。媽媽說：「你自己去山丘上看看吧，也許能找到答案喔！」',
+    en: 'She ran to ask Mama. Mama said: "Why don\'t you go up the hill and look? Maybe you can find the answer!"'
   },
   {
     type: 'story',
     bg: 'page-bg-4',
     illustBg: 'illust-bg-4',
     emoji: '🐰⛰️🌌',
-    zh: '小兔蹦蹦跳跳地爬上了最高的山丘。夜空好大好美，星星閃閃發亮。',
-    en: 'Xiao Tu hopped and hopped up the tallest hill. The night sky was so big and beautiful, with stars twinkling brightly.'
+    zh: '小兔蹦蹦跳跳地往山丘上跑。路邊的小花在月光下輕輕搖擺，好像在跟她說加油。',
+    en: 'Little bunny hopped up the hill. The flowers along the path swayed gently in the moonlight, as if cheering her on.'
   },
   {
     type: 'story',
     bg: 'page-bg-5',
     illustBg: 'illust-bg-5',
-    emoji: '🦉🐰🌙',
-    zh: '山頂上，一隻聰明的貓頭鷹對她說：「月亮其實一直都是圓的，只是太陽照到的地方不一樣。」',
-    en: 'At the top, a wise owl told her: "The moon is always round — the sun just lights up different parts of it."'
+    emoji: '🐰⛰️⭐',
+    zh: '她爬呀爬，終於到了山頂。夜空好大好美，到處都是閃亮亮的星星。',
+    en: 'She climbed and climbed until she reached the top. The night sky was so big and beautiful, full of twinkling stars.'
   },
   {
     type: 'story',
     bg: 'page-bg-6',
     illustBg: 'illust-bg-6',
-    emoji: '🌙😊✨',
-    zh: '小兔看見一彎細細的月牙，好像在對她微笑。「月亮在跟我打招呼呢！」她開心地說。',
-    en: 'Xiao Tu saw a thin crescent moon that seemed to smile at her. "The moon is saying hello to me!" she said happily.'
+    emoji: '🦉🐰🌙',
+    zh: '一隻貓頭鷹停在樹枝上。「你好呀，小兔！你也來看月亮嗎？」貓頭鷹眨眨眼睛問。',
+    en: 'An owl was sitting on a branch. "Hello, little bunny! Are you here to see the moon too?" the owl asked, blinking her eyes.'
   },
   {
     type: 'story',
     bg: 'page-bg-7',
     illustBg: 'illust-bg-7',
-    emoji: '✨🐰💫',
-    zh: '一群螢火蟲飛過來，在月光下翩翩起舞。小兔覺得這是全世界最美的舞蹈。',
-    en: 'A group of fireflies flew over and danced in the moonlight. Xiao Tu thought it was the most beautiful dance in the world.'
+    emoji: '🌙😊✨',
+    zh: '小兔抬頭一看，彎彎的月牙好像在對她微笑呢！「月亮在跟我打招呼！」她開心地叫起來。',
+    en: 'Little bunny looked up and saw the crescent moon smiling at her! "The moon is saying hello!" she cried out happily.'
   },
   {
     type: 'story',
     bg: 'page-bg-8',
     illustBg: 'illust-bg-8',
-    emoji: '🐰💧🌕',
-    zh: '小兔發現池塘裡也有一個月亮！她伸出小手想抓住它，但月亮在水裡碎成了好多片。',
-    en: 'Xiao Tu found another moon in the pond! She reached out to catch it, but the moon broke into many pieces in the water.'
+    emoji: '✨🐰💫',
+    zh: '忽然，好多螢火蟲飛過來了！牠們提著小燈籠，在月光下跳起了舞。小兔看得好開心。',
+    en: 'Suddenly, many fireflies flew over! They carried tiny lanterns and danced in the moonlight. Little bunny watched with joy.'
   },
   {
     type: 'story',
     bg: 'page-bg-9',
     illustBg: 'illust-bg-9',
+    emoji: '🐰💧🌕',
+    zh: '山腳下有一個小池塘，水面上也有一個月亮！小兔伸手去摸，月亮就碎成好多亮片。',
+    en: 'At the bottom of the hill there was a little pond with a moon on the water! She reached out to touch it, and the moon broke into shiny pieces.'
+  },
+  {
+    type: 'story',
+    bg: 'page-bg-10',
+    illustBg: 'illust-bg-10',
+    emoji: '🦉🌕💡',
+    zh: '貓頭鷹飛過來說：「月亮其實一直都是圓的喔，只是每天露出不同的臉，就像你有時笑、有時害羞一樣。」',
+    en: 'The owl flew over and said: "The moon is always whole. It just shows a different face each day, just like you sometimes smile and sometimes feel shy."'
+  },
+  {
+    type: 'story',
+    bg: 'page-bg-11',
+    illustBg: 'illust-bg-11',
     emoji: '🐰🌕🏡',
-    zh: '小兔終於明白了：月亮永遠都是完整的，只是用不同的面貌陪伴大家。她開心地往家跑去。',
-    en: 'Xiao Tu finally understood: the moon is always whole, just showing different faces to everyone. She happily hopped home.'
+    zh: '小兔點點頭，她終於懂了！她開心地蹦蹦跳跳往家的方向跑，月亮一路陪著她。',
+    en: 'Little bunny nodded — she finally understood! She happily hopped toward home, and the moon followed her all the way.'
   },
   {
     type: 'end',
-    bg: 'page-bg-10',
-    illustBg: 'illust-bg-10',
+    bg: 'page-bg-12',
+    illustBg: 'illust-bg-12',
     emoji: '🐰🛏️🌙',
-    zh: '回到家，小兔鑽進暖暖的被窩，帶著微笑入睡了。在夢裡，她和月亮一起在星空中散步…',
-    en: 'Back home, Xiao Tu snuggled into her warm bed and fell asleep with a smile. In her dreams, she walked among the stars with the moon...'
+    zh: '回到家，小兔鑽進暖暖的被窩。她閉上眼睛，夢見自己騎在月亮上，飛過了滿天的星星…',
+    en: 'Back home, little bunny snuggled into her warm bed. She closed her eyes and dreamed she was riding the moon, flying across a sky full of stars...'
   }
 ];
 

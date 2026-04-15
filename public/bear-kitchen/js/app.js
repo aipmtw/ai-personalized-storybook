@@ -15,71 +15,95 @@ const pages = [
     coverTitle: '小熊的魔法廚房',
     coverSubtitle: "Bear's Magic Kitchen",
     coverCredits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-    version: 'ver 1'
+    version: 'ver 2'
   },
   {
     type: 'story',
     bg: 'page-bg-2',
     illustBg: 'illust-bg-2',
-    emoji: '🐻🎂💭',
-    zh: '小熊住在森林裡的小木屋。今天是好朋友小兔的生日，小熊想烤一個蛋糕送給她。',
-    en: 'Little Bear lives in a cabin in the forest. Today is his friend Bunny\'s birthday, and he wants to bake a cake for her.'
+    emoji: '🐻🏠☀️',
+    zh: '小熊住在森林裡的小木屋。早上太陽暖暖的，小熊伸了一個大懶腰，開心地說：「今天我要烤一個蛋糕！」',
+    en: 'Little Bear lives in a cozy cabin in the forest. The morning sun was warm and bright. He stretched and said happily, "Today I want to bake a cake!"'
   },
   {
     type: 'story',
     bg: 'page-bg-3',
     illustBg: 'illust-bg-3',
-    emoji: '🥚🥛🌾',
-    zh: '小熊走進廚房，把雞蛋、牛奶和麵粉放在桌上。「我要做最好吃的蛋糕！」他開心地說。',
-    en: 'Little Bear walked into the kitchen and put eggs, milk, and flour on the table. "I\'m going to make the yummiest cake!" he said happily.'
+    emoji: '🐻📖💡',
+    zh: '小熊翻開奶奶的食譜。上面寫著：「彩虹蛋糕——需要新鮮的雞蛋、牛奶、麵粉，還有一點點魔法。」',
+    en: 'Little Bear opened Grandma\'s recipe book. It said: "Rainbow Cake — you need fresh eggs, milk, flour, and a little bit of magic."'
   },
   {
     type: 'story',
     bg: 'page-bg-4',
     illustBg: 'illust-bg-4',
-    emoji: '🌈✨🥣',
-    zh: '小熊把材料攪一攪，奇怪的事情發生了！麵糊變成了彩虹的顏色，還發出亮亮的光！',
-    en: 'Little Bear stirred the ingredients together, and something magical happened! The batter turned rainbow-colored and started to glow!'
+    emoji: '🥚🥛🌾🍓',
+    zh: '小熊提著籃子去收集材料。他拿了雞蛋、牛奶和麵粉，還摘了森林裡最甜的草莓。',
+    en: 'Little Bear took his basket to gather ingredients. He got eggs, milk, and flour, and picked the sweetest strawberries from the forest.'
   },
   {
     type: 'story',
     bg: 'page-bg-5',
     illustBg: 'illust-bg-5',
-    emoji: '🥄🎵🍳',
-    zh: '突然，湯匙跳起舞來，鍋子唱起歌，烤箱自己打開了門。廚房裡的東西都活過來了！',
-    en: 'Suddenly, the spoon started dancing, the pot began to sing, and the oven opened its door by itself. Everything in the kitchen came alive!'
+    emoji: '🐻🥣💪',
+    zh: '小熊把材料倒進大碗裡，用力地攪呀攪。「一、二、三！」他一邊數，一邊開心地攪拌。',
+    en: 'Little Bear poured everything into a big bowl and stirred hard. "One, two, three!" he counted as he mixed it all together.'
   },
   {
     type: 'story',
     bg: 'page-bg-6',
     illustBg: 'illust-bg-6',
-    emoji: '🍰👃😋',
-    zh: '魔法廚具幫小熊一起烤蛋糕。蛋糕慢慢變大，飄出好香好香的味道！',
-    en: 'The magic kitchen tools helped Little Bear bake the cake. The cake grew bigger and bigger, filling the air with the most wonderful smell!'
+    emoji: '🌈✨🥣',
+    zh: '突然，奇妙的事發生了！麵糊變成了彩虹的顏色，紅的、黃的、藍的，還閃閃發光！',
+    en: 'Suddenly, something magical happened! The batter turned into rainbow colors — red, yellow, and blue — and it sparkled with light!'
   },
   {
     type: 'story',
     bg: 'page-bg-7',
     illustBg: 'illust-bg-7',
-    emoji: '🐰🐿️🎉',
-    zh: '小兔、小松鼠和其他朋友聞到香味都跑來了。「哇，好漂亮的彩虹蛋糕！」大家驚呼。',
-    en: 'Bunny, Squirrel, and all the other friends came running when they smelled the cake. "Wow, what a beautiful rainbow cake!" everyone cheered.'
+    emoji: '🥄🎵🍳',
+    zh: '湯匙跳起了舞，鍋子唱起了歌，烤箱自己打開了門。廚房裡的東西全都活過來了！',
+    en: 'The spoon started dancing, the pot began to sing, and the oven opened its door. Everything in the kitchen came alive!'
   },
   {
     type: 'story',
     bg: 'page-bg-8',
     illustBg: 'illust-bg-8',
+    emoji: '🐻🍰🔥',
+    zh: '魔法廚具幫小熊把麵糊倒進烤盤。烤箱裡飄出暖暖的香味，小熊好期待！',
+    en: 'The magic tools helped Little Bear pour the batter into the pan. A warm, sweet smell came from the oven. Little Bear could not wait!'
+  },
+  {
+    type: 'story',
+    bg: 'page-bg-9',
+    illustBg: 'illust-bg-9',
+    emoji: '🎂🌈😲',
+    zh: '叮！蛋糕烤好了！小熊打開烤箱，哇！一個好大好漂亮的彩虹蛋糕出現了！',
+    en: 'Ding! The cake was ready! Little Bear opened the oven and — wow! A big, beautiful rainbow cake appeared!'
+  },
+  {
+    type: 'story',
+    bg: 'page-bg-10',
+    illustBg: 'illust-bg-10',
+    emoji: '🐰🐿️🦊',
+    zh: '香味飄到了森林裡。小兔、小松鼠和小狐狸都跑過來了。「好香啊！可以一起吃嗎？」',
+    en: 'The smell floated into the forest. Bunny, Squirrel, and Fox all came running. "It smells so good! Can we eat together?"'
+  },
+  {
+    type: 'story',
+    bg: 'page-bg-11',
+    illustBg: 'illust-bg-11',
     emoji: '🎂🥰🤝',
-    zh: '大家一起吃蛋糕，每一口都甜甜的。小熊發現，和朋友一起做的東西，味道最棒了！',
-    en: 'Everyone ate the cake together, and every bite was so sweet. Little Bear realized that things made with friends always taste the best!'
+    zh: '「當然可以！」小熊笑著說。大家一起吃蛋糕，每一口都甜甜的，每個人都好開心。',
+    en: '"Of course!" said Little Bear with a smile. Everyone ate the cake together. Every bite was sweet, and everyone was so happy.'
   },
   {
     type: 'end',
-    bg: 'page-bg-9',
-    illustBg: 'illust-bg-9',
+    bg: 'page-bg-12',
+    illustBg: 'illust-bg-12',
     emoji: '🧁💛🐻',
-    zh: '從那天起，小熊的魔法廚房每天都充滿笑聲。因為最好的魔法，就是和朋友在一起。',
-    en: 'From that day on, Little Bear\'s magic kitchen was always filled with laughter. Because the best magic is being together with friends.'
+    zh: '從那天起，小熊常常在魔法廚房做好吃的東西和朋友分享。因為最好的魔法，就是和朋友在一起！',
+    en: 'From that day on, Little Bear often made yummy treats in his magic kitchen to share with friends. Because the best magic is being together!'
   }
 ];
 

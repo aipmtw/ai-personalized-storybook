@@ -468,6 +468,8 @@ html, body {
 .page-bg-8  { background: linear-gradient(160deg, #f8c8a0 0%, #fce0c0 40%, #fef4e8 100%); }
 .page-bg-9  { background: linear-gradient(160deg, #e0b0d0 0%, #f0d0e0 40%, #f8e8f0 100%); }
 .page-bg-10 { background: linear-gradient(160deg, #a0c8b0 0%, #c0e0c8 40%, #e8f5e0 100%); }
+.page-bg-11 { background: linear-gradient(160deg, #f0d8a0 0%, #f8e8c0 40%, #fef8e8 100%); }
+.page-bg-12 { background: linear-gradient(160deg, #b8d0e0 0%, #d0e0f0 40%, #e8f0f8 100%); }
 
 /* Illustration backgrounds */
 .illust-bg-1  { background: linear-gradient(135deg, #f0c4d8, #f7dce8, #fce8f0); }
@@ -480,6 +482,8 @@ html, body {
 .illust-bg-8  { background: linear-gradient(135deg, #fce0c0, #fee8d0, #fff4e8); }
 .illust-bg-9  { background: linear-gradient(135deg, #f0c8e0, #f8d8e8, #fce8f0); }
 .illust-bg-10 { background: linear-gradient(135deg, #b0d8c0, #c8e8d0, #e0f5e8); }
+.illust-bg-11 { background: linear-gradient(135deg, #f8e0b0, #fce8c8, #fef8e8); }
+.illust-bg-12 { background: linear-gradient(135deg, #c8d8e8, #d8e8f0, #e8f0f8); }
 
 /* Install banner */
 .install-banner {
