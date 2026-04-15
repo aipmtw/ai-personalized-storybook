@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI 個人化語言繪本 | MarkLuce.ai</title>
+  <title>Luce 繪本誌 | MarkLuce.ai</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
@@ -171,6 +171,7 @@
     <div class="demo-sub">前 3 頁免費試閱 · 訂閱後無限閱讀</div>
 
     <div class="age-filters" id="ageFilters">
+      <button class="age-pill" data-key="baby" onclick="filterBooks('baby')">0–2 歲</button>
       <button class="age-pill" data-key="young" onclick="filterBooks('young')">3–6 歲</button>
       <button class="age-pill" data-key="mid" onclick="filterBooks('mid')">7–9 歲</button>
       <button class="age-pill" data-key="teen" onclick="filterBooks('teen')">10–12 歲</button>
@@ -230,6 +231,7 @@
 
   // Age group mapping
   const AGE_GROUPS = [
+    { key: 'baby', label: '0–2 歲 寶寶聽故事', tiers: ['0-2'] },
     { key: 'young', label: '3–6 歲 幼兒繪本', tiers: ['3-5','4-6'] },
     { key: 'mid', label: '7–9 歲 兒童繪本', tiers: ['7-9','8-10'] },
     { key: 'teen', label: '10–12 歲 少年繪本', tiers: ['10-12'] },
@@ -325,8 +327,8 @@
 
   <!-- Hero pitch — below demo -->
   <div class="hero">
-    <h1>0–12 歲兒童<br><span>AI 雙語繪本圖書館</span></h1>
-    <div class="tagline">每月 NT$99 無限閱讀 · 還能免費客製一本專屬繪本</div>
+    <h1>0–12 歲兒童<br><span>Luce 繪本誌</span></h1>
+    <div class="tagline">每月新刊，AI 與你共創的雙語繪本 · NT$99/月</div>
   </div>
 
   <hr class="divider">
