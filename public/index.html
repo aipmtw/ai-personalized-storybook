@@ -86,6 +86,20 @@
     .card-amy{background:linear-gradient(135deg,#e91e63,#f06292)}
     .card-max{background:linear-gradient(135deg,#1a237e,#311b92)}
 
+    /* Age filter pills */
+    .age-filters{display:flex;gap:.5rem;justify-content:center;margin:1rem 0 .5rem;flex-wrap:wrap}
+    .age-pill{padding:.4rem 1.2rem;border-radius:20px;border:1.5px solid #d4a574;background:rgba(255,255,255,.7);font-size:.9rem;color:#5d4037;cursor:pointer;font-family:inherit;font-weight:600;transition:all .2s;backdrop-filter:blur(4px)}
+    .age-pill:hover{border-color:#e91e63;color:#e91e63}
+    .age-pill.active{background:#e91e63;color:#fff;border-color:#e91e63}
+
+    /* Monthly issue badge */
+    .issue-badge{display:inline-block;background:linear-gradient(135deg,#e91e63,#ff6f61);color:#fff;padding:.25rem .8rem;border-radius:8px;font-size:.75rem;font-weight:700;margin-bottom:.3rem;letter-spacing:.03em}
+
+    /* Coming next teaser */
+    .next-issue{text-align:center;padding:1.5rem 1rem;margin:1rem auto;max-width:500px;background:rgba(255,255,255,.5);border:1.5px dashed #d4a574;border-radius:16px;backdrop-filter:blur(4px)}
+    .next-issue h4{font-size:1rem;color:#5d4037;margin-bottom:.3rem}
+    .next-issue p{font-size:.85rem;color:#a1887f}
+
     .divider{border:none;border-top:1px solid #e9ecef;margin:1.5rem auto;max-width:800px}
 
     /* Read more toggle */
@@ -140,12 +154,25 @@
 <body>
 
   <!-- Dynamic bookshelf — loads all books from API -->
-  <div class="demo-section" style="padding-top:2.5rem">
-    <h2 style="font-size:1.8rem">繪本書架</h2>
+  <div class="demo-section" style="padding-top:2rem">
+    <div class="issue-badge">2026 四月號</div>
+    <h2 style="font-size:1.8rem;margin-bottom:.2rem">繪本書架</h2>
     <div class="demo-sub">前 3 頁免費試閱 · 訂閱後無限閱讀</div>
+
+    <div class="age-filters" id="ageFilters">
+      <button class="age-pill active" onclick="filterBooks('')">全部</button>
+      <button class="age-pill" onclick="filterBooks('young')">3–6 歲</button>
+      <button class="age-pill" onclick="filterBooks('mid')">7–9 歲</button>
+      <button class="age-pill" onclick="filterBooks('teen')">10–12 歲</button>
+    </div>
 
     <div id="bookshelf">
       <div style="text-align:center;padding:2rem;color:#adb5bd">載入中...</div>
+    </div>
+
+    <div class="next-issue">
+      <h4>五月號即將推出</h4>
+      <p>每月新增繪本，訂閱者搶先閱讀</p>
     </div>
   </div>
 
@@ -193,16 +220,25 @@
 
   // Age group mapping
   const AGE_GROUPS = [
-    { label: '3–6 歲 幼兒繪本', tiers: ['3-5','4-6'] },
-    { label: '7–9 歲 兒童繪本', tiers: ['7-9','8-10'] },
-    { label: '10–12 歲 少年繪本', tiers: ['10-12'] },
+    { key: 'young', label: '3–6 歲 幼兒繪本', tiers: ['3-5','4-6'] },
+    { key: 'mid', label: '7–9 歲 兒童繪本', tiers: ['7-9','8-10'] },
+    { key: 'teen', label: '10–12 歲 少年繪本', tiers: ['10-12'] },
   ];
 
-  // Estimate reading time from page count (both languages ~1min/page)
+  let allBooksData = [];
+  let activeFilter = '';
+
   function estMinutes(pageCount) {
     if (!pageCount) return '';
     const min = Math.max(1, Math.round(pageCount * 1.1));
     return '約 ' + min + ' 分鐘';
+  }
+
+  function filterBooks(key) {
+    activeFilter = key;
+    document.querySelectorAll('.age-pill').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    renderBookshelf(allBooksData);
   }
 
   async function loadBookshelf() {
@@ -210,19 +246,20 @@
       const r = await fetch('https://markluce.ai/api/books');
       const d = await r.json();
       if (!d.ok || !d.books.length) { document.getElementById('bookshelf').innerHTML = '<p style="text-align:center;color:#adb5bd">暫無繪本</p>'; return; }
-
+      allBooksData = d.books;
       localStorage.setItem('bookshelf_catalog', JSON.stringify(d.books));
       renderBookshelf(d.books);
     } catch (e) {
       const cached = localStorage.getItem('bookshelf_catalog');
-      if (cached) { renderBookshelf(JSON.parse(cached)); }
+      if (cached) { allBooksData = JSON.parse(cached); renderBookshelf(allBooksData); }
       else { document.getElementById('bookshelf').innerHTML = '<p style="text-align:center;color:#adb5bd">無法載入，請檢查網路</p>'; }
     }
   }
 
   function renderBookshelf(books) {
+    const groups = activeFilter ? AGE_GROUPS.filter(g => g.key === activeFilter) : AGE_GROUPS;
     let html = '';
-    for (const group of AGE_GROUPS) {
+    for (const group of groups) {
       const groupBooks = books.filter(b => group.tiers.includes(b.age_tier));
       if (!groupBooks.length) continue;
       html += '<h3 style="font-size:1.2rem;font-weight:800;margin:1.8rem 0 .8rem;color:#5d4037">' + group.label + ' <span style="font-size:.85rem;font-weight:400;color:#a1887f">(' + groupBooks.length + '本)</span></h3>';
@@ -240,9 +277,12 @@
       }
       html += '</div>';
     }
+    if (!html) html = '<p style="text-align:center;padding:2rem;color:#adb5bd">此年齡暫無繪本</p>';
     document.getElementById('bookshelf').innerHTML = html;
   }
 
+  // Expose for onclick
+  window.filterBooks = filterBooks;
   loadBookshelf();
   </script>
 
