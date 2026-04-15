@@ -595,27 +595,7 @@ function toggleFullscreen() {
   }
 }
 
-// PWA install
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('installBanner').classList.remove('hidden');
-});
 
-function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => {
-      deferredPrompt = null;
-      document.getElementById('installBanner').classList.add('hidden');
-    });
-  }
-}
-
-function dismissInstall() {
-  document.getElementById('installBanner').classList.add('hidden');
-}
 
 // Service worker
 if ('serviceWorker' in navigator) {
@@ -641,7 +621,5 @@ window.toggleAudioPlayPause = toggleAudioPlayPause;
 window.seekAudio = seekAudio;
 window.stopAudio = function() { userStoppedAudio = true; autoplayOn = false; if(autoplayBtn) autoplayBtn.classList.remove('active'); stopAudio(); };
 window.toggleAutoplay = toggleAutoplay;
-window.installApp = installApp;
-window.dismissInstall = dismissInstall;
 window.goToPage = goToPage;
 window.lineLoginFromGate = lineLoginFromGate;
