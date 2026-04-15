@@ -446,19 +446,20 @@ function playAudioFile(file, index) {
   });
 
   currentAudio.addEventListener('error', () => {
+    // No audio file — stop autoplay, don't advance
     if (audioQueue.length > 0 && audioPlaying) {
       const next = audioQueue.shift();
       playAudioFile(next.file, next.index);
     } else {
       audioPlaying = false;
       hideAudioBar();
-      if (!userStoppedAudio) onAudioFinished();
+      // No audio file — just stop, dont auto-advance
     }
   });
 
   currentAudio.play().then(() => {
     rafId = requestAnimationFrame(updateAudioUI);
-  }).catch(() => { audioPlaying = false; hideAudioBar(); });
+  }).catch(() => { audioPlaying = false; hideAudioBar(); if (currentAudio) { currentAudio = null; } });
 }
 
 function toggleAudio() {
