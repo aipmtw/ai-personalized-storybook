@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關於 Luce 繪本誌 | MarkLuce.ai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Noto Sans TC',sans-serif;background:#f5efe6;color:#212529;min-height:100vh}
+
+    .top-bar{position:sticky;top:0;background:rgba(245,239,230,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(0,0,0,0.06);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between;z-index:10}
+    .top-bar a{color:#5d4037;text-decoration:none;font-size:.9rem;font-weight:600}
+    .top-bar .title{font-size:1rem;font-weight:800;color:#212529}
+
+    .container{max-width:800px;margin:0 auto;padding:2rem 1.5rem 3rem}
+
+    h1{font-size:2rem;font-weight:900;text-align:center;margin-bottom:.5rem}
+    .subtitle{text-align:center;color:#6c757d;font-size:1.1rem;margin-bottom:2rem}
+
+    h2{font-size:1.5rem;font-weight:800;text-align:center;margin:2.5rem 0 1.5rem;color:#212529}
+
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:2rem}
+    .step{text-align:center;padding:1.5rem 1rem;background:#fff;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    .step .num{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:#e91e63;color:#fff;font-size:1.2rem;font-weight:900;margin-bottom:.8rem}
+    .step h3{font-size:1.05rem;font-weight:700;margin-bottom:.4rem}
+    .step p{font-size:.9rem;color:#6c757d;line-height:1.6}
+
+    .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:2rem}
+    .feature{background:#fff;border-radius:16px;padding:1.2rem;display:flex;gap:.8rem;align-items:flex-start;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    .feature .icon{font-size:1.6rem;flex-shrink:0}
+    .feature h4{font-size:1rem;font-weight:700;margin-bottom:.2rem}
+    .feature p{font-size:.85rem;color:#6c757d;line-height:1.6}
+
+    .cta{text-align:center;padding:2rem 1rem;background:#fff;border-radius:20px;margin:2rem 0;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    .cta p{font-size:1.1rem;color:#6c757d;margin-bottom:1.2rem}
+    .cta-btn{display:inline-block;padding:.8rem 2rem;border-radius:12px;font-size:1.1rem;font-weight:800;text-decoration:none;background:#e91e63;color:#fff;transition:all .2s}
+    .cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,30,99,0.3)}
+    .cta-links{margin-top:.8rem;font-size:.9rem}
+    .cta-links a{color:#6c757d;text-decoration:underline}
+    .cta-note{font-size:.85rem;color:#adb5bd;margin-top:1rem;line-height:1.8}
+
+    .footer{text-align:center;padding:1.5rem;font-size:.85rem;color:#adb5bd}
+    .footer a{color:#6c757d}
+
+    .divider{border:none;border-top:1px solid #e0d6c8;margin:2rem 0}
+
+    @media(max-width:600px){
+      .steps{grid-template-columns:1fr;gap:1rem}
+      .feature-grid{grid-template-columns:1fr}
+      h1{font-size:1.6rem}
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="/">← 回書架</a>
+  <div class="title">Luce 繪本誌</div>
+</div>
+
+<div class="container">
+
+  <h1>關於 Luce 繪本誌</h1>
+  <div class="subtitle">AI 與你共創的雙語繪本</div>
+
+  <h2>三步完成一本繪本</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <h3>描述故事</h3>
+      <p>填入孩子的年齡、興趣，描述你想要的故事主題。家長或老師都可以。</p>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <h3>審閱簽核</h3>
+      <p>AI 生成繁中＋英文雙語故事與插畫。你逐頁審閱、修改，滿意後簽核。</p>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <h3>交付閱讀</h3>
+      <p>繪本以 PWA 形式交付。用 LINE 登入後安裝到手機，離線也能讀。</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>特色功能</h2>
+  <div class="feature-grid">
+    <div class="feature">
+      <div class="icon">👩‍🏫</div>
+      <div>
+        <h4>家長或老師都適用</h4>
+        <p>家長為自己的孩子做專屬故事書，英語老師為學生做個人化教材。</p>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🛡️</div>
+      <div>
+        <h4>人類審閱，不是純 AI</h4>
+        <p>每本書都有具名審閱者簽核。AI 是共同編輯，你才是品質把關人。</p>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">📱</div>
+      <div>
+        <h4>離線 PWA，隨時可讀</h4>
+        <p>安裝到手機桌面，飛機上、車上、阿嬤家，沒有網路也能翻閱和聽朗讀。</p>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🗣️</div>
+      <div>
+        <h4>中英雙語朗讀</h4>
+        <p>Azure 神經語音 TTS，繁中＋英文自然朗讀，支援自動播放。</p>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🎯</div>
+      <div>
+        <h4>0–12 歲全覆蓋</h4>
+        <p>三個年齡分級（3-6、7-9、10-12），語言難度自動匹配。0-2 歲寶寶建議聆聽模式。</p>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="icon">🔄</div>
+      <div>
+        <h4>同一模式，無限應用</h4>
+        <p>不只是繪本——同樣的架構可應用於英語情境教學、TOEIC / GEPT 備考故事、職場英語對話練習等。</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="cta">
+    <p>有問題或想合作？</p>
+    <a class="cta-btn" href="mailto:mark@aipm.com.tw">聯繫我們</a>
+    <div class="cta-note">
+      老師們：歡迎成為合作夥伴，用你的專業為更多孩子做書。
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  由 <a href="https://markluce.ai/">MarkLuce.ai</a> 出品 · Powered by Claude Opus 4.6
+</div>
+
+</body>
+</html>

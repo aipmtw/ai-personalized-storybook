@@ -329,108 +329,8 @@
 
   <hr class="divider">
 
-  <!-- Read more toggle -->
-  <div class="readmore-toggle">
-    <button class="readmore-btn" onclick="toggleReadMore(this)">了解更多 ▾</button>
-  </div>
-
-  <!-- Collapsible pitch content -->
-  <div class="readmore-content" id="pitchContent">
-
-    <!-- How it works -->
-    <div class="how">
-      <h2>三步完成一本繪本</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="num">1</div>
-          <h3>描述故事</h3>
-          <p>填入孩子的名字、年齡、興趣，描述你想要的故事主題。家長或老師都可以。</p>
-        </div>
-        <div class="step">
-          <div class="num">2</div>
-          <h3>審閱簽核</h3>
-          <p>AI 生成繁中＋英文雙語故事與插畫。你逐頁審閱、修改，滿意後簽核。</p>
-        </div>
-        <div class="step">
-          <div class="num">3</div>
-          <h3>交付閱讀</h3>
-          <p>繪本以 PWA 形式交付。用 LINE 登入後安裝到手機，離線也能讀。可分享給 3 位帳號。</p>
-        </div>
-      </div>
-    </div>
-
-    <hr class="divider">
-
-    <!-- Features -->
-    <div class="features">
-      <div class="feature-grid">
-        <div class="feature">
-          <div class="icon">👩‍🏫</div>
-          <div>
-            <h4>家長或老師都適用</h4>
-            <p>家長為自己的孩子做專屬故事書，英語老師為學生做個人化教材。</p>
-          </div>
-        </div>
-        <div class="feature">
-          <div class="icon">🛡️</div>
-          <div>
-            <h4>人類審閱，不是純 AI</h4>
-            <p>每本書都有具名審閱者簽核。AI 是共同編輯，你才是品質把關人。</p>
-          </div>
-        </div>
-        <div class="feature">
-          <div class="icon">📱</div>
-          <div>
-            <h4>離線 PWA，隨時可讀</h4>
-            <p>安裝到手機桌面，飛機上、車上、阿嬤家，沒有網路也能翻閱和聽朗讀。</p>
-          </div>
-        </div>
-        <div class="feature">
-          <div class="icon">👥</div>
-          <div>
-            <h4>分享給 3 位使用者</h4>
-            <p>每本書可透過 LINE 帳號分享給最多 3 位家人或學生。</p>
-          </div>
-        </div>
-        <div class="feature">
-          <div class="icon">🗣️</div>
-          <div>
-            <h4>中英雙語朗讀</h4>
-            <p>Azure 神經語音 TTS，繁中＋英文自然朗讀，支援自動播放。</p>
-          </div>
-        </div>
-        <div class="feature">
-          <div class="icon">🎯</div>
-          <div>
-            <h4>0–12 歲全覆蓋</h4>
-            <p>三個年齡分級（3-6、7-9、10-12），語言難度自動匹配。0-2 歲寶寶建議聆聽模式。</p>
-          </div>
-        </div>
-        <div class="feature">
-          <div class="icon">🔄</div>
-          <div>
-            <h4>同一模式，無限應用</h4>
-            <p>不只是繪本——同樣的架構可應用於專業英語情境教學、TOEIC / GEPT 備考故事、職場英語對話練習、主題式英語學習等。描述你的需求，AI 幫你打造專屬教材。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <hr class="divider">
-
-    <!-- CTA -->
-    <div class="cta-section">
-      <p>有問題或想合作？歡迎留言給我們</p>
-      <a class="cta-btn" href="#" onclick="showInquiryForm();return false" style="background:#e91e63;color:#fff">留言給我們</a>
-      <div class="cta-sub-actions">
-        <a href="mailto:mark@aipm.com.tw" style="color:#6c757d;font-size:1rem;text-decoration:underline">Email 聯繫</a>
-      </div>
-      <div class="cta-note" style="line-height:1.9">
-        訂閱即享無限閱讀 + 每月一本免費客製繪本。<br>
-        老師們：歡迎成為合作夥伴，用你的專業為更多孩子做書。
-      </div>
-    </div>
-
+  <div style="text-align:center;padding:1rem">
+    <a href="/about/" style="font-size:1rem;color:#5d4037;text-decoration:none;border:1.5px solid #d4a574;border-radius:12px;padding:.5rem 1.5rem;display:inline-block;transition:all .2s">了解更多</a>
   </div>
 
   <div class="footer">
@@ -470,11 +370,6 @@
   </div>
 
   <script>
-    function toggleReadMore(btn) {
-      const content = document.getElementById('pitchContent');
-      const isOpen = content.classList.toggle('open');
-      btn.textContent = isOpen ? '收合 ▴' : '了解更多 ▾';
-    }
 
     // Inquiry form
     let inquiryUser = null;
