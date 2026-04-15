@@ -134,6 +134,12 @@ function renderPages() {
           <div class="text-zh">${p.zh}</div>
           <div class="text-en">${p.en}</div>
           <div class="end-divider">— 故事結束 —</div>
+          <div class="end-actions">
+            <a href="https://app.markluce.ai/" class="end-cta">
+              <span class="end-cta-icon">📚</span>
+              <span class="end-cta-text">回到書架<small>探索更多繪本</small></span>
+            </a>
+          </div>
           <div class="end-credits">
             故事由 Luce (AI) 共同編輯 · 審閱：Audrey<br>
             <span class="end-brand">由 <a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a> 出品</span>

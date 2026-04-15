@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Storybook Admin — app.markluce.ai</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Noto Sans TC',system-ui,sans-serif;background:#0f0f1a;color:#e0e0e0;line-height:1.6}
+a{color:#4ecdc4;text-decoration:none}
+a:hover{text-decoration:underline}
+
+.top-bar{background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.06);padding:.6rem 1rem;display:flex;justify-content:space-between;align-items:center}
+.top-bar .brand{font-size:.85rem;color:#888}
+.top-bar .brand strong{color:#4ecdc4}
+.top-bar .links{display:flex;gap:.8rem;font-size:.8rem}
+
+/* Login */
+.login{max-width:360px;margin:5rem auto;text-align:center;padding:0 1.5rem}
+.login h1{font-size:1.3rem;color:#4ecdc4;margin-bottom:.5rem}
+.login p{font-size:.82rem;color:#888;margin-bottom:1.2rem}
+.login-methods{display:flex;flex-direction:column;gap:.8rem}
+.login-btn{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.7rem 1.2rem;border:1px solid #333;border-radius:8px;background:#1a1a2e;color:#fff;cursor:pointer;font-size:.9rem;font-family:inherit;transition:all .15s}
+.login-btn:hover{border-color:#4ecdc4}
+.login-btn.line{background:#06C755;border-color:#06C755;color:#fff}
+.login-btn.line:hover{background:#05b34d}
+.login-btn.google{background:#fff;color:#333;border-color:#ddd}
+.login-btn.google:hover{background:#f5f5f5}
+
+/* Dashboard */
+.container{max-width:1100px;margin:0 auto;padding:0 1rem}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.8rem;margin:1rem 0}
+.stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:.8rem;text-align:center}
+.stat .num{font-size:1.5rem;font-weight:700;color:#4ecdc4}
+.stat .label{font-size:.72rem;color:#888;margin-top:.2rem}
+
+h2{font-size:.95rem;color:#fff;margin:1.2rem 0 .4rem}
+
+/* Book table */
+table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.78rem}
+th,td{padding:.45rem .6rem;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+th{color:#888;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:#0f0f1a}
+td a{color:#4ecdc4}
+.badge{display:inline-block;padding:.1rem .4rem;border-radius:3px;font-size:.68rem;font-weight:600}
+.badge-pub{background:rgba(78,205,196,.15);color:#4ecdc4}
+.badge-draft{background:rgba(255,193,7,.15);color:#ffc107}
+.badge-demo{background:rgba(233,30,99,.15);color:#e91e63}
+.age-pill{background:rgba(255,255,255,.08);padding:.1rem .4rem;border-radius:3px;font-size:.7rem}
+
+.filter-bar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:.8rem 0}
+.filter-bar select,.filter-bar input{padding:.3rem .5rem;background:#1a1a2e;color:#fff;border:1px solid #333;border-radius:4px;font-size:.8rem}
+.filter-bar input{flex:1;min-width:120px;max-width:250px}
+button.sm{padding:.3rem .7rem;background:#333;border:1px solid #555;color:#fff;border-radius:4px;cursor:pointer;font-size:.78rem}
+button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
+
+.user-info{font-size:.78rem;color:#888;display:flex;align-items:center;gap:.5rem}
+.user-info img{width:24px;height:24px;border-radius:50%}
+.user-info strong{color:#4ecdc4}
+
+@media(max-width:600px){
+  table{font-size:.72rem}
+  th,td{padding:.35rem .4rem}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .hide-mobile{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+<div class="brand"><strong>Storybook</strong> Admin</div>
+<div class="links">
+  <a href="https://app.markluce.ai/">← 書架</a>
+  <span class="user-info" id="userInfo" style="display:none"></span>
+</div>
+</div>
+
+<!-- LOGIN -->
+<div class="login" id="loginScreen">
+<h1>Storybook Admin</h1>
+<p>僅限管理員登入</p>
+<div class="login-methods">
+  <button class="login-btn line" onclick="lineLogin()">LINE 登入</button>
+  <button class="login-btn google" onclick="googleLogin()">Google 登入 (mark@aipm.com.tw)</button>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="container" id="dashboard" style="display:none">
+
+<div class="stats" id="bookStats"></div>
+
+<h2>All Books</h2>
+<div class="filter-bar">
+  <select id="statusFilter" onchange="renderTable()">
+    <option value="">All Status</option>
+    <option value="published">Published</option>
+    <option value="draft">Draft</option>
+  </select>
+  <select id="ageFilter" onchange="renderTable()">
+    <option value="">All Ages</option>
+    <option value="3-5">3-5</option>
+    <option value="4-6">4-6</option>
+    <option value="7-9">7-9</option>
+    <option value="8-10">8-10</option>
+    <option value="10-12">10-12</option>
+  </select>
+  <input type="text" id="searchInput" placeholder="Search..." oninput="renderTable()">
+  <button class="sm" onclick="loadBooks()">Refresh</button>
+</div>
+
+<div style="overflow-x:auto">
+<table>
+<thead><tr>
+  <th>#</th>
+  <th>Slug</th>
+  <th>Title (中文)</th>
+  <th class="hide-mobile">Title (EN)</th>
+  <th>Age</th>
+  <th>Pages</th>
+  <th>Status</th>
+  <th>Actions</th>
+</tr></thead>
+<tbody id="bookTableBody"></tbody>
+</table>
+</div>
+
+<div id="pageDetail" style="display:none;margin-top:1.5rem">
+  <h2>Pages — <span id="pageDetailTitle"></span></h2>
+  <table>
+  <thead><tr><th>#</th><th>中文</th><th class="hide-mobile">English</th><th>Image</th></tr></thead>
+  <tbody id="pageTableBody"></tbody>
+  </table>
+  <button class="sm" onclick="document.getElementById('pageDetail').style.display='none'" style="margin-top:.5rem">Close</button>
+</div>
+
+</div>
+
+<script>
+// Admin config
+const ADMIN_LINE_ID = 'U7d41d4b9a49052370bd3a7265c1e391b';
+const ADMIN_EMAIL = 'mark@aipm.com.tw';
+const LINE_CHANNEL_ID = '2009738746';
+const API_BASE = 'https://markluce.ai';
+const APP_BASE = 'https://app.markluce.ai';
+
+let currentUser = null;
+let allBooks = [];
+
+// ============================================
+// Auth
+// ============================================
+function lineLogin() {
+  const returnUrl = encodeURIComponent(APP_BASE + '/admin/?auth=line');
+  const redirectUri = encodeURIComponent(API_BASE + '/api/line-auth');
+  location.href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CHANNEL_ID}&redirect_uri=${redirectUri}&state=${returnUrl}&scope=profile%20openid`;
+}
+
+function googleLogin() {
+  // Use Google OAuth — for simplicity, use Google Identity Services
+  // Since we don't have a Google client ID configured, fallback to LINE for now
+  // and check email on the server side
+  alert('Google OAuth 尚未設定。請使用 LINE 登入。');
+}
+
+function checkAuth() {
+  const params = new URLSearchParams(location.search);
+  const token = params.get('ml_token');
+  const userName = params.get('ml_user');
+
+  if (token) {
+    // Decode token to get userId
+    try {
+      const b64 = token.split('.')[0];
+      const payload = JSON.parse(atob(b64));
+
+      // Check admin access
+      if (payload.userId === ADMIN_LINE_ID) {
+        currentUser = { userId: payload.userId, displayName: decodeURIComponent(userName || payload.displayName || 'Admin'), token };
+        localStorage.setItem('admin_token', token);
+        localStorage.setItem('admin_user', JSON.stringify(currentUser));
+        // Clean URL
+        history.replaceState(null, '', location.pathname);
+        showDashboard();
+        return;
+      } else {
+        alert('此帳號無管理員權限。\nUser ID: ' + payload.userId);
+        history.replaceState(null, '', location.pathname);
+        return;
+      }
+    } catch (e) {
+      console.error('Token decode error:', e);
+    }
+  }
+
+  // Check cached session
+  const cached = localStorage.getItem('admin_token');
+  const cachedUser = localStorage.getItem('admin_user');
+  if (cached && cachedUser) {
+    try {
+      const payload = JSON.parse(atob(cached.split('.')[0]));
+      if (payload.userId === ADMIN_LINE_ID && payload.exp > Date.now()) {
+        currentUser = JSON.parse(cachedUser);
+        currentUser.token = cached;
+        showDashboard();
+        return;
+      }
+    } catch (e) {}
+    // Expired or invalid
+    localStorage.removeItem('admin_token');
+    localStorage.removeItem('admin_user');
+  }
+}
+
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+
+  const info = document.getElementById('userInfo');
+  info.style.display = 'flex';
+  info.innerHTML = `<strong>${currentUser.displayName}</strong> <button class="sm" onclick="logout()">登出</button>`;
+
+  loadBooks();
+}
+
+function logout() {
+  localStorage.removeItem('admin_token');
+  localStorage.removeItem('admin_user');
+  location.reload();
+}
+
+// ============================================
+// Books
+// ============================================
+async function loadBooks() {
+  try {
+    const r = await fetch(API_BASE + '/api/books?status=all');
+    const d = await r.json();
+    if (d.ok) {
+      allBooks = d.books || [];
+      renderStats();
+      renderTable();
+    }
+  } catch (e) {
+    console.error('Load books error:', e);
+    // Fallback: try without status=all
+    try {
+      const r2 = await fetch(API_BASE + '/api/books');
+      const d2 = await r2.json();
+      if (d2.ok) {
+        allBooks = d2.books || [];
+        renderStats();
+        renderTable();
+      }
+    } catch (e2) { console.error(e2); }
+  }
+}
+
+function renderStats() {
+  const total = allBooks.length;
+  const published = allBooks.filter(b => b.status === 'published').length;
+  const demo = allBooks.filter(b => b.is_demo).length;
+  const ages = [...new Set(allBooks.map(b => b.age_tier))].length;
+  const totalPages = allBooks.reduce((s, b) => s + (b.page_count || 0), 0);
+
+  document.getElementById('bookStats').innerHTML = `
+    <div class="stat"><div class="num">${total}</div><div class="label">Total Books</div></div>
+    <div class="stat"><div class="num">${published}</div><div class="label">Published</div></div>
+    <div class="stat"><div class="num">${demo}</div><div class="label">Demo (Legacy)</div></div>
+    <div class="stat"><div class="num">${ages}</div><div class="label">Age Groups</div></div>
+    <div class="stat"><div class="num">${totalPages}</div><div class="label">Total Pages</div></div>
+  `;
+}
+
+function renderTable() {
+  const statusFilter = document.getElementById('statusFilter').value;
+  const ageFilter = document.getElementById('ageFilter').value;
+  const search = document.getElementById('searchInput').value.toLowerCase();
+
+  let filtered = allBooks;
+  if (statusFilter) filtered = filtered.filter(b => b.status === statusFilter);
+  if (ageFilter) filtered = filtered.filter(b => b.age_tier === ageFilter);
+  if (search) filtered = filtered.filter(b =>
+    (b.slug + b.title_zh + b.title_en).toLowerCase().includes(search)
+  );
+
+  const tbody = document.getElementById('bookTableBody');
+  tbody.innerHTML = filtered.map((b, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td><code>${b.slug}</code></td>
+      <td>${b.title_zh || '—'}</td>
+      <td class="hide-mobile">${b.title_en || '—'}</td>
+      <td><span class="age-pill">${b.age_tier || '—'}</span></td>
+      <td>${b.page_count || 0}</td>
+      <td>
+        <span class="badge ${b.status === 'published' ? 'badge-pub' : 'badge-draft'}">${b.status}</span>
+        ${b.is_demo ? ' <span class="badge badge-demo">demo</span>' : ''}
+      </td>
+      <td>
+        <a href="${APP_BASE}/reader.html?book=${b.slug}" target="_blank">Read</a>
+        · <a href="#" onclick="viewPages('${b.slug}','${b.title_zh}');return false">Pages</a>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function viewPages(slug, title) {
+  document.getElementById('pageDetailTitle').textContent = title;
+  document.getElementById('pageDetail').style.display = 'block';
+  document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
+
+  try {
+    const r = await fetch(API_BASE + '/api/book-pages?slug=' + slug);
+    const d = await r.json();
+    if (d.ok && d.pages.length) {
+      document.getElementById('pageTableBody').innerHTML = d.pages.map(p => `
+        <tr>
+          <td>${p.page_num}</td>
+          <td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text_zh || '—'}</td>
+          <td class="hide-mobile" style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text_en || '—'}</td>
+          <td>${p.image_url ? '<a href="' + p.image_url + '" target="_blank">View</a>' : '—'}</td>
+        </tr>
+      `).join('');
+    } else {
+      document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="4">No pages found</td></tr>';
+    }
+  } catch (e) {
+    document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="4">Error loading pages</td></tr>';
+  }
+
+  // Scroll to detail
+  document.getElementById('pageDetail').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Init
+checkAuth();
+</script>
+
+</body>
+</html>

@@ -8,7 +8,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Noto Sans TC',sans-serif;background:#fafaf8;color:#212529}
+    body{font-family:'Noto Sans TC',sans-serif;color:#212529;min-height:100vh}
+
+    /* Bookshelf background */
+    body{
+      background:#f5efe6;
+      background-image:
+        /* Shelf boards */
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 340px,
+          #d4a574 340px,
+          #c49464 348px,
+          #b8845a 350px,
+          transparent 350px,
+          transparent 360px
+        );
+      background-size:100% 360px;
+      background-attachment:fixed;
+    }
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background:linear-gradient(180deg,rgba(245,239,230,0.5) 0%,rgba(245,239,230,0.2) 50%,rgba(245,239,230,0.5) 100%);
+      pointer-events:none;
+      z-index:0;
+    }
+    body>*{position:relative;z-index:1}
 
     /* Hero - compact */
     .hero{text-align:center;padding:3rem 2rem 1.5rem;max-width:800px;margin:0 auto}
@@ -21,7 +49,7 @@
     .demo-section h2{font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:.4rem}
     .demo-section .demo-sub{font-size:1rem;color:#6c757d;text-align:center;margin-bottom:1.5rem}
     .books{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem}
-    .book-card{border-radius:24px;padding:2.5rem 2rem;text-align:center;color:#fff;text-decoration:none;transition:transform .2s,box-shadow .2s;display:block}
+    .book-card{border-radius:24px;padding:2.5rem 2rem;text-align:center;color:#fff;text-decoration:none;transition:transform .2s,box-shadow .2s;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
     .book-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.18)}
     .book-card .emoji{font-size:5rem;margin-bottom:1rem}
     .book-card h3{font-size:1.8rem;font-weight:900;margin-bottom:.4rem}
@@ -111,33 +139,28 @@
   </div>
 
   <!-- Pricing -->
-  <div style="max-width:900px;margin:0 auto;padding:2rem 2rem 1rem">
-    <h2 style="font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:.4rem">價格方案</h2>
-    <div style="font-size:1rem;color:#6c757d;text-align:center;margin-bottom:1.5rem">前 3 頁免費試閱，滿意再購買</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem">
-      <div style="border:2px solid #e9ecef;border-radius:16px;padding:1.5rem;text-align:center">
-        <div style="font-size:.85rem;color:#6c757d;margin-bottom:.3rem">單本購買</div>
-        <div style="font-size:2.2rem;font-weight:900;color:#e91e63">NT$99</div>
-        <div style="font-size:.85rem;color:#6c757d;margin-top:.3rem">每本繪本</div>
+  <div style="max-width:600px;margin:0 auto;padding:2rem 2rem 1rem">
+    <h2 style="font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:.4rem">訂閱方案</h2>
+    <div style="font-size:1rem;color:#6c757d;text-align:center;margin-bottom:1.5rem">前 3 頁免費試閱，滿意再訂閱</div>
+    <div style="border:2px solid #e91e63;border-radius:20px;padding:2rem 1.5rem;text-align:center;background:linear-gradient(135deg,#fff0f3,#fff)">
+      <div style="font-size:.85rem;color:#e91e63;font-weight:700;margin-bottom:.5rem">月訂閱</div>
+      <div style="font-size:3rem;font-weight:900;color:#e91e63;line-height:1">NT$99<span style="font-size:1.1rem;font-weight:400;color:#6c757d">/月</span></div>
+      <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.5rem;text-align:left;max-width:320px;margin-left:auto;margin-right:auto">
+        <div style="display:flex;align-items:center;gap:.5rem;font-size:.95rem;color:#212529"><span style="color:#e91e63;font-weight:700">✓</span> 無限閱讀所有繪本</div>
+        <div style="display:flex;align-items:center;gap:.5rem;font-size:.95rem;color:#212529"><span style="color:#e91e63;font-weight:700">✓</span> 中英雙語朗讀</div>
+        <div style="display:flex;align-items:center;gap:.5rem;font-size:.95rem;color:#212529"><span style="color:#e91e63;font-weight:700">✓</span> 離線 PWA 隨時可讀</div>
+        <div style="display:flex;align-items:center;gap:.5rem;font-size:.95rem;color:#212529"><span style="color:#e91e63;font-weight:700">✓</span> 每月持續新增繪本</div>
+        <div style="display:flex;align-items:center;gap:.5rem;font-size:.95rem;color:#e91e63;font-weight:700"><span>★</span> 每月 1 本免費客製繪本</div>
       </div>
-      <div style="border:2px solid #e91e63;border-radius:16px;padding:1.5rem;text-align:center;background:linear-gradient(135deg,#fff0f3,#fff)">
-        <div style="font-size:.85rem;color:#e91e63;font-weight:700;margin-bottom:.3rem">超值組合</div>
-        <div style="font-size:2.2rem;font-weight:900;color:#e91e63">NT$249</div>
-        <div style="font-size:.85rem;color:#6c757d;margin-top:.3rem">3 本組合包（省 NT$48）</div>
-      </div>
-      <div style="border:2px solid #e9ecef;border-radius:16px;padding:1.5rem;text-align:center">
-        <div style="font-size:.85rem;color:#6c757d;margin-bottom:.3rem">月訂閱</div>
-        <div style="font-size:2.2rem;font-weight:900;color:#e91e63">NT$249<span style="font-size:1rem;font-weight:400">/月</span></div>
-        <div style="font-size:.85rem;color:#6c757d;margin-top:.3rem">無限閱讀所有繪本</div>
-      </div>
+      <div style="margin-top:1.2rem;font-size:.82rem;color:#6c757d;line-height:1.7">用孩子的名字、興趣量身打造專屬故事<br>AI 草擬、你親自審閱</div>
     </div>
     <div style="text-align:center;margin-top:1rem;font-size:.85rem;color:#6c757d">教師/機構合作另有優惠方案 · <a href="mailto:mark@aipm.com.tw" style="color:#e91e63">mark@aipm.com.tw</a></div>
   </div>
 
   <!-- Hero pitch — below demo -->
   <div class="hero">
-    <h1>為你的孩子量身打造<br><span>專屬雙語繪本</span></h1>
-    <div class="tagline">AI 草擬、你親自審閱、LINE PWA 離線可讀</div>
+    <h1>0–12 歲兒童<br><span>AI 雙語繪本圖書館</span></h1>
+    <div class="tagline">每月 NT$99 無限閱讀 · 還能免費客製一本專屬繪本</div>
   </div>
 
   <hr class="divider">
@@ -233,16 +256,14 @@
 
     <!-- CTA -->
     <div class="cta-section">
-      <p>想為你的孩子或學生做一本專屬繪本嗎？</p>
+      <p>有問題或想合作？歡迎留言給我們</p>
       <a class="cta-btn" href="#" onclick="showInquiryForm();return false" style="background:#e91e63;color:#fff">留言給我們</a>
       <div class="cta-sub-actions">
-        <a href="https://markluce.ai/mvp/builder" style="color:#e91e63;font-size:1rem;font-weight:600;text-decoration:underline">或先填寫需求表單</a>
         <a href="mailto:mark@aipm.com.tw" style="color:#6c757d;font-size:1rem;text-decoration:underline">Email 聯繫</a>
       </div>
       <div class="cta-note" style="line-height:1.9">
-        前 99 本免費體驗 — 之後每本依內容複雜度收費。<br>
-        你製作的繪本會展示在書庫中，其他家長可以看到你的作品。<br>
-        老師們：你的學生家長看到你做的繪本後，也會想為自己的孩子訂一本 — 歡迎成為合作夥伴，用你的專業為更多孩子做書。
+        訂閱即享無限閱讀 + 每月一本免費客製繪本。<br>
+        老師們：歡迎成為合作夥伴，用你的專業為更多孩子做書。
       </div>
     </div>
 

@@ -1,6 +1,7 @@
 /* ============================================
    Book Reader — app.js
    Max 的太空探險
+   Vertical scroll layout
    ============================================ */
 
 // Story data
@@ -92,17 +93,11 @@ const pages = [
 ];
 
 let currentPage = 0;
-let startX = 0;
-let startY = 0;
-let deltaX = 0;
-let isSwiping = false;
-let isTouch = false;
+let scrollingTo = false;
 
 const wrapper = document.getElementById('pagesWrapper');
 const container = document.getElementById('bookContainer');
 const dotsContainer = document.getElementById('progressDots');
-const hintLeft = document.getElementById('hintLeft');
-const hintRight = document.getElementById('hintRight');
 
 // Render pages
 function renderPages() {
@@ -110,6 +105,8 @@ function renderPages() {
   pages.forEach((p, i) => {
     const div = document.createElement('div');
     div.className = `page ${p.bg}`;
+    div.id = `page-${i}`;
+    div.dataset.index = i;
 
     if (p.type === 'cover') {
       div.classList.add('page-cover');
@@ -134,6 +131,12 @@ function renderPages() {
           <div class="text-zh">${p.zh}</div>
           <div class="text-en">${p.en}</div>
           <div class="end-divider">— 故事結束 —</div>
+          <div class="end-actions">
+            <a href="https://app.markluce.ai/" class="end-cta">
+              <span class="end-cta-icon">📚</span>
+              <span class="end-cta-text">回到書架<small>探索更多繪本</small></span>
+            </a>
+          </div>
           <div class="end-credits">
             故事由 Luce (AI) 共同編輯 · 審閱：Mark<br>
             <span class="end-brand">由 <a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a> 出品</span>
@@ -155,7 +158,7 @@ function renderPages() {
     wrapper.appendChild(div);
   });
 
-  // Render progress dots (clickable)
+  // Render progress dots
   dotsContainer.innerHTML = '';
   pages.forEach((_, i) => {
     const dot = document.createElement('div');
@@ -166,24 +169,33 @@ function renderPages() {
   });
 }
 
-// Page turn sound using Web Audio API
-let audioCtx = null;
-function playPageTurnSound() {
-  try {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const duration = 0.15;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + duration);
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + duration);
-  } catch {}
+// Intersection Observer — track which page is visible
+function setupScrollObserver() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const el = entry.target;
+      const index = parseInt(el.dataset.index);
+
+      // Add visible class for fade-in animation
+      if (entry.isIntersecting) {
+        el.classList.add('visible');
+      }
+
+      // Update current page based on which page is most visible
+      if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+        if (!scrollingTo) {
+          currentPage = index;
+          updateDots();
+          updateThemeColor();
+        }
+      }
+    });
+  }, {
+    threshold: [0, 0.4, 0.6, 1],
+    rootMargin: '-10% 0px -10% 0px'
+  });
+
+  document.querySelectorAll('.page').forEach(page => observer.observe(page));
 }
 
 // Auth check — demo users can only see pages 1-3 (index 0-2)
@@ -218,6 +230,24 @@ function lineLoginFromGate() {
   window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id='+channelId+'&redirect_uri='+redirectUri+'&state='+returnUrl+'&scope=profile%20openid';
 }
 
+// Demo gate on scroll — block scrolling past demo pages
+if (!isAuthenticated) {
+  let gateShown = false;
+  window.addEventListener('scroll', () => {
+    if (gateShown) return;
+    const gatePage = document.getElementById(`page-${DEMO_MAX_PAGE + 1}`);
+    if (!gatePage) return;
+    const rect = gatePage.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.6) {
+      gateShown = true;
+      stopAudio();
+      if (autoplayOn) { autoplayOn = false; if(autoplayBtn) autoplayBtn.classList.remove('active'); }
+      showDemoGate();
+      goToPage(DEMO_MAX_PAGE);
+    }
+  }, { passive: true });
+}
+
 function goToPage(index) {
   if (index < 0 || index >= pages.length) return;
   if (!isAuthenticated && index > DEMO_MAX_PAGE) {
@@ -226,31 +256,36 @@ function goToPage(index) {
     showDemoGate();
     return;
   }
-  const direction = index > currentPage ? 'right' : 'left';
-  if (index !== currentPage) {
-    playPageTurnSound();
-    wrapper.classList.add('turning-' + direction);
-    setTimeout(() => wrapper.classList.remove('turning-' + direction), 500);
-  }
+
   currentPage = index;
-  wrapper.style.transform = `translateX(-${currentPage * 100}%)`;
-  updateUI();
+  scrollingTo = true;
+  updateDots();
+  updateThemeColor();
+
+  const target = document.getElementById(`page-${index}`);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Reset scrollingTo flag after animation
+    setTimeout(() => { scrollingTo = false; }, 800);
+  }
 }
 
-function updateUI() {
-  // Update dots
+function updateDots() {
   const dots = dotsContainer.querySelectorAll('.progress-dot');
   dots.forEach((d, i) => {
     d.classList.toggle('active', i === currentPage);
   });
+  // Scroll active dot into view
+  const activeDot = dotsContainer.querySelector('.progress-dot.active');
+  if (activeDot) {
+    activeDot.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
 
-  // Update hints
-  hintLeft.style.opacity = currentPage > 0 ? '1' : '0';
-  hintRight.style.opacity = currentPage < pages.length - 1 ? '1' : '0';
-
-  // Update theme color per page
+function updateThemeColor() {
   const colors = ['#1a237e','#0d1b2a','#1a237e','#263238','#bf360c','#006064','#212121','#4a148c','#0d1b2a','#1b5e20'];
-  document.querySelector('meta[name="theme-color"]').content = colors[currentPage] || '#1a237e';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = colors[currentPage] || '#1a237e';
 }
 
 function nextPage() {
@@ -261,55 +296,16 @@ function prevPage() {
   if (currentPage > 0) goToPage(currentPage - 1);
 }
 
-// Touch handling
-container.addEventListener('touchstart', (e) => {
-  isTouch = true;
-  startX = e.touches[0].clientX;
-  startY = e.touches[0].clientY;
-  deltaX = 0;
-  isSwiping = false;
-}, { passive: true });
-
-container.addEventListener('touchmove', (e) => {
-  const dx = e.touches[0].clientX - startX;
-  const dy = e.touches[0].clientY - startY;
-
-  // Only swipe horizontally
-  if (!isSwiping && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
-    isSwiping = true;
-    wrapper.classList.add('swiping');
-  }
-
-  if (isSwiping) {
-    deltaX = dx;
-    const offset = -currentPage * 100 + (deltaX / window.innerWidth) * 100;
-    wrapper.style.transform = `translateX(${offset}%)`;
-  }
-}, { passive: true });
-
-container.addEventListener('touchend', () => {
-  wrapper.classList.remove('swiping');
-  if (isSwiping) {
-    if (deltaX < -50) nextPage();
-    else if (deltaX > 50) prevPage();
-    else goToPage(currentPage);
-  }
-  isSwiping = false;
-});
-
-// Mouse / click handling (tap edges)
-container.addEventListener('click', (e) => {
-  if (isTouch) return; // Skip on touch devices
-  const x = e.clientX;
-  const w = window.innerWidth;
-  if (x < w * 0.3) prevPage();
-  else if (x > w * 0.7) nextPage();
-});
-
-// Keyboard
+// Keyboard navigation
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === ' ') nextPage();
-  if (e.key === 'ArrowLeft') prevPage();
+  if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'ArrowRight') {
+    e.preventDefault();
+    nextPage();
+  }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    prevPage();
+  }
 });
 
 // ============================================
@@ -337,7 +333,6 @@ function applyLangMode(mode) {
   if (mode === 'zh') document.body.classList.add('lang-zh');
   if (mode === 'en') document.body.classList.add('lang-en');
 
-  // Update active button
   const btns = document.querySelectorAll('#langToggle button');
   btns.forEach(b => b.classList.toggle('active', b.dataset.lang === mode));
 }
@@ -383,7 +378,6 @@ function hideAudioBar() {
 function updateAudioUI() {
   if (!currentAudio || sliderDragging) return;
 
-  // Calculate cumulative position across all files
   let elapsed = 0;
   for (let i = 0; i < currentFileIndex; i++) {
     elapsed += totalDurations[i] || 0;
@@ -436,7 +430,12 @@ function playAudioFile(file, index) {
         if (audioPlaying) playAudioFile(next.file, next.index);
       }, 500);
     } else {
-      stopAudio();
+      audioPlaying = false;
+      audioPaused = false;
+      if (audioBtn) audioBtn.classList.remove('playing');
+      hideAudioBar();
+      if (currentAudio) { currentAudio = null; }
+      if (!userStoppedAudio) onAudioFinished();
     }
   });
 
@@ -445,44 +444,24 @@ function playAudioFile(file, index) {
       const next = audioQueue.shift();
       playAudioFile(next.file, next.index);
     } else {
-      stopAudio();
+      audioPlaying = false;
+      hideAudioBar();
+      if (!userStoppedAudio) onAudioFinished();
     }
   });
 
   currentAudio.play().then(() => {
     rafId = requestAnimationFrame(updateAudioUI);
-  }).catch(() => stopAudio());
+  }).catch(() => { audioPlaying = false; hideAudioBar(); });
 }
 
 function toggleAudio() {
   if (audioPlaying) {
+    userStoppedAudio = true;
     stopAudio();
     return;
   }
-
-  const pageNum = currentPage + 1;
-  const files = [];
-
-  if (langMode === 'both' || langMode === 'zh') {
-    files.push(`/max/audio/page-${pageNum}-zh.mp3`);
-  }
-  if (langMode === 'both' || langMode === 'en') {
-    files.push(`/max/audio/page-${pageNum}-en.mp3`);
-  }
-
-  if (files.length === 0) return;
-
-  // Preload durations
-  totalDurations = new Array(files.length).fill(0);
-  files.forEach((f, i) => {
-    const a = new Audio(f);
-    a.addEventListener('loadedmetadata', () => { totalDurations[i] = a.duration; });
-  });
-
-  // Build queue
-  audioQueue = files.slice(1).map((f, i) => ({ file: f, index: i + 1 }));
-  showAudioBar();
-  playAudioFile(files[0], 0);
+  playCurrentPage();
 }
 
 function toggleAudioPlayPause() {
@@ -509,7 +488,6 @@ function seekAudio(val) {
 
   const target = (val / 100) * total;
 
-  // Find which file and position
   let cumulative = 0;
   for (let i = 0; i < totalDurations.length; i++) {
     const d = totalDurations[i] || 0;
@@ -518,7 +496,6 @@ function seekAudio(val) {
       if (i === currentFileIndex && currentAudio) {
         currentAudio.currentTime = posInFile;
       } else {
-        // Need to switch files
         if (currentAudio) { currentAudio.pause(); }
         const pageNum = currentPage + 1;
         const files = [];
@@ -562,13 +539,12 @@ let userStoppedAudio = false;
 const autoplayBtn = document.getElementById('autoplayBtn');
 
 function onAudioFinished() {
-  // Called when audio ends naturally (not user-stopped)
   if (autoplayOn && currentPage < pages.length - 1) {
     setTimeout(() => {
       goToPage(currentPage + 1);
       setTimeout(() => {
         if (autoplayOn) playCurrentPage();
-      }, 600);
+      }, 900);
     }, 1000);
   } else if (autoplayOn && currentPage >= pages.length - 1) {
     autoplayOn = false;
@@ -596,75 +572,13 @@ function playCurrentPage() {
   playAudioFile(files[0], 0);
 }
 
-// Patch the ended handler in playAudioFile to call onAudioFinished
-const _origPlayAudioFile = playAudioFile;
-playAudioFile = function(file, index) {
-  currentFileIndex = index;
-  currentAudio = new Audio(file);
-  audioPlaying = true;
-  audioPaused = false;
-  if (audioBtn) audioBtn.classList.add('playing');
-  if (abPlayPause) abPlayPause.innerHTML = '&#9646;&#9646;';
-
-  currentAudio.addEventListener('loadedmetadata', () => {
-    totalDurations[index] = currentAudio.duration;
-    updateAudioUI();
-  });
-
-  currentAudio.addEventListener('ended', () => {
-    if (audioQueue.length > 0) {
-      const next = audioQueue.shift();
-      setTimeout(() => {
-        if (audioPlaying) playAudioFile(next.file, next.index);
-      }, 500);
-    } else {
-      // All files for this page done
-      audioPlaying = false;
-      audioPaused = false;
-      if (audioBtn) audioBtn.classList.remove('playing');
-      hideAudioBar();
-      if (currentAudio) { currentAudio = null; }
-      // Trigger autoplay chain
-      if (!userStoppedAudio) onAudioFinished();
-    }
-  });
-
-  currentAudio.addEventListener('error', () => {
-    if (audioQueue.length > 0 && audioPlaying) {
-      const next = audioQueue.shift();
-      playAudioFile(next.file, next.index);
-    } else {
-      audioPlaying = false;
-      hideAudioBar();
-      if (!userStoppedAudio) onAudioFinished();
-    }
-  });
-
-  currentAudio.play().then(() => {
-    rafId = requestAnimationFrame(updateAudioUI);
-  }).catch(() => { audioPlaying = false; hideAudioBar(); });
-};
-
 function toggleAutoplay() {
   autoplayOn = !autoplayOn;
   if (autoplayBtn) autoplayBtn.classList.toggle('active', autoplayOn);
   if (autoplayOn && !audioPlaying) {
     playCurrentPage();
   }
-  if (!autoplayOn) {
-    // Keep current audio playing, just stop auto-advance
-  }
 }
-
-// Stop audio on page turn (manual only)
-const origGoToPage = goToPage;
-goToPage = function(index) {
-  if (audioPlaying && !autoplayOn) {
-    userStoppedAudio = true;
-    stopAudio();
-  }
-  origGoToPage(index);
-};
 
 // Fullscreen
 function toggleFullscreen() {
@@ -705,17 +619,23 @@ if ('serviceWorker' in navigator) {
 // Init
 renderPages();
 initLangToggle();
-goToPage(0);
+setupScrollObserver();
+
+// Make first page visible immediately
+const firstPage = document.getElementById('page-0');
+if (firstPage) firstPage.classList.add('visible');
+
+// Enable snap scrolling after initial render
+document.body.classList.add('snap-scroll');
 
 // Expose for toolbar
 window.toggleFullscreen = toggleFullscreen;
-window.toggleAudio = function() {
-  if (audioPlaying) { userStoppedAudio = true; stopAudio(); return; }
-  playCurrentPage();
-};
+window.toggleAudio = toggleAudio;
 window.toggleAudioPlayPause = toggleAudioPlayPause;
 window.seekAudio = seekAudio;
 window.stopAudio = function() { userStoppedAudio = true; autoplayOn = false; if(autoplayBtn) autoplayBtn.classList.remove('active'); stopAudio(); };
 window.toggleAutoplay = toggleAutoplay;
 window.installApp = installApp;
 window.dismissInstall = dismissInstall;
+window.goToPage = goToPage;
+window.lineLoginFromGate = lineLoginFromGate;

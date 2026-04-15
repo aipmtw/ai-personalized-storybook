@@ -1,0 +1,23 @@
+{
+  "name": "平行世界",
+  "short_name": "平行世界",
+  "description": "AI 個人化雙語兒童繪本 — Parallel Worlds",
+  "start_url": "/parallel-worlds/book.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#283593",
+  "background_color": "#0a0a1a",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%23283593'/><text x='96' y='130' font-size='120' text-anchor='middle'>🌀</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23283593'/><text x='256' y='350' font-size='320' text-anchor='middle'>🌀</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
