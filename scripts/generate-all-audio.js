@@ -26,19 +26,32 @@ function extractPages(slug) {
   return pages;
 }
 
-async function generateTTS(text, lang, outputFile) {
+// TTS rate by age group
+function getTTSRate(slug, lang) {
+  // Determine age group from slug
+  const young = ['mei','lulu-garden','bear-kitchen','dino-school','ocean-friends','bunny-moon','rainbow-painting','magic-seeds','cloud-adventure','penguin-dance','kitten-market','firefly-night'];
+  const mid = ['amy','robot-dream','time-travel','detective-cat','music-forest','flying-bicycle','dream-bakery','treasure-map','shadow-friend','paper-airplane','weather-wizard','star-musician'];
+  // Everything else is 10-12
+
+  if (young.includes(slug)) return lang === 'zh' ? '-20%' : '-25%';
+  if (mid.includes(slug)) return lang === 'zh' ? '-10%' : '-15%';
+  return lang === 'zh' ? '0%' : '-5%'; // 10-12
+}
+
+async function generateTTS(text, lang, outputFile, slug) {
   if (fs.existsSync(outputFile)) {
     return 'skip';
   }
 
   const voice = lang === 'zh' ? 'zh-TW-HsiaoChenNeural' : 'en-US-JennyNeural';
   const xmlLang = lang === 'zh' ? 'zh-TW' : 'en-US';
+  const rate = getTTSRate(slug, lang);
   const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
   const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts' xml:lang='${xmlLang}'>
     <voice name='${voice}'>
       <mstts:express-as style="friendly">
-        <prosody rate="-5%">${escaped}</prosody>
+        <prosody rate="${rate}">${escaped}</prosody>
       </mstts:express-as>
     </voice>
   </speak>`;
@@ -86,7 +99,7 @@ async function processBook(slug) {
     // Chinese
     if (pages[i].zh) {
       const zhFile = path.join(audioDir, `page-${pageNum}-zh.mp3`);
-      const zhResult = await generateTTS(pages[i].zh, 'zh', zhFile);
+      const zhResult = await generateTTS(pages[i].zh, 'zh', zhFile, slug);
       process.stdout.write(`  p${pageNum}-zh:${zhResult} `);
       if (zhResult === 'ok') await delay(200); // Rate limit
     }
@@ -94,7 +107,7 @@ async function processBook(slug) {
     // English
     if (pages[i].en) {
       const enFile = path.join(audioDir, `page-${pageNum}-en.mp3`);
-      const enResult = await generateTTS(pages[i].en, 'en', enFile);
+      const enResult = await generateTTS(pages[i].en, 'en', enFile, slug);
       process.stdout.write(`p${pageNum}-en:${enResult} `);
       if (enResult === 'ok') await delay(200);
     }
