@@ -122,6 +122,7 @@ button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
   <th class="hide-mobile">中文</th>
   <th class="hide-mobile">EN</th>
   <th>雙語</th>
+  <th>Audio</th>
   <th>Status</th>
   <th>Actions</th>
 </tr></thead>
@@ -282,6 +283,15 @@ async function loadBooks() {
   }
 }
 
+let bookAudioStatus = {}; // slug -> 'ok' | 'missing' | 'checking'
+
+async function checkAudioForBook(slug) {
+  try {
+    const r = await fetch(APP_BASE + '/' + slug + '/audio/page-1-zh.mp3', { method: 'HEAD' });
+    return r.ok ? 'ok' : 'missing';
+  } catch { return 'missing'; }
+}
+
 async function loadAllDurations() {
   // Fetch pages for all books in parallel (batched)
   const promises = allBooks.map(async (b) => {
@@ -294,8 +304,18 @@ async function loadAllDurations() {
     } catch (e) {}
   });
   await Promise.all(promises);
-  renderTable(); // Re-render with durations
-  renderStats(); // Update stats with total duration
+  renderTable();
+  renderStats();
+
+  // Check audio status for all books
+  for (const b of allBooks) { bookAudioStatus[b.slug] = 'checking'; }
+  renderTable();
+  const audioChecks = allBooks.map(async (b) => {
+    bookAudioStatus[b.slug] = await checkAudioForBook(b.slug);
+  });
+  await Promise.all(audioChecks);
+  renderTable();
+  renderStats();
 }
 
 function renderStats() {
@@ -313,15 +333,30 @@ function renderStats() {
     totalBoth += bookDurations[slug].both || 0;
   }
 
+  const audioOk = Object.values(bookAudioStatus).filter(s => s === 'ok').length;
+  const audioMissing = Object.values(bookAudioStatus).filter(s => s === 'missing').length;
+
   document.getElementById('bookStats').innerHTML = `
     <div class="stat"><div class="num">${total}</div><div class="label">Total Books</div></div>
     <div class="stat"><div class="num">${published}</div><div class="label">Published</div></div>
     <div class="stat"><div class="num">${totalPages}</div><div class="label">Total Pages</div></div>
     <div class="stat"><div class="num">${ages}</div><div class="label">Age Groups</div></div>
-    <div class="stat"><div class="num">${fmtDuration(totalZh)}</div><div class="label">Total 中文</div></div>
-    <div class="stat"><div class="num">${fmtDuration(totalEn)}</div><div class="label">Total EN</div></div>
     <div class="stat"><div class="num">${fmtDuration(totalBoth)}</div><div class="label">Total 雙語</div></div>
+    <div class="stat"><div class="num" style="color:${audioMissing ? '#eb4d4b' : '#4ecdc4'}">${audioOk}/${total}</div><div class="label">Audio Ready</div></div>
   `;
+
+  // Show alert if missing audio
+  let alertEl = document.getElementById('audioAlert');
+  if (audioMissing > 0) {
+    const missingSlugs = allBooks.filter(b => bookAudioStatus[b.slug] === 'missing').map(b => b.slug);
+    if (!alertEl) {
+      alertEl = document.createElement('div');
+      alertEl.id = 'audioAlert';
+      alertEl.style.cssText = 'background:rgba(235,77,75,0.15);border:1px solid rgba(235,77,75,0.3);border-radius:8px;padding:.8rem 1rem;margin:1rem 0;font-size:.82rem;color:#eb4d4b';
+      document.getElementById('bookStats').after(alertEl);
+    }
+    alertEl.innerHTML = '<strong>⚠ ' + audioMissing + ' books missing audio:</strong> ' + missingSlugs.join(', ');
+  } else if (alertEl) { alertEl.remove(); }
 }
 
 function renderTable() {
@@ -350,6 +385,7 @@ function renderTable() {
       <td class="hide-mobile">${dur.zh ? fmtDuration(dur.zh) : '...'}</td>
       <td class="hide-mobile">${dur.en ? fmtDuration(dur.en) : '...'}</td>
       <td>${dur.both ? fmtDuration(dur.both) : '...'}</td>
+      <td>${bookAudioStatus[b.slug] === 'ok' ? '<span style="color:#4ecdc4">✓</span>' : bookAudioStatus[b.slug] === 'missing' ? '<span style="color:#eb4d4b">✗</span>' : '...'}</td>
       <td>
         <span class="badge ${b.status === 'published' ? 'badge-pub' : 'badge-draft'}">${b.status}</span>
         ${b.is_demo ? ' <span class="badge badge-demo">demo</span>' : ''}
