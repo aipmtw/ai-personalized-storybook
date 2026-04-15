@@ -10,29 +10,56 @@
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Noto Sans TC',sans-serif;color:#212529;min-height:100vh}
 
-    /* Bookshelf background */
+    /* Bookshelf background — realistic wood */
     body{
-      background:#f5efe6;
+      background-color:#e8ddd0;
       background-image:
-        /* Shelf boards */
+        /* Wood grain texture overlay */
+        repeating-linear-gradient(
+          87deg,
+          rgba(139,90,43,0.03) 0px,
+          transparent 2px,
+          transparent 6px,
+          rgba(139,90,43,0.02) 8px
+        ),
+        /* Shelf front face — thick board with highlight */
         repeating-linear-gradient(
           to bottom,
+          /* Wall area */
           transparent 0px,
-          transparent 340px,
-          #d4a574 340px,
-          #c49464 348px,
-          #b8845a 350px,
-          transparent 350px,
-          transparent 360px
-        );
-      background-size:100% 360px;
-      background-attachment:fixed;
+          transparent 330px,
+          /* Shelf top edge — light highlight */
+          rgba(210,180,140,0.6) 330px,
+          rgba(210,180,140,0.6) 331px,
+          /* Shelf board — main wood color with gradient */
+          #b5804a 331px,
+          #a87040 340px,
+          #9c6535 346px,
+          /* Shelf bottom edge — dark shadow */
+          #7a5030 348px,
+          #6b4528 350px,
+          /* Drop shadow beneath shelf */
+          rgba(80,45,20,0.25) 350px,
+          rgba(80,45,20,0.12) 354px,
+          rgba(80,45,20,0.04) 358px,
+          transparent 362px,
+          transparent 370px
+        ),
+        /* Subtle wall texture */
+        radial-gradient(ellipse at 20% 50%, rgba(245,235,220,0.5) 0%, transparent 70%),
+        radial-gradient(ellipse at 80% 30%, rgba(240,228,210,0.4) 0%, transparent 60%);
+      background-size:12px 12px, 100% 370px, 100% 100%, 100% 100%;
+      background-attachment:scroll, scroll, fixed, fixed;
     }
     body::before{
       content:'';
       position:fixed;
       inset:0;
-      background:linear-gradient(180deg,rgba(245,239,230,0.5) 0%,rgba(245,239,230,0.2) 50%,rgba(245,239,230,0.5) 100%);
+      background:
+        /* Warm ambient light from above */
+        radial-gradient(ellipse at 50% -20%, rgba(255,240,210,0.3) 0%, transparent 60%),
+        /* Slight vignette */
+        radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(120,80,40,0.08) 100%);
       pointer-events:none;
       z-index:0;
     }
