@@ -106,6 +106,11 @@ button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
     <option value="8-10">8-10</option>
     <option value="10-12">10-12</option>
   </select>
+  <select id="monthFilter" onchange="renderTable()">
+    <option value="">All Months</option>
+    <option value="2026-04">2026-04</option>
+    <option value="2026-05">2026-05</option>
+  </select>
   <input type="text" id="searchInput" placeholder="Search..." oninput="renderTable()">
   <button class="sm" onclick="loadBooks()">Refresh</button>
 </div>
@@ -123,6 +128,7 @@ button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
   <th class="hide-mobile">EN</th>
   <th>雙語</th>
   <th>Audio</th>
+  <th>Month</th>
   <th>Status</th>
   <th>Actions</th>
 </tr></thead>
@@ -130,10 +136,26 @@ button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
 </table>
 </div>
 
+<!-- Spec Reference -->
+<div style="margin-top:1.5rem;background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.15);border-radius:10px;padding:1rem">
+  <h2 style="margin-top:0;color:#4ecdc4">Content Spec — 2026 四月號</h2>
+  <table style="font-size:.75rem">
+  <thead><tr><th>Age Group</th><th>Books/Month</th><th>Pages/Book</th><th>字/Page</th><th>Words/Page</th><th>Total 字</th><th>Reading Time</th><th>TTS Rate</th></tr></thead>
+  <tbody>
+    <tr><td>3-6 歲 幼兒</td><td>6</td><td>12</td><td>20-40</td><td>15-30</td><td>~300</td><td>~3 min</td><td>zh -20%, en -25%</td></tr>
+    <tr><td>7-9 歲 兒童</td><td>6</td><td>16</td><td>40-70</td><td>30-50</td><td>~800</td><td>~5 min</td><td>zh -10%, en -15%</td></tr>
+    <tr><td>10-12 歲 少年</td><td>6</td><td>20</td><td>60-100</td><td>50-100</td><td>~1,500</td><td>~8 min</td><td>zh 0%, en -5%</td></tr>
+  </tbody>
+  </table>
+  <div style="font-size:.7rem;color:#888;margin-top:.5rem">Industry standard: 32 pages (print). Digital optimized: 12-20 pages. Sentence highlighting for 10-12 age group.</div>
+</div>
+
+<!-- Book Detail Panel -->
 <div id="pageDetail" style="display:none;margin-top:1.5rem">
   <h2>Pages — <span id="pageDetailTitle"></span></h2>
+  <div id="bookSpecCheck" style="margin-bottom:.8rem"></div>
   <table>
-  <thead><tr><th>#</th><th>中文</th><th class="hide-mobile">English</th><th>Image</th></tr></thead>
+  <thead><tr><th>#</th><th>中文</th><th>字數</th><th class="hide-mobile">English</th><th class="hide-mobile">Words</th><th>Image</th></tr></thead>
   <tbody id="pageTableBody"></tbody>
   </table>
   <button class="sm" onclick="document.getElementById('pageDetail').style.display='none'" style="margin-top:.5rem">Close</button>
@@ -362,11 +384,13 @@ function renderStats() {
 function renderTable() {
   const statusFilter = document.getElementById('statusFilter').value;
   const ageFilter = document.getElementById('ageFilter').value;
+  const monthFilter = document.getElementById('monthFilter').value;
   const search = document.getElementById('searchInput').value.toLowerCase();
 
   let filtered = allBooks;
   if (statusFilter) filtered = filtered.filter(b => b.status === statusFilter);
   if (ageFilter) filtered = filtered.filter(b => b.age_tier === ageFilter);
+  if (monthFilter) filtered = filtered.filter(b => b.published_month === monthFilter);
   if (search) filtered = filtered.filter(b =>
     (b.slug + b.title_zh + b.title_en).toLowerCase().includes(search)
   );
@@ -386,6 +410,7 @@ function renderTable() {
       <td class="hide-mobile">${dur.en ? fmtDuration(dur.en) : '...'}</td>
       <td>${dur.both ? fmtDuration(dur.both) : '...'}</td>
       <td>${bookAudioStatus[b.slug] === 'ok' ? '<span style="color:#4ecdc4">✓</span>' : bookAudioStatus[b.slug] === 'missing' ? '<span style="color:#eb4d4b">✗</span>' : '...'}</td>
+      <td style="font-size:.7rem;color:#888">${b.published_month || '—'}</td>
       <td>
         <span class="badge ${b.status === 'published' ? 'badge-pub' : 'badge-draft'}">${b.status}</span>
         ${b.is_demo ? ' <span class="badge badge-demo">demo</span>' : ''}
@@ -398,31 +423,98 @@ function renderTable() {
   `}).join('');
 }
 
+// Spec targets per age group
+const SPEC = {
+  '3-6': { pages: 12, zhMin: 20, zhMax: 40, enMin: 15, enMax: 30, ttsZh: '-20%', ttsEn: '-25%' },
+  '7-9': { pages: 16, zhMin: 40, zhMax: 70, enMin: 30, enMax: 50, ttsZh: '-10%', ttsEn: '-15%' },
+  '10-12': { pages: 20, zhMin: 60, zhMax: 100, enMin: 50, enMax: 100, ttsZh: '0%', ttsEn: '-5%' },
+};
+
+function getSpec(ageTier) {
+  if (['3-5','3-6','4-6'].includes(ageTier)) return SPEC['3-6'];
+  if (['7-9','8-10'].includes(ageTier)) return SPEC['7-9'];
+  if (ageTier === '10-12') return SPEC['10-12'];
+  return SPEC['7-9'];
+}
+
 async function viewPages(slug, title) {
+  const book = allBooks.find(b => b.slug === slug);
+  const spec = book ? getSpec(book.age_tier) : SPEC['7-9'];
+
   document.getElementById('pageDetailTitle').textContent = title;
   document.getElementById('pageDetail').style.display = 'block';
-  document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="4">Loading...</td></tr>';
+  document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
+  document.getElementById('bookSpecCheck').innerHTML = '';
 
   try {
     const r = await fetch(API_BASE + '/api/book-pages?slug=' + slug);
     const d = await r.json();
     if (d.ok && d.pages.length) {
-      document.getElementById('pageTableBody').innerHTML = d.pages.map(p => `
+      let totalZh = 0, totalEn = 0, outOfSpec = 0;
+
+      document.getElementById('pageTableBody').innerHTML = d.pages.map(p => {
+        const zhLen = (p.text_zh || '').length;
+        const enWords = (p.text_en || '').split(/\s+/).filter(w => w).length;
+        totalZh += zhLen;
+        totalEn += enWords;
+
+        const zhOk = zhLen >= spec.zhMin && zhLen <= spec.zhMax;
+        const enOk = enWords >= spec.enMin && enWords <= spec.enMax;
+        if (!zhOk || !enOk) outOfSpec++;
+
+        return `
         <tr>
           <td>${p.page_num}</td>
-          <td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text_zh || '—'}</td>
-          <td class="hide-mobile" style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text_en || '—'}</td>
+          <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text_zh || '—'}</td>
+          <td style="color:${zhOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${zhLen}</td>
+          <td class="hide-mobile" style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text_en || '—'}</td>
+          <td class="hide-mobile" style="color:${enOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${enWords}</td>
           <td>${p.image_url ? '<a href="' + p.image_url + '" target="_blank">View</a>' : '—'}</td>
-        </tr>
-      `).join('');
+        </tr>`;
+      }).join('');
+
+      // Spec summary
+      const pageCount = d.pages.length;
+      const pageOk = pageCount >= spec.pages - 2; // allow some tolerance
+      const dur = bookDurations[slug] || {};
+      const audio = bookAudioStatus[slug] || 'unknown';
+
+      document.getElementById('bookSpecCheck').innerHTML = `
+        <div style="display:flex;flex-wrap:wrap;gap:.6rem;font-size:.78rem">
+          <span style="padding:.2rem .6rem;border-radius:4px;background:${pageOk ? 'rgba(78,205,196,.15)' : 'rgba(235,77,75,.15)'};color:${pageOk ? '#4ecdc4' : '#eb4d4b'}">
+            Pages: ${pageCount} / ${spec.pages} target
+          </span>
+          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
+            Total: ${totalZh} 字 / ${totalEn} words
+          </span>
+          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
+            Avg/page: ${Math.round(totalZh/pageCount)} 字 / ${Math.round(totalEn/pageCount)} words
+          </span>
+          <span style="padding:.2rem .6rem;border-radius:4px;background:${outOfSpec === 0 ? 'rgba(78,205,196,.15)' : 'rgba(235,77,75,.15)'};color:${outOfSpec === 0 ? '#4ecdc4' : '#eb4d4b'}">
+            ${outOfSpec === 0 ? 'All pages in spec' : outOfSpec + ' pages out of spec'}
+          </span>
+          <span style="padding:.2rem .6rem;border-radius:4px;background:${audio === 'ok' ? 'rgba(78,205,196,.15)' : 'rgba(235,77,75,.15)'};color:${audio === 'ok' ? '#4ecdc4' : '#eb4d4b'}">
+            Audio: ${audio}
+          </span>
+          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
+            Duration: ${dur.both ? fmtDuration(dur.both) : '—'}
+          </span>
+          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
+            TTS: zh ${spec.ttsZh} / en ${spec.ttsEn}
+          </span>
+          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
+            Age: ${book?.age_tier || '—'} | Month: ${book?.published_month || '—'}
+          </span>
+        </div>
+      `;
     } else {
-      document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="4">No pages found</td></tr>';
+      document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="6">No pages found in DB — this book uses standalone JS data</td></tr>';
+      document.getElementById('bookSpecCheck').innerHTML = '<span style="font-size:.78rem;color:#ffc107">This book\'s content is in js/app.js, not in the database.</span>';
     }
   } catch (e) {
-    document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="4">Error loading pages</td></tr>';
+    document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="6">Error loading pages</td></tr>';
   }
 
-  // Scroll to detail
   document.getElementById('pageDetail').scrollIntoView({ behavior: 'smooth' });
 }
 
