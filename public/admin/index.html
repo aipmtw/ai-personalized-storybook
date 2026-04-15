@@ -328,7 +328,19 @@ async function checkAudioForBook(slug) {
 }
 
 async function loadAllDurations() {
-  // Fetch pages for all books in parallel (batched)
+  // Estimate duration from page_count and age group spec
+  // 3-6: ~15s/page, 7-9: ~20s/page, 10-12: ~25s/page (both languages)
+  for (const b of allBooks) {
+    const spec = getSpec(b.age_tier);
+    const avgZhChars = (spec.zhMin + spec.zhMax) / 2;
+    const avgEnWords = (spec.enMin + spec.enMax) / 2;
+    const storyPages = (b.page_count || 10) - 2; // minus cover + end
+    const zhSec = Math.round(storyPages * (avgZhChars / 3.5 + 1.5));
+    const enSec = Math.round(storyPages * (avgEnWords / 2.5 + 1.5));
+    bookDurations[b.slug] = { zh: zhSec, en: enSec, both: zhSec + enSec + storyPages };
+  }
+
+  // Also try to fetch actual page data for books that have it in DB
   const promises = allBooks.map(async (b) => {
     try {
       const r = await fetch(API_BASE + '/api/book-pages?slug=' + b.slug);
