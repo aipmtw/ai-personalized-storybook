@@ -171,10 +171,9 @@
     <div class="demo-sub">前 3 頁免費試閱 · 訂閱後無限閱讀</div>
 
     <div class="age-filters" id="ageFilters">
-      <button class="age-pill active" onclick="filterBooks('')">全部</button>
-      <button class="age-pill" onclick="filterBooks('young')">3–6 歲</button>
-      <button class="age-pill" onclick="filterBooks('mid')">7–9 歲</button>
-      <button class="age-pill" onclick="filterBooks('teen')">10–12 歲</button>
+      <button class="age-pill" data-key="young" onclick="filterBooks('young')">3–6 歲</button>
+      <button class="age-pill" data-key="mid" onclick="filterBooks('mid')">7–9 歲</button>
+      <button class="age-pill" data-key="teen" onclick="filterBooks('teen')">10–12 歲</button>
     </div>
 
     <div id="bookshelf">
@@ -237,7 +236,7 @@
   ];
 
   let allBooksData = [];
-  let activeFilter = '';
+  let activeFilter = localStorage.getItem('bookshelf_age') || 'mid';
 
   function estMinutes(pageCount) {
     if (!pageCount) return '';
@@ -247,10 +246,18 @@
 
   function filterBooks(key) {
     activeFilter = key;
+    localStorage.setItem('bookshelf_age', key);
     document.querySelectorAll('.age-pill').forEach(p => p.classList.remove('active'));
-    event.target.classList.add('active');
+    document.querySelector('.age-pill[data-key="' + key + '"]').classList.add('active');
     renderBookshelf(allBooksData);
   }
+
+  // Set initial active pill
+  function initFilter() {
+    const pill = document.querySelector('.age-pill[data-key="' + activeFilter + '"]');
+    if (pill) pill.classList.add('active');
+  }
+  initFilter();
 
   async function loadBookshelf() {
     try {
