@@ -266,7 +266,7 @@
 
   async function loadBookshelf() {
     try {
-      const r = await fetch('https://markluce.ai/api/books');
+      const r = await fetch('https://markluce.ai/api/books?month=2026-04');
       const d = await r.json();
       if (!d.ok || !d.books.length) { document.getElementById('bookshelf').innerHTML = '<p style="text-align:center;color:#adb5bd">暫無繪本</p>'; return; }
       allBooksData = d.books;
