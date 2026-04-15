@@ -10,7 +10,9 @@ const PUBLIC = path.join(__dirname, '..', 'public');
 
 // Extract page text from a book's app.js
 function extractPages(slug) {
-  const appJs = path.join(PUBLIC, slug, 'js', 'app.js');
+  // Check data.js first (new format), then app.js (old format)
+  let appJs = path.join(PUBLIC, slug, 'js', 'data.js');
+  if (!fs.existsSync(appJs)) appJs = path.join(PUBLIC, slug, 'js', 'app.js');
   if (!fs.existsSync(appJs)) return [];
   const code = fs.readFileSync(appJs, 'utf-8');
 

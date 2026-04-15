@@ -762,3 +762,10 @@ body.lang-en .cover-title { display: none !important; }
     max-width: 260px;
   }
 }
+
+.toolbar-page {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

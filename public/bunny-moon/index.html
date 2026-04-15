@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#5c6bc0">
+  <meta name="theme-color" content="#ff6f61">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>小兔望月</title>
+  <title>bunny-moon</title>
   <link rel="manifest" href="/bunny-moon/manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,44 +14,29 @@
   <link rel="stylesheet" href="/bunny-moon/css/style.css">
 </head>
 <body>
-  <!-- Top bar: language toggle + autoplay -->
   <div class="top-controls">
     <div class="lang-toggle" id="langToggle">
       <button class="active" data-lang="both">中＋EN</button>
       <button data-lang="zh">中文</button>
       <button data-lang="en">English</button>
     </div>
-    <button class="autoplay-toggle" id="autoplayBtn" onclick="toggleAutoplay()">&#9654;&#9654; 自動播放</button>
+    <button class="autoplay-toggle" id="autoplayBtn">&#9654;&#9654; 自動播放</button>
   </div>
-
-  <div class="book-container" id="bookContainer">
-    <div class="pages-wrapper" id="pagesWrapper">
-      <!-- Pages are rendered by JS -->
-    </div>
-
-    <!-- Touch hint arrows -->
-    <div class="touch-hint left" id="hintLeft">&#8249;</div>
-    <div class="touch-hint right" id="hintRight">&#8250;</div>
-  </div>
-
-  <!-- Audio player bar -->
+  <div class="page-container" id="pageContainer"></div>
   <div class="audio-bar hidden" id="audioBar">
-    <button class="ab-btn" id="abPlayPause" onclick="toggleAudioPlayPause()">&#9654;</button>
+    <button class="ab-btn" id="abPlayPause">&#9654;</button>
     <span class="ab-time" id="abCurrent">0:00</span>
-    <input type="range" class="ab-slider" id="abSlider" min="0" max="100" value="0" step="0.1" oninput="seekAudio(this.value)">
+    <input type="range" class="ab-slider" id="abSlider" min="0" max="100" value="0" step="0.1">
     <span class="ab-time" id="abTotal">0:00</span>
-    <button class="ab-btn ab-close" onclick="stopAudio()">&#x2715;</button>
+    <button class="ab-btn ab-close" id="abClose">&#x2715;</button>
   </div>
-
-  <!-- Bottom toolbar -->
   <div class="toolbar">
     <a href="/" class="toolbar-btn" title="首頁">&#x1F3E0;</a>
-    <button class="toolbar-btn audio-btn" id="audioBtn" title="播放朗讀" onclick="toggleAudio()">&#x1F50A;</button>
-    <div class="progress-dots" id="progressDots"></div>
-    <button class="toolbar-btn" id="fullscreenBtn" title="全螢幕" onclick="toggleFullscreen()">&#x26F6;</button>
+    <button class="toolbar-btn audio-btn" id="audioBtn" title="播放朗讀">&#x1F50A;</button>
+    <span class="toolbar-page" id="pageIndicator">1 / 12</span>
+    <button class="toolbar-btn" id="fullscreenBtn" title="全螢幕">&#x26F6;</button>
   </div>
-
-
-  <script src="/bunny-moon/js/app.js"></script>
+  <script src="/bunny-moon/js/data.js"></script>
+  <script src="/bunny-moon/js/reader.js"></script>
 </body>
 </html>
