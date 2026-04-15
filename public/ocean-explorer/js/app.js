@@ -621,11 +621,13 @@ const autoplayBtn = document.getElementById('autoplayBtn');
 
 function onAudioFinished() {
   if (autoplayOn && currentPage < pages.length - 1) {
+    const nextPage = currentPage + 1;
     setTimeout(() => {
-      goToPage(currentPage + 1);
+      goToPage(nextPage);
       setTimeout(() => {
+        currentPage = nextPage;
         if (autoplayOn) playCurrentPage();
-      }, 900);
+      }, 1200);
     }, 1000);
   } else if (autoplayOn && currentPage >= pages.length - 1) {
     autoplayOn = false;
