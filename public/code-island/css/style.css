@@ -73,7 +73,7 @@ body {
   box-shadow: var(--shadow-lg), 0 0 60px rgba(0,137,123,0.5);
   margin-bottom: 2rem;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .landing-cover::before {
@@ -200,10 +200,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 1.5rem 1.2rem;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Snap scrolling on the body */

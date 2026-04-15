@@ -59,8 +59,9 @@ function renderPage(pageNum) {
   currentPage = pageNum;
   const container = pageContainer;
 
-  // Apply background
+  // Apply background + scroll to top
   container.className = 'page-container page ' + p.bg;
+  container.scrollTop = 0;
 
   if (p.type === 'cover') {
     container.innerHTML = `
