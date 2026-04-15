@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-v10';
+const CACHE_NAME = 'storybook-v11';
 
 // Install: only cache the shell, not book content
 self.addEventListener('install', (event) => {
