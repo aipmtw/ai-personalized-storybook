@@ -266,7 +266,23 @@
 
   async function loadBookshelf() {
     try {
-      const r = await fetch('https://markluce.ai/api/books?month=2026-04');
+      // Get current issue month from site config
+      let currentMonth = '2026-04';
+      try {
+        const cm = await fetch('https://markluce.ai/api/site-config?key=current_issue');
+        const cmd = await cm.json();
+        if (cmd.ok && cmd.value) currentMonth = cmd.value;
+      } catch (e) {}
+
+      // Update issue badge
+      const badge = document.querySelector('.issue-badge');
+      if (badge) {
+        const [y, m] = currentMonth.split('-');
+        const months = ['','一','二','三','四','五','六','七','八','九','十','十一','十二'];
+        badge.textContent = y + ' ' + months[parseInt(m)] + '月號';
+      }
+
+      const r = await fetch('https://markluce.ai/api/books?month=' + currentMonth);
       const d = await r.json();
       if (!d.ok || !d.books.length) { document.getElementById('bookshelf').innerHTML = '<p style="text-align:center;color:#adb5bd">暫無繪本</p>'; return; }
       allBooksData = d.books;
