@@ -370,6 +370,12 @@ document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscr
 // body.lang-zh .text-en, body.lang-zh .cover-subtitle { display: none }
 // body.lang-en .text-zh, body.lang-en .cover-title { display: none }
 
+// ---- Version display ----
+const versionEl = document.createElement('span');
+versionEl.style.cssText = 'font-size:.6rem;color:rgba(255,255,255,0.3);margin-left:.5rem';
+versionEl.textContent = BOOK.version || '';
+if (autoplayBtn) autoplayBtn.parentNode.insertBefore(versionEl, autoplayBtn.nextSibling);
+
 // ---- Init ----
 applyLangMode(langMode);
 
@@ -380,6 +386,7 @@ if (!isAuthenticated && currentPage > DEMO_MAX) {
 }
 
 renderPage(currentPage);
+pageContainer.style.opacity = '1';
 history.replaceState({ page: currentPage }, '', currentPage === 1 ? `/${SLUG}/` : `/${SLUG}/${currentPage}`);
 
 // Expose for inline handlers

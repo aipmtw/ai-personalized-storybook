@@ -32,8 +32,8 @@ html, body {
   color: var(--text-dark);
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
+  
+  -webkit-
   -webkit-tap-highlight-color: transparent;
 }
 
