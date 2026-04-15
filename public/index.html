@@ -316,6 +316,7 @@
         <div style="display:flex;align-items:center;gap:.5rem;font-size:.95rem;color:#212529"><span style="color:#e91e63;font-weight:700">✓</span> 中英雙語朗讀 · 離線可讀</div>
         <div style="display:flex;align-items:center;gap:.5rem;font-size:.95rem;color:#212529"><span style="color:#e91e63;font-weight:700">✓</span> 客製繪本享訂閱者優惠</div>
       </div>
+      <button onclick="startSubscribe()" style="margin-top:1.2rem;width:100%;max-width:280px;padding:.8rem;background:#e91e63;color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s" onmouseover="this.style.background='#c2185b'" onmouseout="this.style.background='#e91e63'">立即訂閱</button>
     </div>
     <div style="text-align:center;margin-top:1rem;font-size:.85rem;color:#6c757d">教師/機構合作另有優惠方案 · <a href="mailto:mark@aipm.com.tw" style="color:#e91e63">mark@aipm.com.tw</a></div>
   </div>
@@ -495,6 +496,43 @@
     setTimeout(() => {
       document.getElementById('iosGuide').classList.add('show');
     }, 3000);
+  }
+
+  // Subscribe flow
+  function startSubscribe() {
+    const token = localStorage.getItem('ml_token') || new URLSearchParams(location.search).get('ml_token');
+    if (!token) {
+      // Need LINE login first
+      const channelId = '2009738746';
+      const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
+      const returnUrl = encodeURIComponent(location.origin + '/?subscribe=1');
+      location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id='+channelId+'&redirect_uri='+redirectUri+'&state='+returnUrl+'&scope=profile%20openid';
+      return;
+    }
+    // Call ECPay create for subscription
+    fetch('https://markluce.ai/api/ecpay-create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ product_type: 'subscription' }),
+    }).then(r => r.text()).then(html => {
+      document.open();
+      document.write(html);
+      document.close();
+    }).catch(e => { console.error(e); alert('付款失敗，請稍後再試'); });
+  }
+  window.startSubscribe = startSubscribe;
+
+  // Auto-trigger subscribe after LINE login return
+  const urlParams = new URLSearchParams(location.search);
+  if (urlParams.get('subscribe') === '1' && urlParams.get('ml_token')) {
+    localStorage.setItem('ml_token', urlParams.get('ml_token'));
+    localStorage.setItem('ml_user', urlParams.get('ml_user') || '');
+    history.replaceState(null, '', location.pathname);
+    setTimeout(startSubscribe, 500);
+  } else if (urlParams.get('ml_token')) {
+    localStorage.setItem('ml_token', urlParams.get('ml_token'));
+    localStorage.setItem('ml_user', urlParams.get('ml_user') || '');
+    history.replaceState(null, '', location.pathname);
   }
 
   // Register root service worker
