@@ -119,6 +119,9 @@ button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
   <th class="hide-mobile">Title (EN)</th>
   <th>Age</th>
   <th>Pages</th>
+  <th class="hide-mobile">中文</th>
+  <th class="hide-mobile">EN</th>
+  <th>雙語</th>
   <th>Status</th>
   <th>Actions</th>
 </tr></thead>
@@ -233,6 +236,26 @@ function logout() {
 // ============================================
 // Books
 // ============================================
+// Estimate audio duration from text
+// Chinese TTS: ~3.5 chars/sec, English TTS: ~2.5 words/sec, pause between pages: ~1.5s
+function estimateDuration(pages) {
+  let zhSec = 0, enSec = 0;
+  for (const p of pages) {
+    if (p.text_zh) zhSec += p.text_zh.length / 3.5 + 1.5;
+    if (p.text_en) enSec += p.text_en.split(/\s+/).length / 2.5 + 1.5;
+  }
+  return { zh: Math.round(zhSec), en: Math.round(enSec), both: Math.round(zhSec + enSec + pages.length * 0.5) };
+}
+
+function fmtDuration(sec) {
+  if (!sec) return '—';
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return m > 0 ? m + ':' + (s < 10 ? '0' : '') + s : s + 's';
+}
+
+let bookDurations = {}; // slug -> { zh, en, both }
+
 async function loadBooks() {
   try {
     const r = await fetch(API_BASE + '/api/books?status=all');
@@ -241,10 +264,11 @@ async function loadBooks() {
       allBooks = d.books || [];
       renderStats();
       renderTable();
+      // Load pages for all books to estimate durations
+      loadAllDurations();
     }
   } catch (e) {
     console.error('Load books error:', e);
-    // Fallback: try without status=all
     try {
       const r2 = await fetch(API_BASE + '/api/books');
       const d2 = await r2.json();
@@ -252,9 +276,26 @@ async function loadBooks() {
         allBooks = d2.books || [];
         renderStats();
         renderTable();
+        loadAllDurations();
       }
     } catch (e2) { console.error(e2); }
   }
+}
+
+async function loadAllDurations() {
+  // Fetch pages for all books in parallel (batched)
+  const promises = allBooks.map(async (b) => {
+    try {
+      const r = await fetch(API_BASE + '/api/book-pages?slug=' + b.slug);
+      const d = await r.json();
+      if (d.ok && d.pages.length) {
+        bookDurations[b.slug] = estimateDuration(d.pages);
+      }
+    } catch (e) {}
+  });
+  await Promise.all(promises);
+  renderTable(); // Re-render with durations
+  renderStats(); // Update stats with total duration
 }
 
 function renderStats() {
@@ -264,12 +305,22 @@ function renderStats() {
   const ages = [...new Set(allBooks.map(b => b.age_tier))].length;
   const totalPages = allBooks.reduce((s, b) => s + (b.page_count || 0), 0);
 
+  // Total estimated audio time
+  let totalZh = 0, totalEn = 0, totalBoth = 0;
+  for (const slug in bookDurations) {
+    totalZh += bookDurations[slug].zh || 0;
+    totalEn += bookDurations[slug].en || 0;
+    totalBoth += bookDurations[slug].both || 0;
+  }
+
   document.getElementById('bookStats').innerHTML = `
     <div class="stat"><div class="num">${total}</div><div class="label">Total Books</div></div>
     <div class="stat"><div class="num">${published}</div><div class="label">Published</div></div>
-    <div class="stat"><div class="num">${demo}</div><div class="label">Demo (Legacy)</div></div>
-    <div class="stat"><div class="num">${ages}</div><div class="label">Age Groups</div></div>
     <div class="stat"><div class="num">${totalPages}</div><div class="label">Total Pages</div></div>
+    <div class="stat"><div class="num">${ages}</div><div class="label">Age Groups</div></div>
+    <div class="stat"><div class="num">${fmtDuration(totalZh)}</div><div class="label">Total 中文</div></div>
+    <div class="stat"><div class="num">${fmtDuration(totalEn)}</div><div class="label">Total EN</div></div>
+    <div class="stat"><div class="num">${fmtDuration(totalBoth)}</div><div class="label">Total 雙語</div></div>
   `;
 }
 
@@ -286,7 +337,9 @@ function renderTable() {
   );
 
   const tbody = document.getElementById('bookTableBody');
-  tbody.innerHTML = filtered.map((b, i) => `
+  tbody.innerHTML = filtered.map((b, i) => {
+    const dur = bookDurations[b.slug] || {};
+    return `
     <tr>
       <td>${i + 1}</td>
       <td><code>${b.slug}</code></td>
@@ -294,6 +347,9 @@ function renderTable() {
       <td class="hide-mobile">${b.title_en || '—'}</td>
       <td><span class="age-pill">${b.age_tier || '—'}</span></td>
       <td>${b.page_count || 0}</td>
+      <td class="hide-mobile">${dur.zh ? fmtDuration(dur.zh) : '...'}</td>
+      <td class="hide-mobile">${dur.en ? fmtDuration(dur.en) : '...'}</td>
+      <td>${dur.both ? fmtDuration(dur.both) : '...'}</td>
       <td>
         <span class="badge ${b.status === 'published' ? 'badge-pub' : 'badge-draft'}">${b.status}</span>
         ${b.is_demo ? ' <span class="badge badge-demo">demo</span>' : ''}
@@ -303,7 +359,7 @@ function renderTable() {
         · <a href="#" onclick="viewPages('${b.slug}','${b.title_zh}');return false">Pages</a>
       </td>
     </tr>
-  `).join('');
+  `}).join('');
 }
 
 async function viewPages(slug, title) {

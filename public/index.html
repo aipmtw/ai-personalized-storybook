@@ -198,17 +198,22 @@
     { label: '10–12 歲 少年繪本', tiers: ['10-12'] },
   ];
 
+  // Estimate reading time from page count (both languages ~1min/page)
+  function estMinutes(pageCount) {
+    if (!pageCount) return '';
+    const min = Math.max(1, Math.round(pageCount * 1.1));
+    return '約 ' + min + ' 分鐘';
+  }
+
   async function loadBookshelf() {
     try {
       const r = await fetch('https://markluce.ai/api/books');
       const d = await r.json();
       if (!d.ok || !d.books.length) { document.getElementById('bookshelf').innerHTML = '<p style="text-align:center;color:#adb5bd">暫無繪本</p>'; return; }
 
-      // Cache catalog for offline
       localStorage.setItem('bookshelf_catalog', JSON.stringify(d.books));
       renderBookshelf(d.books);
     } catch (e) {
-      // Offline fallback
       const cached = localStorage.getItem('bookshelf_catalog');
       if (cached) { renderBookshelf(JSON.parse(cached)); }
       else { document.getElementById('bookshelf').innerHTML = '<p style="text-align:center;color:#adb5bd">無法載入，請檢查網路</p>'; }
@@ -225,11 +230,12 @@
       for (const b of groupBooks) {
         const s = BOOK_STYLES[b.slug] || DEFAULT_STYLE;
         const href = '/' + b.slug + '/book.html';
+        const dur = estMinutes(b.page_count);
         html += '<a class="book-card" href="' + href + '" style="background:' + s.gradient + '">' +
           '<div class="emoji">' + s.emoji + '</div>' +
           '<h3>' + (b.title_zh || b.slug) + '</h3>' +
           '<div class="subtitle">' + (b.title_en || '') + '</div>' +
-          '<div class="age">' + (b.age_tier || '') + ' 歲</div>' +
+          '<div class="age">' + (b.age_tier || '') + ' 歲' + (dur ? ' · ' + dur : '') + '</div>' +
           '</a>';
       }
       html += '</div>';
