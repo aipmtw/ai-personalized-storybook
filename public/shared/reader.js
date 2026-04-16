@@ -102,7 +102,7 @@ function renderPage(pageNum) {
         <div class="cover-title">${BOOK.title}</div>
         <div class="cover-subtitle">${BOOK.subtitle}</div>
         <div class="cover-credits">${BOOK.credits}</div>
-        <div class="cover-stats" id="coverStats">${contentPages} pages</div>
+        <div class="cover-stats" id="coverStats"><span class="text-zh">${contentPages} 頁</span><span class="text-en">${contentPages} pages</span><span class="text-both">${contentPages} pages</span></div>
         <button class="cover-start-btn" onclick="startReading()"><span class="text-zh">開始閱讀 </span><span class="text-en">Start Reading </span>▶</button>
         <div class="cover-version">${BOOK.version}</div>
       </div>
@@ -408,37 +408,16 @@ async function probeCoverStats(contentPages) {
   const el = document.getElementById('coverStats');
   if (!el) return;
 
-  let zhCount = 0, enCount = 0, zhTotal = 0, enTotal = 0;
-  const probes = [];
-
+  // Use HEAD requests to check audio file existence (lightweight, no stalling)
+  let zhCount = 0, enCount = 0;
   for (let i = 1; i <= contentPages; i++) {
-    probes.push(
-      new Promise(resolve => {
-        const a = new Audio();
-        a.preload = 'metadata';
-        a.addEventListener('loadedmetadata', () => { zhCount++; zhTotal += a.duration; resolve(); });
-        a.addEventListener('error', () => resolve());
-        a.src = `/${SLUG}/audio/page-${i}-zh.mp3`;
-      })
-    );
-    probes.push(
-      new Promise(resolve => {
-        const a = new Audio();
-        a.preload = 'metadata';
-        a.addEventListener('loadedmetadata', () => { enCount++; enTotal += a.duration; resolve(); });
-        a.addEventListener('error', () => resolve());
-        a.src = `/${SLUG}/audio/page-${i}-en.mp3`;
-      })
-    );
+    const [zhR, enR] = await Promise.all([
+      fetch(`/${SLUG}/audio/page-${i}-zh.mp3`, { method: 'HEAD' }).catch(() => null),
+      fetch(`/${SLUG}/audio/page-${i}-en.mp3`, { method: 'HEAD' }).catch(() => null)
+    ]);
+    if (zhR?.ok) zhCount++;
+    if (enR?.ok) enCount++;
   }
-
-  await Promise.all(probes);
-
-  const fmtMin = (sec) => {
-    const m = Math.floor(sec / 60);
-    const s = Math.round(sec % 60);
-    return m + ':' + (s < 10 ? '0' : '') + s;
-  };
 
   // Build stats respecting language mode
   const zhParts = [`${contentPages} 頁`];
@@ -447,10 +426,6 @@ async function probeCoverStats(contentPages) {
 
   if (zhCount) { zhParts.push(`${zhCount} 篇音檔`); bothParts.push(`${zhCount} ZH audio`); }
   if (enCount) { enParts.push(`${enCount} audio tracks`); bothParts.push(`${enCount} EN audio`); }
-
-  if (zhTotal > 0) zhParts.push(`~${fmtMin(Math.round(zhTotal))}`);
-  if (enTotal > 0) enParts.push(`~${fmtMin(Math.round(enTotal))}`);
-  if (zhTotal + enTotal > 0) bothParts.push(`~${fmtMin(Math.round(zhTotal + enTotal))} bilingual`);
 
   el.innerHTML = `<span class="text-zh">${zhParts.join(' · ')}</span><span class="text-en">${enParts.join(' · ')}</span><span class="text-both">${bothParts.join(' · ')}</span>`;
 }
