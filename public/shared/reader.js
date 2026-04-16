@@ -1,12 +1,15 @@
 /* ============================================
-   Universal Book Reader — URL per page
-   One page at a time, clean and simple
+   Universal Book Reader — v3
+   0-indexed: cover=0, content=1..N
+   URL: /slug/ = cover, /slug/1 = page 1
+   Audio: page-{currentPage}-zh.mp3
    ============================================ */
 
 // ---- Config ----
 const SLUG = BOOK.slug;
-const DEMO_MAX = 3; // pages 1-3 free
+const DEMO_MAX = 3; // content pages 1-3 free
 const LINE_CHANNEL_ID = '2009738746';
+const totalContentPages = BOOK.pages.filter(p => p.type === 'cover' ? false : true).length;
 
 // ---- State ----
 let currentPage = getPageFromURL();
@@ -37,24 +40,25 @@ const isAuthenticated = (function() {
 })();
 
 // ---- URL helpers ----
+// URL: /slug/ = cover (page 0), /slug/1 = content page 1, etc.
 function getPageFromURL() {
   const parts = location.pathname.split('/').filter(Boolean);
-  // /{slug}/{pageNum} or /{slug}/
   const last = parts[parts.length - 1];
+  if (last === SLUG) return 0; // /slug/ = cover
   const num = parseInt(last);
-  if (!isNaN(num) && num >= 1 && num <= (BOOK?.pages?.length || 99)) return num;
-  return 1;
+  if (!isNaN(num) && num >= 1 && num <= totalContentPages) return num;
+  return 0;
 }
 
 function updateURL(pageNum) {
-  const url = pageNum === 1 ? `/${SLUG}/` : `/${SLUG}/${pageNum}`;
+  const url = pageNum === 0 ? `/${SLUG}/` : `/${SLUG}/${pageNum}`;
   history.pushState({ page: pageNum }, '', url);
 }
 
 // ---- Page rendering ----
 function renderPage(pageNum) {
-  // Universal end screen — after the last data page
-  if (pageNum > BOOK.pages.length) {
+  // Universal end screen — after the last content page
+  if (pageNum > totalContentPages) {
     currentPage = pageNum;
     const container = pageContainer;
     container.className = 'page-container page page-bg-1';
@@ -77,23 +81,22 @@ function renderPage(pageNum) {
         </div>
       </div>
     `;
-    pageIndicator.textContent = 'The End';
+    updateDots(-1); // no active dot
     applyLangMode(langMode);
     return;
   }
 
-  const p = BOOK.pages[pageNum - 1];
+  // Cover page (page 0) → pages[0]
+  // Content page N → pages[N] (since pages[0] is cover, pages[1] is content 1, etc.)
+  const p = BOOK.pages[pageNum];
   if (!p) return;
 
   currentPage = pageNum;
   const container = pageContainer;
-
-  // Apply background + scroll to top
   container.className = 'page-container page ' + p.bg;
   container.scrollTop = 0;
 
   if (p.type === 'cover') {
-    const contentPages = BOOK.pages.filter(pg => pg.type !== 'cover' && pg.type !== 'end').length;
     container.innerHTML = `
       <div class="page-illustration ${p.illustBg}">
         <div class="emoji-scene">${p.emoji}</div>
@@ -102,13 +105,12 @@ function renderPage(pageNum) {
         <div class="cover-title">${BOOK.title}</div>
         <div class="cover-subtitle">${BOOK.subtitle}</div>
         <div class="cover-credits">${BOOK.credits}</div>
-        <div class="cover-stats" id="coverStats"><span class="text-zh">${contentPages} 頁</span><span class="text-en">${contentPages} pages</span><span class="text-both">${contentPages} pages</span></div>
+        <div class="cover-stats" id="coverStats"><span class="text-zh">${totalContentPages} 頁</span><span class="text-en">${totalContentPages} pages</span><span class="text-both">${totalContentPages} pages</span></div>
         <button class="cover-start-btn" onclick="startReading()"><span class="text-zh">開始閱讀 </span><span class="text-en">Start Reading </span><span class="text-both">開始閱讀 Start Reading </span>▶</button>
         <div class="cover-version">${BOOK.version}</div>
       </div>
     `;
-    // Probe audio counts async
-    probeCoverStats(contentPages);
+    probeCoverStats(totalContentPages);
   } else {
     container.innerHTML = `
       <div class="page-illustration ${p.illustBg}">
@@ -121,24 +123,64 @@ function renderPage(pageNum) {
     `;
   }
 
-  // Update indicator
-  pageIndicator.textContent = `${pageNum} / ${BOOK.pages.length}`;
+  // Update dots
+  updateDots(pageNum);
 
   // Update theme color
   const colors = ['#ff6f61','#f5f5f5','#fff3e0','#e8f5e9','#fce4ec','#e3f2fd','#fff8e1','#e0f7fa','#f3e5f5','#fbe9e7','#ede7f6','#e8eaf6',
     '#ffccbc','#c8e6c9','#bbdefb','#d1c4e9','#ffecb3','#b2dfdb','#f8bbd0','#dcedc8'];
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = colors[pageNum - 1] || colors[0];
+  if (meta) meta.content = colors[pageNum] || colors[0];
 
-  // Apply language mode
   applyLangMode(langMode);
+}
+
+// ---- Dot indicator ----
+function buildDots() {
+  // Replace pageIndicator with dots: one dot per content page + cover icon
+  pageIndicator.innerHTML = '';
+  pageIndicator.style.cssText = 'display:flex;align-items:center;gap:4px;cursor:default';
+
+  // Cover dot (book icon)
+  const coverDot = document.createElement('span');
+  coverDot.textContent = '📖';
+  coverDot.style.cssText = 'font-size:.6rem;cursor:pointer;opacity:.5;transition:opacity .15s';
+  coverDot.dataset.page = '0';
+  coverDot.addEventListener('click', () => goToPage(0));
+  pageIndicator.appendChild(coverDot);
+
+  // Content dots
+  for (let i = 1; i <= totalContentPages; i++) {
+    const dot = document.createElement('span');
+    dot.style.cssText = 'width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .15s;cursor:pointer';
+    dot.dataset.page = String(i);
+    dot.addEventListener('click', () => goToPage(i));
+    pageIndicator.appendChild(dot);
+  }
+}
+
+function updateDots(activePageNum) {
+  const dots = pageIndicator.querySelectorAll('span');
+  dots.forEach(dot => {
+    const p = parseInt(dot.dataset.page);
+    if (p === 0) {
+      // Cover icon
+      dot.style.opacity = activePageNum === 0 ? '1' : '.4';
+    } else {
+      // Content dot
+      const isActive = p === activePageNum;
+      dot.style.background = isActive ? '#4ecdc4' : 'rgba(255,255,255,.3)';
+      dot.style.width = isActive ? '8px' : '6px';
+      dot.style.height = isActive ? '8px' : '6px';
+    }
+  });
 }
 
 // ---- Navigation ----
 function goToPage(pageNum) {
-  if (pageNum < 1 || pageNum > BOOK.pages.length + 1) return; // +1 for universal end screen
+  if (pageNum < 0 || pageNum > totalContentPages + 1) return; // +1 for end screen
 
-  // Demo gate
+  // Demo gate: content pages beyond DEMO_MAX
   if (!isAuthenticated && pageNum > DEMO_MAX) {
     stopAudio();
     autoplayOn = false;
@@ -150,7 +192,6 @@ function goToPage(pageNum) {
   // Stop audio on manual nav (not autoplay)
   if (audioPlaying && !autoplayOn) stopAudio();
 
-  // Simple fade transition
   pageContainer.style.opacity = '0';
   setTimeout(() => {
     renderPage(pageNum);
@@ -182,7 +223,7 @@ pageContainer.addEventListener('touchend', (e) => {
 
 // ---- Click edges ----
 pageContainer.addEventListener('click', (e) => {
-  if (e.target.closest('a, button')) return; // Don't interfere with links/buttons
+  if (e.target.closest('a, button')) return;
   const x = e.clientX;
   const w = window.innerWidth;
   if (x < w * 0.25) prevPage();
@@ -197,7 +238,7 @@ document.addEventListener('keydown', (e) => {
 
 // ---- Browser back/forward ----
 window.addEventListener('popstate', (e) => {
-  const page = e.state?.page || getPageFromURL();
+  const page = e.state?.page ?? getPageFromURL();
   renderPage(page);
 });
 
@@ -270,50 +311,43 @@ function playFile(url) {
 async function playPageAudio(pageNum) {
   if (audioPlaying) return;
 
-  // Cover and end pages have no audio
-  const page = BOOK.pages[pageNum - 1];
-  if (!page || page.type === 'cover' || page.type === 'end') return;
+  // Only content pages have audio (pageNum >= 1)
+  if (pageNum < 1 || pageNum > totalContentPages) return;
 
-  // Audio files numbered from 1 for first content page; cover is page 1, so audioNum = pageNum - 1
-  const audioNum = pageNum - 1;
+  // Audio file: page-{pageNum}-{lang}.mp3 — direct mapping, no offset
   const files = [];
-  if (langMode === 'both' || langMode === 'zh') files.push(`/${SLUG}/audio/page-${audioNum}-zh.mp3`);
-  if (langMode === 'both' || langMode === 'en') files.push(`/${SLUG}/audio/page-${audioNum}-en.mp3`);
+  if (langMode === 'both' || langMode === 'zh') files.push(`/${SLUG}/audio/page-${pageNum}-zh.mp3`);
+  if (langMode === 'both' || langMode === 'en') files.push(`/${SLUG}/audio/page-${pageNum}-en.mp3`);
   if (!files.length) return;
 
   showAudioBar();
 
   for (const file of files) {
-    if (!audioPlaying && file !== files[0]) break; // stopped mid-sequence
+    if (!audioPlaying && file !== files[0]) break;
     try {
       await playFile(file);
-      // Brief pause between zh and en
       if (files.length > 1) await new Promise(r => setTimeout(r, 500));
     } catch {
-      // Audio file not found — stop gracefully
       break;
     }
   }
 
-  // Done playing this page
   audioPlaying = false;
   if (audioBtn) audioBtn.classList.remove('playing');
   hideAudioBar();
   currentAudio = null;
 
   // Autoplay: advance to next page
-  if (autoplayOn && currentPage < BOOK.pages.length) {
+  if (autoplayOn && currentPage < totalContentPages) {
     setTimeout(() => {
       goToPage(currentPage + 1);
       setTimeout(() => {
-        // Play audio if next page is a content page, otherwise stop
-        const nextP = BOOK.pages[currentPage - 1];
-        if (autoplayOn && nextP && nextP.type !== 'cover') playPageAudio(currentPage);
+        if (autoplayOn) playPageAudio(currentPage);
       }, 800);
     }, 1000);
-  } else if (autoplayOn && currentPage === BOOK.pages.length) {
-    // Last story page done — show end screen, stop autoplay
-    setTimeout(() => goToPage(BOOK.pages.length + 1), 1000);
+  } else if (autoplayOn && currentPage === totalContentPages) {
+    // Last story page done — show end screen
+    setTimeout(() => goToPage(totalContentPages + 1), 1000);
     autoplayOn = false;
     if (autoplayBtn) autoplayBtn.classList.remove('active');
   } else if (autoplayOn) {
@@ -370,14 +404,13 @@ function showDemoGate() {
     <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:.5rem;color:#212529">試閱結束</h2>
     <p style="font-size:1rem;color:#6c757d;line-height:1.7;margin-bottom:1.5rem">免費試閱前 3 頁已結束。<br>訂閱即可閱讀完整繪本！</p>
     <a href="#" onclick="lineLoginFromGate()" style="display:inline-block;background:#06C755;color:#fff;padding:.7rem 2rem;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none;margin-bottom:.8rem">用 LINE 登入</a>
-    <br><a href="#" onclick="document.getElementById('demoGate').style.display='none';goToPage(1);return false" style="font-size:.85rem;color:#adb5bd;text-decoration:underline">返回第一頁</a>
+    <br><a href="#" onclick="document.getElementById('demoGate').style.display='none';goToPage(0);return false" style="font-size:.85rem;color:#adb5bd;text-decoration:underline">返回封面</a>
   </div>`;
   document.body.appendChild(gate);
 }
 
 function lineLoginFromGate() {
   const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
-  // Return to the page they were trying to access (DEMO_MAX + 1)
   const nextPage = currentPage > DEMO_MAX ? currentPage : DEMO_MAX + 1;
   const returnUrl = encodeURIComponent(window.location.origin + '/' + SLUG + '/' + nextPage);
   window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=' + LINE_CHANNEL_ID + '&redirect_uri=' + redirectUri + '&state=' + returnUrl + '&scope=profile%20openid';
@@ -393,22 +426,16 @@ function toggleFullscreen() {
 }
 document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
-// ---- Language mode CSS ----
-// (defined in stylesheet)
-// body.lang-zh .text-en, body.lang-zh .cover-subtitle { display: none }
-// body.lang-en .text-zh, body.lang-en .cover-title { display: none }
-
 // ---- Cover stats & Start Reading ----
 function startReading() {
-  goToPage(2); // page 2 = first content page
-  setTimeout(() => playPageAudio(2), 500);
+  goToPage(1); // page 1 = first content page — aligned with admin and audio
+  setTimeout(() => playPageAudio(1), 500);
 }
 
 async function probeCoverStats(contentPages) {
   const el = document.getElementById('coverStats');
   if (!el) return;
 
-  // Use HEAD requests to check audio file existence (lightweight, no stalling)
   let zhCount = 0, enCount = 0;
   for (let i = 1; i <= contentPages; i++) {
     const [zhR, enR] = await Promise.all([
@@ -419,7 +446,6 @@ async function probeCoverStats(contentPages) {
     if (enR?.ok) enCount++;
   }
 
-  // Build stats respecting language mode
   const zhParts = [`${contentPages} 頁`];
   const enParts = [`${contentPages} pages`];
   const bothParts = [`${contentPages} pages`];
@@ -438,9 +464,9 @@ versionEl.style.cssText = 'font-size:.6rem;color:rgba(255,255,255,0.3);margin-le
 versionEl.textContent = BOOK.version || '';
 if (autoplayBtn) autoplayBtn.parentNode.insertBefore(versionEl, autoplayBtn.nextSibling);
 
-// ---- Inject cover styles ----
-const coverStyle = document.createElement('style');
-coverStyle.textContent = `
+// ---- Inject styles ----
+const readerStyle = document.createElement('style');
+readerStyle.textContent = `
 .cover-stats{font-size:.85rem;color:var(--text-medium,#888);margin:.8rem 0 .5rem;letter-spacing:.02em}
 .cover-start-btn{display:inline-block;padding:.7rem 2rem;background:#06C755;color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit;margin:.5rem 0;transition:transform .1s,box-shadow .1s;box-shadow:0 4px 12px rgba(6,199,85,.3)}
 .cover-start-btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(6,199,85,.4)}
@@ -451,20 +477,21 @@ body.lang-zh .text-en,body.lang-zh .text-both{display:none}
 body.lang-en .text-zh,body.lang-en .text-both{display:none}
 body:not(.lang-zh):not(.lang-en) .text-zh,body:not(.lang-zh):not(.lang-en) .text-en{display:none}
 `;
-document.head.appendChild(coverStyle);
+document.head.appendChild(readerStyle);
 
 // ---- Init ----
 applyLangMode(langMode);
+buildDots();
 
 // Check auth and enforce demo gate on direct URL access
 if (!isAuthenticated && currentPage > DEMO_MAX) {
-  currentPage = 1;
-  history.replaceState({ page: 1 }, '', `/${SLUG}/`);
+  currentPage = 0;
+  history.replaceState({ page: 0 }, '', `/${SLUG}/`);
 }
 
 renderPage(currentPage);
 pageContainer.style.opacity = '1';
-history.replaceState({ page: currentPage }, '', currentPage === 1 ? `/${SLUG}/` : `/${SLUG}/${currentPage}`);
+history.replaceState({ page: currentPage }, '', currentPage === 0 ? `/${SLUG}/` : `/${SLUG}/${currentPage}`);
 
 // Expose for inline handlers
 window.goToPage = goToPage;
