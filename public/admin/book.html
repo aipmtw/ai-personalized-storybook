@@ -176,6 +176,7 @@ async function renderOverview(bookInfo, bookData) {
     const isContent = !isCover && !isEnd;
     if (isContent) contentIdx++;
     const displayNum = isContent ? contentIdx : '';
+    const pageNum = i + 1; // for element IDs
     const zhText = p.zh || '';
     const enText = p.en || '';
     const zhLen = zhText.length;
