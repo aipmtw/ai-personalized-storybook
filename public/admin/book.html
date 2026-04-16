@@ -121,22 +121,17 @@ function fmtDuration(sec) {
   return m + ':' + (s < 10 ? '0' : '') + s;
 }
 
-function probeAudio(url) {
-  return fetch(url, { method: 'HEAD' }).then(r => {
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+async function probeAudio(url) {
+  try {
+    const r = await fetch(url);
     if (!r.ok) return null;
-    const size = parseInt(r.headers.get('content-length') || '0');
-    if (!size) return null;
-    // Estimate duration: MP3 at ~48kbps (Azure TTS typical) → bytes / 6000 ≈ seconds
-    // More accurate: load just this one file's metadata
-    return new Promise(resolve => {
-      const a = new Audio();
-      a.preload = 'metadata';
-      const timeout = setTimeout(() => resolve(size / 6000), 5000); // fallback estimate
-      a.addEventListener('loadedmetadata', () => { clearTimeout(timeout); resolve(a.duration); });
-      a.addEventListener('error', () => { clearTimeout(timeout); resolve(size / 6000); });
-      a.src = url;
-    });
-  }).catch(() => null);
+    const buf = await r.arrayBuffer();
+    if (!buf.byteLength) return null;
+    const decoded = await audioCtx.decodeAudioData(buf);
+    return decoded.duration;
+  } catch { return null; }
 }
 
 async function init() {
