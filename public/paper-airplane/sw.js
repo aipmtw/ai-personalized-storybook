@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-paper-airplane-v1';
+const CACHE_NAME = 'storybook-paper-airplane-v2';
 
 // Generate audio file URLs for all 12 pages (cover + 10 story + end)
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/paper-airplane/index.html',
   '/paper-airplane/book.html',
   '/paper-airplane/css/style.css',
-  '/paper-airplane/js/app.js',
+  '/shared/reader.js', '/paper-airplane/js/data.js',
   '/paper-airplane/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

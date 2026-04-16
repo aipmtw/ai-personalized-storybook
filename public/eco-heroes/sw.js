@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-eco-heroes-v1';
+const CACHE_NAME = 'storybook-eco-heroes-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/eco-heroes/index.html',
   '/eco-heroes/book.html',
   '/eco-heroes/css/style.css',
-  '/eco-heroes/js/app.js',
+  '/shared/reader.js', '/eco-heroes/js/data.js',
   '/eco-heroes/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

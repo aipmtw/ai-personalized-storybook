@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bunny-moon-v1';
+const CACHE_NAME = 'bunny-moon-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/bunny-moon/index.html',
   '/bunny-moon/book.html',
   '/bunny-moon/css/style.css',
-  '/bunny-moon/js/app.js',
+  '/shared/reader.js', '/bunny-moon/js/data.js',
   '/bunny-moon/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

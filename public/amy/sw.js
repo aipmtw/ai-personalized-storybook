@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/amy/index.html',
   '/amy/book.html',
   '/amy/css/style.css',
-  '/amy/js/app.js',
+  '/shared/reader.js', '/amy/js/data.js',
   '/amy/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

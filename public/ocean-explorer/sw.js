@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-ocean-explorer-v1';
+const CACHE_NAME = 'storybook-ocean-explorer-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/ocean-explorer/index.html',
   '/ocean-explorer/book.html',
   '/ocean-explorer/css/style.css',
-  '/ocean-explorer/js/app.js',
+  '/shared/reader.js', '/ocean-explorer/js/data.js',
   '/ocean-explorer/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

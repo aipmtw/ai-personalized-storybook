@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cloud-adventure-v1';
+const CACHE_NAME = 'cloud-adventure-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/cloud-adventure/index.html',
   '/cloud-adventure/book.html',
   '/cloud-adventure/css/style.css',
-  '/cloud-adventure/js/app.js',
+  '/shared/reader.js', '/cloud-adventure/js/data.js',
   '/cloud-adventure/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

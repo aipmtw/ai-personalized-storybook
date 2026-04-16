@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-time-travel-v1';
+const CACHE_NAME = 'storybook-time-travel-v2';
 
 // Generate audio file URLs for all 11 pages (cover + 10 story pages)
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/time-travel/index.html',
   '/time-travel/book.html',
   '/time-travel/css/style.css',
-  '/time-travel/js/app.js',
+  '/shared/reader.js', '/time-travel/js/data.js',
   '/time-travel/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

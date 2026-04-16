@@ -1,4 +1,4 @@
-const CACHE_NAME = 'firefly-night-v1';
+const CACHE_NAME = 'firefly-night-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/firefly-night/index.html',
   '/firefly-night/book.html',
   '/firefly-night/css/style.css',
-  '/firefly-night/js/app.js',
+  '/shared/reader.js', '/firefly-night/js/data.js',
   '/firefly-night/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

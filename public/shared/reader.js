@@ -257,9 +257,15 @@ function playFile(url) {
 async function playPageAudio(pageNum) {
   if (audioPlaying) return;
 
+  // Cover and end pages have no audio
+  const page = BOOK.pages[pageNum - 1];
+  if (!page || page.type === 'cover' || page.type === 'end') return;
+
+  // Audio files numbered from 1 for first content page; cover is page 1, so audioNum = pageNum - 1
+  const audioNum = pageNum - 1;
   const files = [];
-  if (langMode === 'both' || langMode === 'zh') files.push(`/${SLUG}/audio/page-${pageNum}-zh.mp3`);
-  if (langMode === 'both' || langMode === 'en') files.push(`/${SLUG}/audio/page-${pageNum}-en.mp3`);
+  if (langMode === 'both' || langMode === 'zh') files.push(`/${SLUG}/audio/page-${audioNum}-zh.mp3`);
+  if (langMode === 'both' || langMode === 'en') files.push(`/${SLUG}/audio/page-${audioNum}-en.mp3`);
   if (!files.length) return;
 
   showAudioBar();

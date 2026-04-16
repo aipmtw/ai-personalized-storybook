@@ -1,4 +1,4 @@
-const CACHE_NAME = 'penguin-dance-v1';
+const CACHE_NAME = 'penguin-dance-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/penguin-dance/index.html',
   '/penguin-dance/book.html',
   '/penguin-dance/css/style.css',
-  '/penguin-dance/js/app.js',
+  '/shared/reader.js', '/penguin-dance/js/data.js',
   '/penguin-dance/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

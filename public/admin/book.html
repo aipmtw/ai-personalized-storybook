@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Detail — Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Noto Sans TC',system-ui,sans-serif;background:#0f0f1a;color:#e0e0e0;line-height:1.6}
+a{color:#4ecdc4;text-decoration:none}
+a:hover{text-decoration:underline}
+
+.top-bar{background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.06);padding:.6rem 1rem;display:flex;justify-content:space-between;align-items:center}
+.top-bar .brand{font-size:.85rem;color:#888}
+.top-bar .brand strong{color:#4ecdc4}
+.top-bar .links{display:flex;gap:.8rem;font-size:.8rem}
+
+.container{max-width:1100px;margin:0 auto;padding:1rem}
+
+h1{font-size:1.2rem;color:#fff;margin-bottom:.3rem}
+h2{font-size:.95rem;color:#fff;margin:1.2rem 0 .4rem}
+
+.book-meta{display:flex;flex-wrap:wrap;gap:.6rem;font-size:.78rem;margin:.8rem 0}
+.book-meta span{padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc}
+.book-meta .ok{background:rgba(78,205,196,.15);color:#4ecdc4}
+.book-meta .warn{background:rgba(235,77,75,.15);color:#eb4d4b}
+
+table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.78rem}
+th,td{padding:.45rem .6rem;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+th{color:#888;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:#0f0f1a}
+td a{color:#4ecdc4}
+
+.badge{display:inline-block;padding:.1rem .4rem;border-radius:3px;font-size:.68rem;font-weight:600}
+.badge-cover{background:rgba(249,202,36,.15);color:#f9ca24}
+.badge-story{background:rgba(78,205,196,.15);color:#4ecdc4}
+.badge-end{background:rgba(255,255,255,.08);color:#888}
+
+.text-preview{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dur{font-family:'SF Mono','Fira Code',monospace;font-size:.75rem}
+.dur-ok{color:#4ecdc4}
+.dur-miss{color:#eb4d4b}
+.dur-na{color:#555}
+
+button.sm{padding:.3rem .7rem;background:#333;border:1px solid #555;color:#fff;border-radius:4px;cursor:pointer;font-size:.78rem}
+button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
+
+.audio-summary{display:flex;flex-wrap:wrap;gap:.6rem;font-size:.78rem;margin:1rem 0;padding:.8rem 1rem;background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.15);border-radius:8px}
+.audio-summary span{padding:.2rem .6rem;border-radius:4px}
+
+@media(max-width:600px){
+  table{font-size:.72rem}
+  th,td{padding:.35rem .4rem}
+  .hide-mobile{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+<div class="brand"><strong>Storybook</strong> Admin</div>
+<div class="links">
+  <a href="/admin/">← Admin</a>
+  <a href="https://app.markluce.ai/">書架</a>
+</div>
+</div>
+
+<div class="container">
+  <h1 id="bookTitle">Loading...</h1>
+  <div id="bookSubtitle" style="font-size:.85rem;color:#888;margin-bottom:.5rem"></div>
+  <div class="book-meta" id="bookMeta"></div>
+
+  <h2>Pages & Audio</h2>
+  <div style="overflow-x:auto">
+  <table>
+  <thead><tr>
+    <th>#</th>
+    <th>Type</th>
+    <th>中文</th>
+    <th>字數</th>
+    <th class="hide-mobile">English</th>
+    <th class="hide-mobile">Words</th>
+    <th>ZH MP3</th>
+    <th>EN MP3</th>
+    <th>Emoji</th>
+  </tr></thead>
+  <tbody id="pageTableBody">
+    <tr><td colspan="9" style="color:#888">Loading...</td></tr>
+  </tbody>
+  </table>
+  </div>
+
+  <div class="audio-summary" id="audioSummary" style="display:none"></div>
+
+  <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap">
+    <a id="readLink" href="#" target="_blank" style="padding:.4rem 1rem;background:#4ecdc4;color:#000;border-radius:6px;font-weight:600;font-size:.82rem;text-decoration:none">Read Book</a>
+    <a href="/admin/" style="padding:.4rem 1rem;background:#333;color:#fff;border:1px solid #555;border-radius:6px;font-size:.82rem;text-decoration:none">← Back to Admin</a>
+  </div>
+</div>
+
+<script>
+const APP_BASE = 'https://app.markluce.ai';
+const API_BASE = 'https://markluce.ai';
+
+// Get slug from URL: /admin/{slug}
+const pathParts = location.pathname.split('/').filter(Boolean);
+const slug = pathParts.length >= 2 ? pathParts[pathParts.length - 1] : null;
+
+if (!slug || slug === 'admin') {
+  document.getElementById('bookTitle').textContent = 'No book specified';
+  document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="9">Use /admin/{slug} to view a book</td></tr>';
+} else {
+  document.title = slug + ' — Admin';
+  document.getElementById('readLink').href = APP_BASE + '/' + slug + '/';
+  init();
+}
+
+function fmtDuration(sec) {
+  if (!sec || isNaN(sec)) return '—';
+  const m = Math.floor(sec / 60);
+  const s = Math.round(sec % 60);
+  return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function probeAudio(url) {
+  return new Promise(resolve => {
+    const a = new Audio();
+    a.preload = 'metadata';
+    a.addEventListener('loadedmetadata', () => resolve(a.duration));
+    a.addEventListener('error', () => resolve(null));
+    a.src = url;
+  });
+}
+
+async function init() {
+  // Load book info from API
+  let bookInfo = null;
+  try {
+    const r = await fetch(API_BASE + '/api/books?status=all&_t=' + Date.now());
+    const d = await r.json();
+    if (d.ok) bookInfo = (d.books || []).find(b => b.slug === slug);
+  } catch (e) {}
+
+  // Load data.js for page content
+  let bookData = null;
+  try {
+    const r = await fetch(APP_BASE + '/' + slug + '/js/data.js?_t=' + Date.now());
+    const text = await r.text();
+    const fn = new Function(text + '; return BOOK;');
+    bookData = fn();
+  } catch (e) {
+    console.error('Failed to load data.js:', e);
+  }
+
+  // Header info
+  const title = bookData?.title || bookInfo?.title_zh || slug;
+  const subtitle = bookData?.subtitle || bookInfo?.title_en || '';
+  document.getElementById('bookTitle').textContent = title;
+  document.getElementById('bookSubtitle').textContent = subtitle;
+  document.title = title + ' — Admin';
+
+  // Meta badges
+  const age = bookInfo?.age_tier || '—';
+  const status = bookInfo?.status || '—';
+  const month = bookInfo?.published_month || '—';
+  const pageCount = bookData?.pages?.length || bookInfo?.page_count || 0;
+  document.getElementById('bookMeta').innerHTML = `
+    <span>${slug}</span>
+    <span>Age: ${age}</span>
+    <span>Pages: ${pageCount}</span>
+    <span>Month: ${month}</span>
+    <span>Status: ${status}</span>
+  `;
+
+  if (!bookData || !bookData.pages || !bookData.pages.length) {
+    document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="9" style="color:#eb4d4b">Could not load data.js for this book</td></tr>';
+    return;
+  }
+
+  const pages = bookData.pages;
+  const SPEC = {
+    '3-6': { zhMin: 20, zhMax: 40, enMin: 15, enMax: 30 },
+    '7-9': { zhMin: 40, zhMax: 70, enMin: 30, enMax: 50 },
+    '10-12': { zhMin: 60, zhMax: 100, enMin: 50, enMax: 100 },
+  };
+  const spec = SPEC[age] || SPEC['7-9'];
+
+  // Render table
+  let totalZhChars = 0, totalEnWords = 0;
+  document.getElementById('pageTableBody').innerHTML = pages.map((p, i) => {
+    const pageNum = i + 1;
+    const isCover = p.type === 'cover';
+    const isEnd = p.type === 'end';
+    const isContent = !isCover && !isEnd;
+
+    const zhText = p.zh || '';
+    const enText = p.en || '';
+    const zhLen = zhText.length;
+    const enWords = enText.split(/\s+/).filter(w => w).length;
+
+    if (isContent) { totalZhChars += zhLen; totalEnWords += enWords; }
+
+    const zhOk = !isContent || (zhLen >= spec.zhMin && zhLen <= spec.zhMax);
+    const enOk = !isContent || (enWords >= spec.enMin && enWords <= spec.enMax);
+
+    const typeBadge = isCover ? 'badge-cover' : isEnd ? 'badge-end' : 'badge-story';
+    const typeLabel = p.type || 'story';
+
+    // Audio cell: will be filled async. Cover/end = no audio expected
+    const audioId = isContent ? i : null; // content at index i → audio file number i (pageNum-1)
+
+    return `<tr>
+      <td>${pageNum}</td>
+      <td><span class="badge ${typeBadge}">${typeLabel}</span></td>
+      <td class="text-preview">${zhText.substring(0, 50) || '—'}</td>
+      <td style="color:${zhOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${isContent ? zhLen : '—'}</td>
+      <td class="hide-mobile text-preview">${enText.substring(0, 50) || '—'}</td>
+      <td class="hide-mobile" style="color:${enOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${isContent ? enWords : '—'}</td>
+      <td class="dur" id="zh-${pageNum}">${audioId != null ? '<span style="color:#888">...</span>' : '<span class="dur-na">—</span>'}</td>
+      <td class="dur" id="en-${pageNum}">${audioId != null ? '<span style="color:#888">...</span>' : '<span class="dur-na">—</span>'}</td>
+      <td>${p.emoji || '—'}</td>
+    </tr>`;
+  }).join('');
+
+  // Probe all MP3s
+  let zhTotal = 0, enTotal = 0, zhCount = 0, enCount = 0, zhMiss = 0, enMiss = 0;
+  const probes = [];
+
+  for (let i = 0; i < pages.length; i++) {
+    const p = pages[i];
+    if (p.type === 'cover' || p.type === 'end') continue;
+    const audioNum = i; // cover=0 skipped, first content at index 1 → audio 1
+    const pageNum = i + 1;
+
+    probes.push(
+      probeAudio(APP_BASE + '/' + slug + '/audio/page-' + audioNum + '-zh.mp3').then(dur => {
+        const el = document.getElementById('zh-' + pageNum);
+        if (dur != null) {
+          zhTotal += dur; zhCount++;
+          if (el) el.innerHTML = '<span class="dur-ok">' + fmtDuration(dur) + '</span>';
+        } else {
+          zhMiss++;
+          if (el) el.innerHTML = '<span class="dur-miss">missing</span>';
+        }
+      })
+    );
+    probes.push(
+      probeAudio(APP_BASE + '/' + slug + '/audio/page-' + audioNum + '-en.mp3').then(dur => {
+        const el = document.getElementById('en-' + pageNum);
+        if (dur != null) {
+          enTotal += dur; enCount++;
+          if (el) el.innerHTML = '<span class="dur-ok">' + fmtDuration(dur) + '</span>';
+        } else {
+          enMiss++;
+          if (el) el.innerHTML = '<span class="dur-miss">missing</span>';
+        }
+      })
+    );
+  }
+
+  await Promise.all(probes);
+
+  // Audio summary
+  const summaryEl = document.getElementById('audioSummary');
+  summaryEl.style.display = 'flex';
+  const contentCount = pages.filter(p => p.type !== 'cover' && p.type !== 'end').length;
+  summaryEl.innerHTML = `
+    <span style="background:rgba(78,205,196,.1);color:#4ecdc4;font-weight:700">
+      ZH: ${zhCount}/${contentCount} files &middot; ${fmtDuration(Math.round(zhTotal))}
+    </span>
+    <span style="background:rgba(78,205,196,.1);color:#4ecdc4;font-weight:700">
+      EN: ${enCount}/${contentCount} files &middot; ${fmtDuration(Math.round(enTotal))}
+    </span>
+    <span style="background:rgba(255,255,255,.06);color:#ccc">
+      Combined: ${fmtDuration(Math.round(zhTotal + enTotal))}
+    </span>
+    ${zhMiss + enMiss > 0
+      ? '<span style="background:rgba(235,77,75,.15);color:#eb4d4b;font-weight:700">Missing: ' + zhMiss + ' ZH, ' + enMiss + ' EN</span>'
+      : '<span style="background:rgba(78,205,196,.15);color:#4ecdc4">All audio present</span>'}
+    <span style="background:rgba(255,255,255,.06);color:#ccc">
+      Text: ${totalZhChars} 字 / ${totalEnWords} words
+    </span>
+  `;
+}
+</script>
+
+</body>
+</html>

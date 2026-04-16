@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-treasure-map-v1';
+const CACHE_NAME = 'storybook-treasure-map-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/treasure-map/index.html',
   '/treasure-map/book.html',
   '/treasure-map/css/style.css',
-  '/treasure-map/js/app.js',
+  '/shared/reader.js', '/treasure-map/js/data.js',
   '/treasure-map/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

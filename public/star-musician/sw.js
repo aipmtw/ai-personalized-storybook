@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-star-musician-v1';
+const CACHE_NAME = 'storybook-star-musician-v2';
 
 // Generate audio file URLs for all 12 pages (cover + 10 story + end)
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/star-musician/index.html',
   '/star-musician/book.html',
   '/star-musician/css/style.css',
-  '/star-musician/js/app.js',
+  '/shared/reader.js', '/star-musician/js/data.js',
   '/star-musician/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

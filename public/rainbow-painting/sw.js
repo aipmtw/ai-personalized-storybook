@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rainbow-painting-v1';
+const CACHE_NAME = 'rainbow-painting-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/rainbow-painting/index.html',
   '/rainbow-painting/book.html',
   '/rainbow-painting/css/style.css',
-  '/rainbow-painting/js/app.js',
+  '/shared/reader.js', '/rainbow-painting/js/data.js',
   '/rainbow-painting/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

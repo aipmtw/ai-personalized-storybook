@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-shadow-friend-v1';
+const CACHE_NAME = 'storybook-shadow-friend-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/shadow-friend/index.html',
   '/shadow-friend/book.html',
   '/shadow-friend/css/style.css',
-  '/shadow-friend/js/app.js',
+  '/shared/reader.js', '/shadow-friend/js/data.js',
   '/shadow-friend/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-dream-bakery-v1';
+const CACHE_NAME = 'storybook-dream-bakery-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/dream-bakery/index.html',
   '/dream-bakery/book.html',
   '/dream-bakery/css/style.css',
-  '/dream-bakery/js/app.js',
+  '/shared/reader.js', '/dream-bakery/js/data.js',
   '/dream-bakery/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

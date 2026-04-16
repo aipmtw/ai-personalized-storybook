@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-parallel-worlds-v1';
+const CACHE_NAME = 'storybook-parallel-worlds-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/parallel-worlds/index.html',
   '/parallel-worlds/book.html',
   '/parallel-worlds/css/style.css',
-  '/parallel-worlds/js/app.js',
+  '/shared/reader.js', '/parallel-worlds/js/data.js',
   '/parallel-worlds/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

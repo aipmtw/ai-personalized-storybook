@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bear-kitchen-v1';
+const CACHE_NAME = 'bear-kitchen-v2';
 
 // Generate audio file URLs for all 9 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/bear-kitchen/index.html',
   '/bear-kitchen/book.html',
   '/bear-kitchen/css/style.css',
-  '/bear-kitchen/js/app.js',
+  '/shared/reader.js', '/bear-kitchen/js/data.js',
   '/bear-kitchen/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

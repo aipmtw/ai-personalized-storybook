@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dino-school-v1';
+const CACHE_NAME = 'dino-school-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/dino-school/index.html',
   '/dino-school/book.html',
   '/dino-school/css/style.css',
-  '/dino-school/js/app.js',
+  '/shared/reader.js', '/dino-school/js/data.js',
   '/dino-school/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

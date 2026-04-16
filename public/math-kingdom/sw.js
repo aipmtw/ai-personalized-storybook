@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-math-kingdom-v1';
+const CACHE_NAME = 'storybook-math-kingdom-v2';
 
 // Generate audio file URLs for all 12 pages (cover + 10 story + end)
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/math-kingdom/index.html',
   '/math-kingdom/book.html',
   '/math-kingdom/css/style.css',
-  '/math-kingdom/js/app.js',
+  '/shared/reader.js', '/math-kingdom/js/data.js',
   '/math-kingdom/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

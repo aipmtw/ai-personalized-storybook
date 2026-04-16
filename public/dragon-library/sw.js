@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-dragon-library-v1';
+const CACHE_NAME = 'storybook-dragon-library-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/dragon-library/index.html',
   '/dragon-library/book.html',
   '/dragon-library/css/style.css',
-  '/dragon-library/js/app.js',
+  '/shared/reader.js', '/dragon-library/js/data.js',
   '/dragon-library/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

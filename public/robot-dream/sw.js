@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-robot-dream-v1';
+const CACHE_NAME = 'storybook-robot-dream-v2';
 
 // Generate audio file URLs for all 11 pages (cover + 10 story pages)
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/robot-dream/index.html',
   '/robot-dream/book.html',
   '/robot-dream/css/style.css',
-  '/robot-dream/js/app.js',
+  '/shared/reader.js', '/robot-dream/js/data.js',
   '/robot-dream/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

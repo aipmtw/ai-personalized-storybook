@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-v12';
+const CACHE_NAME = 'storybook-mei-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/mei/index.html',
   '/mei/book.html',
   '/mei/css/style.css',
-  '/mei/js/app.js',
+  '/shared/reader.js', '/mei/js/data.js',
   '/mei/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

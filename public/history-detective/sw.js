@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-history-detective-v1';
+const CACHE_NAME = 'storybook-history-detective-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/history-detective/index.html',
   '/history-detective/book.html',
   '/history-detective/css/style.css',
-  '/history-detective/js/app.js',
+  '/shared/reader.js', '/history-detective/js/data.js',
   '/history-detective/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

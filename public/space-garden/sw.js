@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-space-garden-v1';
+const CACHE_NAME = 'storybook-space-garden-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/space-garden/index.html',
   '/space-garden/book.html',
   '/space-garden/css/style.css',
-  '/space-garden/js/app.js',
+  '/shared/reader.js', '/space-garden/js/data.js',
   '/space-garden/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

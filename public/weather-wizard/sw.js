@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-weather-wizard-v1';
+const CACHE_NAME = 'storybook-weather-wizard-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/weather-wizard/index.html',
   '/weather-wizard/book.html',
   '/weather-wizard/css/style.css',
-  '/weather-wizard/js/app.js',
+  '/shared/reader.js', '/weather-wizard/js/data.js',
   '/weather-wizard/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

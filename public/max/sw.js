@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-max-v1';
+const CACHE_NAME = 'storybook-max-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/max/index.html',
   '/max/book.html',
   '/max/css/style.css',
-  '/max/js/app.js',
+  '/shared/reader.js', '/max/js/data.js',
   '/max/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-detective-cat-v1';
+const CACHE_NAME = 'storybook-detective-cat-v2';
 
 // Generate audio file URLs for all 11 pages (cover + 10 story pages)
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/detective-cat/index.html',
   '/detective-cat/book.html',
   '/detective-cat/css/style.css',
-  '/detective-cat/js/app.js',
+  '/shared/reader.js', '/detective-cat/js/data.js',
   '/detective-cat/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

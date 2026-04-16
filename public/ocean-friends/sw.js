@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ocean-friends-v1';
+const CACHE_NAME = 'ocean-friends-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/ocean-friends/index.html',
   '/ocean-friends/book.html',
   '/ocean-friends/css/style.css',
-  '/ocean-friends/js/app.js',
+  '/shared/reader.js', '/ocean-friends/js/data.js',
   '/ocean-friends/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

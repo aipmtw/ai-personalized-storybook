@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-flying-bicycle-v1';
+const CACHE_NAME = 'storybook-flying-bicycle-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/flying-bicycle/index.html',
   '/flying-bicycle/book.html',
   '/flying-bicycle/css/style.css',
-  '/flying-bicycle/js/app.js',
+  '/shared/reader.js', '/flying-bicycle/js/data.js',
   '/flying-bicycle/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

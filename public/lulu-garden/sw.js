@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lulu-garden-v1';
+const CACHE_NAME = 'lulu-garden-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/lulu-garden/index.html',
   '/lulu-garden/book.html',
   '/lulu-garden/css/style.css',
-  '/lulu-garden/js/app.js',
+  '/shared/reader.js', '/lulu-garden/js/data.js',
   '/lulu-garden/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

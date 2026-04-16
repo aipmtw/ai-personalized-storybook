@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kitten-market-v1';
+const CACHE_NAME = 'kitten-market-v2';
 
 // Generate audio file URLs for all 11 pages (cover + 10 story + end)
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/kitten-market/index.html',
   '/kitten-market/book.html',
   '/kitten-market/css/style.css',
-  '/kitten-market/js/app.js',
+  '/shared/reader.js', '/kitten-market/js/data.js',
   '/kitten-market/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS

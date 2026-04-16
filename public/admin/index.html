@@ -167,17 +167,6 @@ button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
   <div style="font-size:.7rem;color:#888;margin-top:.5rem">Industry standard: 32 pages (print). Digital optimized: 12-20 pages. Sentence highlighting for 10-12 age group.</div>
 </div>
 
-<!-- Book Detail Panel -->
-<div id="pageDetail" style="display:none;margin-top:1.5rem">
-  <h2>Pages — <span id="pageDetailTitle"></span></h2>
-  <div id="bookSpecCheck" style="margin-bottom:.8rem"></div>
-  <table>
-  <thead><tr><th>#</th><th>中文</th><th>字數</th><th class="hide-mobile">English</th><th class="hide-mobile">Words</th><th>Image</th></tr></thead>
-  <tbody id="pageTableBody"></tbody>
-  </table>
-  <button class="sm" onclick="document.getElementById('pageDetail').style.display='none'" style="margin-top:.5rem">Close</button>
-</div>
-
 </div>
 
 <script>
@@ -453,7 +442,7 @@ function renderTable() {
       </td>
       <td>
         <a href="${APP_BASE}/${b.slug}/" target="_blank">Read</a>
-        · <a href="#" onclick="viewPages('${b.slug}','${b.title_zh}');return false">Pages</a>
+        · <a href="/admin/${b.slug}">Pages</a>
       </td>
     </tr>
   `}).join('');
@@ -471,87 +460,6 @@ function getSpec(ageTier) {
   if (['7-9','8-10'].includes(ageTier)) return SPEC['7-9'];
   if (ageTier === '10-12') return SPEC['10-12'];
   return SPEC['7-9'];
-}
-
-async function viewPages(slug, title) {
-  const book = allBooks.find(b => b.slug === slug);
-  const spec = book ? getSpec(book.age_tier) : SPEC['7-9'];
-
-  document.getElementById('pageDetailTitle').textContent = title;
-  document.getElementById('pageDetail').style.display = 'block';
-  document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="6">Loading...</td></tr>';
-  document.getElementById('bookSpecCheck').innerHTML = '';
-
-  try {
-    const r = await fetch(API_BASE + '/api/book-pages?slug=' + slug);
-    const d = await r.json();
-    if (d.ok && d.pages.length) {
-      let totalZh = 0, totalEn = 0, outOfSpec = 0;
-
-      document.getElementById('pageTableBody').innerHTML = d.pages.map(p => {
-        const zhLen = (p.text_zh || '').length;
-        const enWords = (p.text_en || '').split(/\s+/).filter(w => w).length;
-        totalZh += zhLen;
-        totalEn += enWords;
-
-        const zhOk = zhLen >= spec.zhMin && zhLen <= spec.zhMax;
-        const enOk = enWords >= spec.enMin && enWords <= spec.enMax;
-        if (!zhOk || !enOk) outOfSpec++;
-
-        return `
-        <tr>
-          <td>${p.page_num}</td>
-          <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text_zh || '—'}</td>
-          <td style="color:${zhOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${zhLen}</td>
-          <td class="hide-mobile" style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text_en || '—'}</td>
-          <td class="hide-mobile" style="color:${enOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${enWords}</td>
-          <td>${p.image_url ? '<a href="' + p.image_url + '" target="_blank">View</a>' : '—'}</td>
-        </tr>`;
-      }).join('');
-
-      // Spec summary
-      const pageCount = d.pages.length;
-      const pageOk = pageCount >= spec.pages - 2; // allow some tolerance
-      const dur = bookDurations[slug] || {};
-      const audio = bookAudioStatus[slug] || 'unknown';
-
-      document.getElementById('bookSpecCheck').innerHTML = `
-        <div style="display:flex;flex-wrap:wrap;gap:.6rem;font-size:.78rem">
-          <span style="padding:.2rem .6rem;border-radius:4px;background:${pageOk ? 'rgba(78,205,196,.15)' : 'rgba(235,77,75,.15)'};color:${pageOk ? '#4ecdc4' : '#eb4d4b'}">
-            Pages: ${pageCount} / ${spec.pages} target
-          </span>
-          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
-            Total: ${totalZh} 字 / ${totalEn} words
-          </span>
-          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
-            Avg/page: ${Math.round(totalZh/pageCount)} 字 / ${Math.round(totalEn/pageCount)} words
-          </span>
-          <span style="padding:.2rem .6rem;border-radius:4px;background:${outOfSpec === 0 ? 'rgba(78,205,196,.15)' : 'rgba(235,77,75,.15)'};color:${outOfSpec === 0 ? '#4ecdc4' : '#eb4d4b'}">
-            ${outOfSpec === 0 ? 'All pages in spec' : outOfSpec + ' pages out of spec'}
-          </span>
-          <span style="padding:.2rem .6rem;border-radius:4px;background:${audio === 'ok' ? 'rgba(78,205,196,.15)' : 'rgba(235,77,75,.15)'};color:${audio === 'ok' ? '#4ecdc4' : '#eb4d4b'}">
-            Audio: ${audio}
-          </span>
-          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
-            Duration: ${dur.both ? fmtDuration(dur.both) : '—'}
-          </span>
-          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
-            TTS: zh ${spec.ttsZh} / en ${spec.ttsEn}
-          </span>
-          <span style="padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc">
-            Age: ${book?.age_tier || '—'} | Month: ${book?.published_month || '—'}
-          </span>
-        </div>
-      `;
-    } else {
-      document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="6">No pages found in DB — this book uses standalone JS data</td></tr>';
-      document.getElementById('bookSpecCheck').innerHTML = '<span style="font-size:.78rem;color:#ffc107">This book\'s content is in js/app.js, not in the database.</span>';
-    }
-  } catch (e) {
-    document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="6">Error loading pages</td></tr>';
-  }
-
-  document.getElementById('pageDetail').scrollIntoView({ behavior: 'smooth' });
 }
 
 // Current Issue management

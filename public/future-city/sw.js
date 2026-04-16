@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-future-city-v1';
+const CACHE_NAME = 'storybook-future-city-v2';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   '/future-city/index.html',
   '/future-city/book.html',
   '/future-city/css/style.css',
-  '/future-city/js/app.js',
+  '/shared/reader.js', '/future-city/js/data.js',
   '/future-city/manifest.json',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap',
   ...AUDIO_URLS
