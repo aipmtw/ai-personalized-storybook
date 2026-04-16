@@ -32,12 +32,29 @@ const abTotal = document.getElementById('abTotal');
 const autoplayBtn = document.getElementById('autoplayBtn');
 
 // ---- Auth ----
+let userName = null;
 const isAuthenticated = (function() {
   const params = new URLSearchParams(location.search);
-  if (params.get('ml_token')) return true;
-  if (document.cookie.includes('ml_auth=')) return true;
+  const token = params.get('ml_token');
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[0]));
+      userName = decodeURIComponent(params.get('ml_user') || payload.displayName || '');
+    } catch(e) {}
+    return true;
+  }
+  if (document.cookie.includes('ml_auth=')) {
+    // Try to get name from localStorage
+    try {
+      const cached = localStorage.getItem('ml_user_name');
+      if (cached) userName = cached;
+    } catch(e) {}
+    return true;
+  }
   return false;
 })();
+// Cache user name
+if (userName) try { localStorage.setItem('ml_user_name', userName); } catch(e) {}
 
 // ---- URL helpers ----
 // URL: /slug/ = cover (page 0), /slug/1 = page 1, /slug/end = end screen
@@ -498,6 +515,23 @@ async function probeCoverStats(contentPages) {
 }
 
 window.startReading = startReading;
+
+// ---- User status display ----
+const topControls = document.querySelector('.top-controls');
+if (topControls) {
+  const userStatus = document.createElement('span');
+  userStatus.style.cssText = 'font-size:.7rem;color:rgba(255,255,255,.4);margin-left:auto;padding-left:.5rem;white-space:nowrap';
+  if (isAuthenticated && userName) {
+    userStatus.textContent = userName;
+    userStatus.style.color = '#4ecdc4';
+  } else if (isAuthenticated) {
+    userStatus.textContent = '已登入';
+    userStatus.style.color = '#4ecdc4';
+  } else {
+    userStatus.innerHTML = '<span class="i18n-zh">未登入</span><span class="i18n-en">Not signed in</span><span class="i18n-both">未登入</span>';
+  }
+  topControls.appendChild(userStatus);
+}
 
 // ---- Version display in toolbar footer ----
 const versionEl = document.createElement('span');
