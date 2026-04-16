@@ -3,7 +3,7 @@ const BOOK = {
   title: '飛天腳踏車',
   subtitle: 'The Flying Bicycle',
   credits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-  version: 'ver 2',
+  version: 'ver 3',
   coverEmoji: '🚲',
   pages: [
   {

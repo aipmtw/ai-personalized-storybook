@@ -3,7 +3,7 @@ const BOOK = {
   title: '小美的恐龍冒險',
   subtitle: "Mei's Dinosaur Adventure",
   credits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-  version: 'ver 2',
+  version: 'ver 3',
   coverEmoji: '🦕',
   pages: [
     {

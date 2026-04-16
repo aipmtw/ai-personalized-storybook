@@ -3,7 +3,7 @@ const BOOK = {
   title: '時光旅行日記',
   subtitle: 'Time Travel Diary',
   credits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-  version: 'ver 2',
+  version: 'ver 3',
   coverEmoji: '⏰',
   pages: [
   {

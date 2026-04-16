@@ -3,7 +3,7 @@ const BOOK = {
   title: '小熊的魔法廚房',
   subtitle: 'Bear\'s Magic Kitchen',
   credits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-  version: 'ver 2',
+  version: 'ver 3',
   coverEmoji: '🧁',
   pages: [
   {

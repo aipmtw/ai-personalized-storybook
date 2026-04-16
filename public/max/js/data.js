@@ -3,7 +3,7 @@ const BOOK = {
   title: 'Max 的太空探險',
   subtitle: 'Max\'s Space Adventure',
   credits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-  version: 'ver 1',
+  version: 'ver 3',
   coverEmoji: '🚀',
   pages: [
   {

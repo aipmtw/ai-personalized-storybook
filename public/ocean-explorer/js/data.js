@@ -3,7 +3,7 @@ const BOOK = {
   title: '深海探險家',
   subtitle: 'Deep Sea Explorer',
   credits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-  version: 'ver 2',
+  version: 'ver 3',
   coverEmoji: '🌊',
   pages: [
   {

@@ -3,7 +3,7 @@ const BOOK = {
   title: 'Amy 的故事魔法',
   subtitle: 'Amy\'s Story Magic',
   credits: '審閱：Mark ｜ 共同編輯：Luce (AI)',
-  version: 'ver 1',
+  version: 'ver 3',
   coverEmoji: '🌤',
   pages: [
   {
