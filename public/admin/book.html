@@ -122,13 +122,21 @@ function fmtDuration(sec) {
 }
 
 function probeAudio(url) {
-  return new Promise(resolve => {
-    const a = new Audio();
-    a.preload = 'metadata';
-    a.addEventListener('loadedmetadata', () => resolve(a.duration));
-    a.addEventListener('error', () => resolve(null));
-    a.src = url;
-  });
+  return fetch(url, { method: 'HEAD' }).then(r => {
+    if (!r.ok) return null;
+    const size = parseInt(r.headers.get('content-length') || '0');
+    if (!size) return null;
+    // Estimate duration: MP3 at ~48kbps (Azure TTS typical) → bytes / 6000 ≈ seconds
+    // More accurate: load just this one file's metadata
+    return new Promise(resolve => {
+      const a = new Audio();
+      a.preload = 'metadata';
+      const timeout = setTimeout(() => resolve(size / 6000), 5000); // fallback estimate
+      a.addEventListener('loadedmetadata', () => { clearTimeout(timeout); resolve(a.duration); });
+      a.addEventListener('error', () => { clearTimeout(timeout); resolve(size / 6000); });
+      a.src = url;
+    });
+  }).catch(() => null);
 }
 
 async function init() {
@@ -221,9 +229,8 @@ async function init() {
     </tr>`;
   }).join('');
 
-  // Probe all MP3s
+  // Probe MP3s — sequential pairs to avoid browser throttling
   let zhTotal = 0, enTotal = 0, zhCount = 0, enCount = 0, zhMiss = 0, enMiss = 0;
-  const probes = [];
 
   for (let i = 0; i < pages.length; i++) {
     const p = pages[i];
@@ -231,33 +238,30 @@ async function init() {
     const audioNum = i; // cover=0 skipped, first content at index 1 → audio 1
     const pageNum = i + 1;
 
-    probes.push(
-      probeAudio(APP_BASE + '/' + slug + '/audio/page-' + audioNum + '-zh.mp3').then(dur => {
-        const el = document.getElementById('zh-' + pageNum);
-        if (dur != null) {
-          zhTotal += dur; zhCount++;
-          if (el) el.innerHTML = '<span class="dur-ok">' + fmtDuration(dur) + '</span>';
-        } else {
-          zhMiss++;
-          if (el) el.innerHTML = '<span class="dur-miss">missing</span>';
-        }
-      })
-    );
-    probes.push(
-      probeAudio(APP_BASE + '/' + slug + '/audio/page-' + audioNum + '-en.mp3').then(dur => {
-        const el = document.getElementById('en-' + pageNum);
-        if (dur != null) {
-          enTotal += dur; enCount++;
-          if (el) el.innerHTML = '<span class="dur-ok">' + fmtDuration(dur) + '</span>';
-        } else {
-          enMiss++;
-          if (el) el.innerHTML = '<span class="dur-miss">missing</span>';
-        }
-      })
-    );
-  }
+    // Probe zh and en for this page in parallel (just 2 at a time)
+    const [zhDur, enDur] = await Promise.all([
+      probeAudio(APP_BASE + '/' + slug + '/audio/page-' + audioNum + '-zh.mp3'),
+      probeAudio(APP_BASE + '/' + slug + '/audio/page-' + audioNum + '-en.mp3')
+    ]);
 
-  await Promise.all(probes);
+    const zhEl = document.getElementById('zh-' + pageNum);
+    if (zhDur != null) {
+      zhTotal += zhDur; zhCount++;
+      if (zhEl) zhEl.innerHTML = '<span class="dur-ok">' + fmtDuration(zhDur) + '</span>';
+    } else {
+      zhMiss++;
+      if (zhEl) zhEl.innerHTML = '<span class="dur-miss">missing</span>';
+    }
+
+    const enEl = document.getElementById('en-' + pageNum);
+    if (enDur != null) {
+      enTotal += enDur; enCount++;
+      if (enEl) enEl.innerHTML = '<span class="dur-ok">' + fmtDuration(enDur) + '</span>';
+    } else {
+      enMiss++;
+      if (enEl) enEl.innerHTML = '<span class="dur-miss">missing</span>';
+    }
+  }
 
   // Audio summary
   const summaryEl = document.getElementById('audioSummary');
