@@ -169,12 +169,13 @@ async function renderOverview(bookInfo, bookData) {
 
   document.title = title + ' — Admin';
 
-  let totalZhChars = 0, totalEnWords = 0;
+  let totalZhChars = 0, totalEnWords = 0, contentIdx = 0;
   const tableRows = pages.map((p, i) => {
-    const pageNum = i + 1;
     const isCover = p.type === 'cover';
     const isEnd = p.type === 'end';
     const isContent = !isCover && !isEnd;
+    if (isContent) contentIdx++;
+    const displayNum = isContent ? contentIdx : '';
     const zhText = p.zh || '';
     const enText = p.en || '';
     const zhLen = zhText.length;
@@ -187,7 +188,7 @@ async function renderOverview(bookInfo, bookData) {
     const detailLink = isCover ? `/admin/${slug}/cover` : `/admin/${slug}/${i}`;
 
     return `<tr>
-      <td><a href="${detailLink}">${pageNum}</a></td>
+      <td><a href="${detailLink}">${displayNum}</a></td>
       <td><span class="badge ${typeBadge}">${p.type || 'story'}</span></td>
       <td class="text-preview" onclick="location.href='${detailLink}'">${zhText.substring(0, 50) || (isCover ? bookData?.title || '' : '—')}</td>
       <td style="color:${zhOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${isContent ? zhLen : '—'}</td>
