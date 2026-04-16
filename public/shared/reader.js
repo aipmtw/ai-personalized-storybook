@@ -472,6 +472,8 @@ readerStyle.textContent = `
 .cover-start-btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(6,199,85,.4)}
 .cover-start-btn:active{transform:scale(.97)}
 .i18n-both{display:inline}
+body:not(.lang-zh):not(.lang-en) .text-zh{display:block !important}
+body:not(.lang-zh):not(.lang-en) .text-en{display:block !important}
 .i18n-zh,.i18n-en{display:inline}
 body.lang-zh .i18n-en,body.lang-zh .i18n-both{display:none}
 body.lang-en .i18n-zh,body.lang-en .i18n-both{display:none}
