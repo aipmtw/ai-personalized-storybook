@@ -112,6 +112,10 @@ function renderPage(pageNum) {
     `;
     probeCoverStats(totalContentPages);
   } else {
+    const isLast = pageNum === totalContentPages;
+    const nextLabel = isLast
+      ? '<span class="i18n-zh">故事結束 </span><span class="i18n-en">The End </span><span class="i18n-both">故事結束 The End </span>▶'
+      : '<span class="i18n-zh">下一頁 </span><span class="i18n-en">Next Page </span><span class="i18n-both">下一頁 Next Page </span>▶';
     container.innerHTML = `
       <div class="page-illustration ${p.illustBg}">
         <div class="emoji-scene">${p.emoji}</div>
@@ -119,6 +123,7 @@ function renderPage(pageNum) {
       <div class="page-text">
         <div class="text-zh">${p.zh}</div>
         <div class="text-en">${p.en}</div>
+        <button class="next-page-btn" onclick="goToPage(${pageNum + 1})">${nextLabel}</button>
       </div>
     `;
   }
@@ -471,6 +476,8 @@ readerStyle.textContent = `
 .cover-start-btn{display:inline-block;padding:.7rem 2rem;background:#06C755;color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit;margin:.5rem 0;transition:transform .1s,box-shadow .1s;box-shadow:0 4px 12px rgba(6,199,85,.3)}
 .cover-start-btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(6,199,85,.4)}
 .cover-start-btn:active{transform:scale(.97)}
+.next-page-btn{display:block;margin:1.5rem auto .5rem;padding:.5rem 1.5rem;background:rgba(255,255,255,.1);color:var(--text-medium,#aaa);border:1px solid rgba(255,255,255,.15);border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.next-page-btn:hover{background:rgba(78,205,196,.15);border-color:rgba(78,205,196,.3);color:#4ecdc4}
 .i18n-both{display:inline}
 body:not(.lang-zh):not(.lang-en) .text-zh{display:block !important}
 body:not(.lang-zh):not(.lang-en) .text-en{display:block !important}
