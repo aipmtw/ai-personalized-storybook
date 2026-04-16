@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rainbow-painting-v3';
+const CACHE_NAME = 'rainbow-painting-v4';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];
@@ -46,7 +46,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Network-first for HTML pages (get latest version)
-  if (event.request.mode === 'navigate' || event.request.url.endsWith('.html')) {
+  if (event.request.mode === 'navigate' || event.request.url.endsWith('.html') || event.request.url.includes('/shared/')) {
     event.respondWith(
       fetch(event.request).then((response) => {
         const clone = response.clone();
