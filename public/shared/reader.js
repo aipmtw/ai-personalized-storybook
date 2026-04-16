@@ -64,16 +64,16 @@ function renderPage(pageNum) {
         <div class="emoji-scene">📚</div>
       </div>
       <div class="page-text">
-        <div class="end-divider">— 故事結束 The End —</div>
+        <div class="end-divider"><span class="text-zh">— 故事結束 —</span><span class="text-en">— The End —</span></div>
         <div class="end-actions">
           <a href="https://app.markluce.ai/" class="end-cta">
             <span class="end-cta-icon">📚</span>
-            <span class="end-cta-text">回到書架<small>探索更多繪本</small></span>
+            <span class="end-cta-text"><span class="text-zh">回到書架<small>探索更多繪本</small></span><span class="text-en">Back to Bookshelf<small>Explore more stories</small></span></span>
           </a>
         </div>
         <div class="end-credits">
-          故事由 Luce (AI) 共同編輯 · 審閱：Mark<br>
-          <span class="end-brand">由 <a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a> 出品</span>
+          <span class="text-zh">故事由 Luce (AI) 共同編輯 · 審閱：Mark</span><span class="text-en">Co-edited by Luce (AI) · Reviewed by Mark</span><br>
+          <span class="end-brand"><span class="text-zh">由 </span><a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a><span class="text-zh"> 出品</span></span>
         </div>
       </div>
     `;
@@ -103,7 +103,7 @@ function renderPage(pageNum) {
         <div class="cover-subtitle">${BOOK.subtitle}</div>
         <div class="cover-credits">${BOOK.credits}</div>
         <div class="cover-stats" id="coverStats">${contentPages} pages</div>
-        <button class="cover-start-btn" onclick="startReading()">開始閱讀 Start Reading ▶</button>
+        <button class="cover-start-btn" onclick="startReading()"><span class="text-zh">開始閱讀 </span><span class="text-en">Start Reading </span>▶</button>
         <div class="cover-version">${BOOK.version}</div>
       </div>
     `;
@@ -440,11 +440,19 @@ async function probeCoverStats(contentPages) {
     return m + ':' + (s < 10 ? '0' : '') + s;
   };
 
-  const parts = [`${contentPages} pages`];
-  if (zhCount) parts.push(`${zhCount} ZH audio`);
-  if (enCount) parts.push(`${enCount} EN audio`);
-  if (zhTotal + enTotal > 0) parts.push(`~${fmtMin(zhTotal + enTotal)} bilingual`);
-  el.textContent = parts.join(' · ');
+  // Build stats respecting language mode
+  const zhParts = [`${contentPages} 頁`];
+  const enParts = [`${contentPages} pages`];
+  const bothParts = [`${contentPages} pages`];
+
+  if (zhCount) { zhParts.push(`${zhCount} 篇音檔`); bothParts.push(`${zhCount} ZH audio`); }
+  if (enCount) { enParts.push(`${enCount} audio tracks`); bothParts.push(`${enCount} EN audio`); }
+
+  if (zhTotal > 0) zhParts.push(`~${fmtMin(Math.round(zhTotal))}`);
+  if (enTotal > 0) enParts.push(`~${fmtMin(Math.round(enTotal))}`);
+  if (zhTotal + enTotal > 0) bothParts.push(`~${fmtMin(Math.round(zhTotal + enTotal))} bilingual`);
+
+  el.innerHTML = `<span class="text-zh">${zhParts.join(' · ')}</span><span class="text-en">${enParts.join(' · ')}</span><span class="text-both">${bothParts.join(' · ')}</span>`;
 }
 
 window.startReading = startReading;
@@ -462,6 +470,11 @@ coverStyle.textContent = `
 .cover-start-btn{display:inline-block;padding:.7rem 2rem;background:#06C755;color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit;margin:.5rem 0;transition:transform .1s,box-shadow .1s;box-shadow:0 4px 12px rgba(6,199,85,.3)}
 .cover-start-btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(6,199,85,.4)}
 .cover-start-btn:active{transform:scale(.97)}
+.text-both{display:inline}
+.text-zh,.text-en{display:inline}
+body.lang-zh .text-en,body.lang-zh .text-both{display:none}
+body.lang-en .text-zh,body.lang-en .text-both{display:none}
+body:not(.lang-zh):not(.lang-en) .text-zh,body:not(.lang-zh):not(.lang-en) .text-en{display:none}
 `;
 document.head.appendChild(coverStyle);
 
