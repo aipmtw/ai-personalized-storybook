@@ -40,48 +40,67 @@ const isAuthenticated = (function() {
 })();
 
 // ---- URL helpers ----
-// URL: /slug/ = cover (page 0), /slug/1 = content page 1, etc.
+// URL: /slug/ = cover (page 0), /slug/1 = page 1, /slug/end = end screen
+const END_PAGE = -1; // sentinel value for end screen
+
 function getPageFromURL() {
   const parts = location.pathname.split('/').filter(Boolean);
   const last = parts[parts.length - 1];
   if (last === SLUG) return 0; // /slug/ = cover
+  if (last === 'end') return END_PAGE;
   const num = parseInt(last);
   if (!isNaN(num) && num >= 1 && num <= totalContentPages) return num;
   return 0;
 }
 
 function updateURL(pageNum) {
-  const url = pageNum === 0 ? `/${SLUG}/` : `/${SLUG}/${pageNum}`;
+  const url = pageNum === 0 ? `/${SLUG}/` : pageNum === END_PAGE ? `/${SLUG}/end` : `/${SLUG}/${pageNum}`;
   history.pushState({ page: pageNum }, '', url);
 }
 
 // ---- Page rendering ----
 function renderPage(pageNum) {
-  // Universal end screen — after the last content page
-  if (pageNum > totalContentPages) {
-    currentPage = pageNum;
+  // Universal end screen
+  if (pageNum === END_PAGE) {
+    currentPage = END_PAGE;
     const container = pageContainer;
     container.className = 'page-container page page-bg-1';
     container.scrollTop = 0;
     container.innerHTML = `
       <div class="page-illustration" style="background:rgba(255,255,255,.04)">
-        <div class="emoji-scene">📚</div>
+        <div class="emoji-scene">🎉</div>
       </div>
-      <div class="page-text">
-        <div class="end-divider"><span class="i18n-zh">— 故事結束 —</span><span class="i18n-en">— The End —</span></div>
+      <div class="page-text" style="text-align:center">
+        <div class="end-congrats">
+          <span class="i18n-zh">恭喜你讀完了！</span>
+          <span class="i18n-en">Congratulations!</span>
+          <span class="i18n-both">恭喜你讀完了！Congratulations!</span>
+        </div>
+        <div class="end-book-title">${BOOK.title}</div>
+        <div class="end-book-subtitle">${BOOK.subtitle}</div>
+        <div class="end-recap">
+          <span class="i18n-zh">你剛讀完 ${totalContentPages} 頁的精彩故事！</span>
+          <span class="i18n-en">You just finished ${totalContentPages} pages of adventure!</span>
+          <span class="i18n-both">你剛讀完 ${totalContentPages} 頁的精彩故事！</span>
+        </div>
         <div class="end-actions">
-          <a href="https://app.markluce.ai/" class="end-cta">
-            <span class="end-cta-icon">📚</span>
-            <span class="end-cta-text"><span class="i18n-zh">回到書架<small>探索更多繪本</small></span><span class="i18n-en">Back to Bookshelf<small>Explore more stories</small></span></span>
+          <a href="https://app.markluce.ai/" class="end-cta-btn">
+            <span class="i18n-zh">📚 探索更多繪本</span>
+            <span class="i18n-en">📚 Explore More Stories</span>
+            <span class="i18n-both">📚 探索更多繪本 Explore More</span>
+            <span style="margin-left:.3rem">▶</span>
           </a>
         </div>
         <div class="end-credits">
-          <span class="i18n-zh">故事由 Luce (AI) 共同編輯 · 審閱：Mark</span><span class="i18n-en">Co-edited by Luce (AI) · Reviewed by Mark</span><br>
+          <span class="i18n-zh">故事由 Luce (AI) 共同編輯 · 審閱：Mark</span>
+          <span class="i18n-en">Co-edited by Luce (AI) · Reviewed by Mark</span>
+          <span class="i18n-both">${BOOK.credits}</span><br>
           <span class="end-brand"><span class="i18n-zh">由 </span><a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a><span class="i18n-zh"> 出品</span></span>
         </div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.2);margin-top:.5rem">${BOOK.version || ''}</div>
       </div>
     `;
-    updateDots(-1); // no active dot
+    updateDots(END_PAGE);
     applyLangMode(langMode);
     return;
   }
@@ -123,7 +142,7 @@ function renderPage(pageNum) {
       <div class="page-text">
         <div class="text-zh">${p.zh}</div>
         <div class="text-en">${p.en}</div>
-        <button class="next-page-btn" onclick="goToPage(${pageNum + 1})">${nextLabel}</button>
+        <button class="next-page-btn" onclick="goToPage(${isLast ? 'END_PAGE' : pageNum + 1})">${nextLabel}</button>
       </div>
     `;
   }
@@ -183,10 +202,10 @@ function updateDots(activePageNum) {
 
 // ---- Navigation ----
 function goToPage(pageNum) {
-  if (pageNum < 0 || pageNum > totalContentPages + 1) return; // +1 for end screen
+  if (pageNum < END_PAGE || (pageNum > totalContentPages && pageNum !== END_PAGE)) return;
 
-  // Demo gate: content pages beyond DEMO_MAX
-  if (!isAuthenticated && pageNum > DEMO_MAX) {
+  // Demo gate: content pages beyond DEMO_MAX (allow end screen)
+  if (!isAuthenticated && pageNum > DEMO_MAX && pageNum !== END_PAGE) {
     stopAudio();
     autoplayOn = false;
     if (autoplayBtn) autoplayBtn.classList.remove('active');
@@ -205,8 +224,14 @@ function goToPage(pageNum) {
   }, 150);
 }
 
-function nextPage() { goToPage(currentPage + 1); }
-function prevPage() { goToPage(currentPage - 1); }
+function nextPage() {
+  if (currentPage === totalContentPages) goToPage(END_PAGE);
+  else if (currentPage !== END_PAGE) goToPage(currentPage + 1);
+}
+function prevPage() {
+  if (currentPage === END_PAGE) goToPage(totalContentPages);
+  else goToPage(currentPage - 1);
+}
 
 // ---- Touch / swipe ----
 let touchStartX = 0;
@@ -352,7 +377,7 @@ async function playPageAudio(pageNum) {
     }, 1000);
   } else if (autoplayOn && currentPage === totalContentPages) {
     // Last story page done — show end screen
-    setTimeout(() => goToPage(totalContentPages + 1), 1000);
+    setTimeout(() => goToPage(END_PAGE), 1000);
     autoplayOn = false;
     if (autoplayBtn) autoplayBtn.classList.remove('active');
   } else if (autoplayOn) {
@@ -479,6 +504,13 @@ readerStyle.textContent = `
 .cover-start-btn:active{transform:scale(.97)}
 .next-page-btn{display:block;margin:1.5rem auto .5rem;padding:.5rem 1.5rem;background:rgba(255,255,255,.1);color:var(--text-medium,#aaa);border:1px solid rgba(255,255,255,.15);border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
 .next-page-btn:hover{background:rgba(78,205,196,.15);border-color:rgba(78,205,196,.3);color:#4ecdc4}
+.end-congrats{font-size:1.8rem;font-weight:900;color:#4ecdc4;margin-bottom:.5rem}
+.end-book-title{font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:.2rem}
+.end-book-subtitle{font-size:1rem;color:#aaa;margin-bottom:.8rem}
+.end-recap{font-size:.9rem;color:#ccc;margin-bottom:1.5rem}
+.end-cta-btn{display:inline-block;padding:.8rem 2rem;background:#06C755;color:#fff;border-radius:12px;font-size:1.1rem;font-weight:700;text-decoration:none;transition:transform .1s,box-shadow .1s;box-shadow:0 4px 12px rgba(6,199,85,.3)}
+.end-cta-btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(6,199,85,.4);text-decoration:none;color:#fff}
+.end-credits{font-size:.78rem;color:#888;margin-top:1.5rem}
 .i18n-both{display:inline}
 body:not(.lang-zh):not(.lang-en) .text-zh{display:block !important}
 body:not(.lang-zh):not(.lang-en) .text-en{display:block !important}

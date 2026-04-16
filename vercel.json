@@ -3,6 +3,7 @@
     { "source": "/api/auth", "destination": "/api/auth.js" },
     { "source": "/admin/:slug/:page", "destination": "/admin/book.html" },
     { "source": "/admin/:slug", "destination": "/admin/book.html" },
+    { "source": "/:slug/end", "destination": "/:slug/index.html" },
     { "source": "/:slug/:page(\\d+)", "destination": "/:slug/index.html" }
   ],
   "headers": [

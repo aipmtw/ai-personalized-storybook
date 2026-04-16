@@ -201,6 +201,15 @@ async function renderOverview(bookInfo, bookData) {
     </tr>`;
   }).join('');
 
+  // Add universal end row
+  tableRows += `<tr style="opacity:.6">
+    <td><a href="/admin/${slug}/end"></a></td>
+    <td><span class="badge badge-end">end</span></td>
+    <td class="text-preview" onclick="location.href='/admin/${slug}/end'" style="cursor:pointer">Universal end screen</td>
+    <td>—</td><td class="hide-mobile">—</td><td class="hide-mobile">—</td>
+    <td class="dur-na">—</td><td class="dur-na">—</td><td>🎉</td>
+  </tr>`;
+
   document.getElementById('main').innerHTML = `
     <h1>${title}</h1>
     <div style="font-size:.85rem;color:#888;margin-bottom:.5rem">${subtitle}</div>
@@ -488,6 +497,55 @@ async function renderPageDetail(bookInfo, bookData, pageIndex) {
 }
 
 // ============================================
+// END SCREEN PREVIEW
+// ============================================
+async function renderEndPreview(bookInfo, bookData) {
+  const title = bookData?.title || bookInfo?.title_zh || slug;
+  const subtitle = bookData?.subtitle || bookInfo?.title_en || '';
+  const contentPages = bookData.pages.filter(p => p.type !== 'cover').length;
+  const age = bookInfo?.age_tier || '—';
+
+  document.title = 'End Screen — ' + title + ' — Admin';
+
+  document.getElementById('main').innerHTML = `
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem">
+      <a href="/admin/${slug}" style="font-size:.82rem">← ${title}</a>
+      <span style="color:#555;font-size:.78rem">/ End Screen</span>
+    </div>
+
+    <h2>End Screen Preview — as user sees it</h2>
+    <div class="cover-preview" style="text-align:center">
+      <div class="illust">🎉</div>
+      <div class="info">
+        <div style="font-size:1.5rem;font-weight:900;color:#4ecdc4;margin-bottom:.5rem">恭喜你讀完了！</div>
+        <div style="font-size:1.3rem;font-weight:700;color:#fff">${title}</div>
+        <div style="font-size:1rem;color:#aaa;margin-bottom:.8rem">${subtitle}</div>
+        <div style="font-size:.9rem;color:#ccc;margin-bottom:1.5rem">你剛讀完 ${contentPages} 頁的精彩故事！</div>
+        <div style="display:inline-block;padding:.8rem 2rem;background:#06C755;color:#fff;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:default">📚 探索更多繪本 ▶</div>
+        <div style="font-size:.78rem;color:#888;margin-top:1.5rem">${bookData?.credits || ''}</div>
+        <div style="font-size:.6rem;color:rgba(255,255,255,.2);margin-top:.5rem">${bookData?.version || ''}</div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>End Screen Info</h3>
+      <div class="stat-row">
+        <span>Universal — same for all books</span>
+        <span>No audio</span>
+        <span>Shows book title + page count recap</span>
+        <span>Strong CTA to bookshelf</span>
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <a href="/admin/${slug}/${bookData.pages.length - 1}" class="nav-btn">← Page ${contentPages}</a>
+      <a href="/admin/${slug}" class="nav-btn">↑ Book Overview</a>
+      <a href="${APP_BASE}/${slug}/end" target="_blank" class="nav-btn">Open in Reader</a>
+    </div>
+  `;
+}
+
+// ============================================
 // INIT
 // ============================================
 async function init() {
@@ -509,6 +567,9 @@ async function init() {
   } else if (pageParam === 'cover') {
     // Cover preview
     await renderCover(bookInfo, bookData);
+  } else if (pageParam === 'end') {
+    // End screen preview
+    await renderEndPreview(bookInfo, bookData);
   } else {
     // Page detail — pageParam is the array index (1 = first content page)
     const idx = parseInt(pageParam);
