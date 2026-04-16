@@ -142,7 +142,7 @@ function renderPage(pageNum) {
       <div class="page-text">
         <div class="text-zh">${p.zh}</div>
         <div class="text-en">${p.en}</div>
-        <button class="next-page-btn" onclick="goToPage(${isLast ? 'END_PAGE' : pageNum + 1})">${nextLabel}</button>
+        <button class="next-page-btn" onclick="goToPageAndPlay(${isLast ? 'END_PAGE' : pageNum + 1})">${nextLabel}</button>
       </div>
     `;
   }
@@ -223,6 +223,14 @@ function goToPage(pageNum) {
     pageContainer.style.opacity = '1';
   }, 150);
 }
+
+function goToPageAndPlay(pageNum) {
+  goToPage(pageNum);
+  if (pageNum > 0 && pageNum !== END_PAGE) {
+    setTimeout(() => playPageAudio(pageNum), 500);
+  }
+}
+window.goToPageAndPlay = goToPageAndPlay;
 
 function nextPage() {
   if (currentPage === totalContentPages) goToPage(END_PAGE);
