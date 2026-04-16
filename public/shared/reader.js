@@ -143,6 +143,7 @@ function renderPage(pageNum) {
         <div class="text-zh">${p.zh}</div>
         <div class="text-en">${p.en}</div>
         <button class="next-page-btn" onclick="goToPageAndPlay(${isLast ? 'END_PAGE' : pageNum + 1})">${nextLabel}</button>
+        <span class="page-time">${new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei', hour: '2-digit', minute: '2-digit' })} Taipei</span>
       </div>
     `;
   }
@@ -512,8 +513,10 @@ readerStyle.textContent = `
 .cover-start-btn{display:inline-block;padding:.7rem 2rem;background:#06C755;color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit;margin:.5rem 0;transition:transform .1s,box-shadow .1s;box-shadow:0 4px 12px rgba(6,199,85,.3)}
 .cover-start-btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(6,199,85,.4)}
 .cover-start-btn:active{transform:scale(.97)}
-.next-page-btn{display:block;margin:1.5rem auto .5rem;padding:.5rem 1.5rem;background:rgba(255,255,255,.1);color:var(--text-medium,#aaa);border:1px solid rgba(255,255,255,.15);border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
-.next-page-btn:hover{background:rgba(78,205,196,.15);border-color:rgba(78,205,196,.3);color:#4ecdc4}
+.next-page-btn{display:block;margin:1.5rem auto 5rem;padding:.7rem 2rem;background:#06C755;color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .1s,box-shadow .1s;box-shadow:0 4px 12px rgba(6,199,85,.3)}
+.next-page-btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(6,199,85,.4)}
+.next-page-btn:active{transform:scale(.97)}
+.page-time{display:block;text-align:center;font-size:.65rem;color:rgba(255,255,255,.2);margin-top:.3rem;margin-bottom:4rem}
 .end-congrats{font-size:1.8rem;font-weight:900;color:#4ecdc4;margin-bottom:.5rem}
 .end-book-title{font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:.2rem}
 .end-book-subtitle{font-size:1rem;color:#aaa;margin-bottom:.8rem}
