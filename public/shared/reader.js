@@ -103,7 +103,7 @@ function renderPage(pageNum) {
         <div class="cover-subtitle">${BOOK.subtitle}</div>
         <div class="cover-credits">${BOOK.credits}</div>
         <div class="cover-stats" id="coverStats"><span class="text-zh">${contentPages} 頁</span><span class="text-en">${contentPages} pages</span><span class="text-both">${contentPages} pages</span></div>
-        <button class="cover-start-btn" onclick="startReading()"><span class="text-zh">開始閱讀 </span><span class="text-en">Start Reading </span>▶</button>
+        <button class="cover-start-btn" onclick="startReading()"><span class="text-zh">開始閱讀 </span><span class="text-en">Start Reading </span><span class="text-both">開始閱讀 Start Reading </span>▶</button>
         <div class="cover-version">${BOOK.version}</div>
       </div>
     `;
