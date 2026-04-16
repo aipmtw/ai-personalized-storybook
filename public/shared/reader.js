@@ -64,6 +64,7 @@ function renderPage(pageNum) {
   container.scrollTop = 0;
 
   if (p.type === 'cover') {
+    const contentPages = BOOK.pages.filter(pg => pg.type !== 'cover' && pg.type !== 'end').length;
     container.innerHTML = `
       <div class="page-illustration ${p.illustBg}">
         <div class="emoji-scene">${p.emoji}</div>
@@ -72,9 +73,13 @@ function renderPage(pageNum) {
         <div class="cover-title">${BOOK.title}</div>
         <div class="cover-subtitle">${BOOK.subtitle}</div>
         <div class="cover-credits">${BOOK.credits}</div>
+        <div class="cover-stats" id="coverStats">${contentPages} pages</div>
+        <button class="cover-start-btn" onclick="startReading()">開始閱讀 Start Reading ▶</button>
         <div class="cover-version">${BOOK.version}</div>
       </div>
     `;
+    // Probe audio counts async
+    probeCoverStats(contentPages);
   } else if (p.type === 'end') {
     container.innerHTML = `
       <div class="page-illustration ${p.illustBg}">
@@ -378,11 +383,72 @@ document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscr
 // body.lang-zh .text-en, body.lang-zh .cover-subtitle { display: none }
 // body.lang-en .text-zh, body.lang-en .cover-title { display: none }
 
+// ---- Cover stats & Start Reading ----
+function startReading() {
+  goToPage(2); // page 2 = first content page
+  setTimeout(() => playPageAudio(2), 500);
+}
+
+async function probeCoverStats(contentPages) {
+  const el = document.getElementById('coverStats');
+  if (!el) return;
+
+  let zhCount = 0, enCount = 0, zhTotal = 0, enTotal = 0;
+  const probes = [];
+
+  for (let i = 1; i <= contentPages; i++) {
+    probes.push(
+      new Promise(resolve => {
+        const a = new Audio();
+        a.preload = 'metadata';
+        a.addEventListener('loadedmetadata', () => { zhCount++; zhTotal += a.duration; resolve(); });
+        a.addEventListener('error', () => resolve());
+        a.src = `/${SLUG}/audio/page-${i}-zh.mp3`;
+      })
+    );
+    probes.push(
+      new Promise(resolve => {
+        const a = new Audio();
+        a.preload = 'metadata';
+        a.addEventListener('loadedmetadata', () => { enCount++; enTotal += a.duration; resolve(); });
+        a.addEventListener('error', () => resolve());
+        a.src = `/${SLUG}/audio/page-${i}-en.mp3`;
+      })
+    );
+  }
+
+  await Promise.all(probes);
+
+  const fmtMin = (sec) => {
+    const m = Math.floor(sec / 60);
+    const s = Math.round(sec % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  };
+
+  const parts = [`${contentPages} pages`];
+  if (zhCount) parts.push(`${zhCount} ZH audio`);
+  if (enCount) parts.push(`${enCount} EN audio`);
+  if (zhTotal + enTotal > 0) parts.push(`~${fmtMin(zhTotal + enTotal)} bilingual`);
+  el.textContent = parts.join(' · ');
+}
+
+window.startReading = startReading;
+
 // ---- Version display ----
 const versionEl = document.createElement('span');
 versionEl.style.cssText = 'font-size:.6rem;color:rgba(255,255,255,0.3);margin-left:.5rem';
 versionEl.textContent = BOOK.version || '';
 if (autoplayBtn) autoplayBtn.parentNode.insertBefore(versionEl, autoplayBtn.nextSibling);
+
+// ---- Inject cover styles ----
+const coverStyle = document.createElement('style');
+coverStyle.textContent = `
+.cover-stats{font-size:.85rem;color:var(--text-medium,#888);margin:.8rem 0 .5rem;letter-spacing:.02em}
+.cover-start-btn{display:inline-block;padding:.7rem 2rem;background:#06C755;color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit;margin:.5rem 0;transition:transform .1s,box-shadow .1s;box-shadow:0 4px 12px rgba(6,199,85,.3)}
+.cover-start-btn:hover{transform:scale(1.03);box-shadow:0 6px 16px rgba(6,199,85,.4)}
+.cover-start-btn:active{transform:scale(.97)}
+`;
+document.head.appendChild(coverStyle);
 
 // ---- Init ----
 applyLangMode(langMode);
