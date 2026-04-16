@@ -1,4 +1,4 @@
-const CACHE_NAME = 'magic-seeds-v2';
+const CACHE_NAME = 'magic-seeds-v3';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];

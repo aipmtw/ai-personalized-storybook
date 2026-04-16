@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cloud-adventure-v2';
+const CACHE_NAME = 'cloud-adventure-v3';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];

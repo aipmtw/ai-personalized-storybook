@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bear-kitchen-v2';
+const CACHE_NAME = 'bear-kitchen-v3';
 
 // Generate audio file URLs for all 9 pages
 const AUDIO_URLS = [];

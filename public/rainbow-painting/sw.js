@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rainbow-painting-v2';
+const CACHE_NAME = 'rainbow-painting-v3';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];

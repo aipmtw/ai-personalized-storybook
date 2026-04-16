@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kitten-market-v2';
+const CACHE_NAME = 'kitten-market-v3';
 
 // Generate audio file URLs for all 11 pages (cover + 10 story + end)
 const AUDIO_URLS = [];

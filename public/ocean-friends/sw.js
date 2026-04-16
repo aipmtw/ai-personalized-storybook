@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ocean-friends-v2';
+const CACHE_NAME = 'ocean-friends-v3';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];

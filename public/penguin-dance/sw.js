@@ -1,4 +1,4 @@
-const CACHE_NAME = 'penguin-dance-v2';
+const CACHE_NAME = 'penguin-dance-v3';
 
 // Generate audio file URLs for all 10 pages
 const AUDIO_URLS = [];

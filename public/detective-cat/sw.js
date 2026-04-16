@@ -1,4 +1,4 @@
-const CACHE_NAME = 'storybook-detective-cat-v2';
+const CACHE_NAME = 'storybook-detective-cat-v3';
 
 // Generate audio file URLs for all 11 pages (cover + 10 story pages)
 const AUDIO_URLS = [];
