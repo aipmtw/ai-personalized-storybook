@@ -22,8 +22,6 @@ h2{font-size:.95rem;color:#fff;margin:1.2rem 0 .4rem}
 
 .book-meta{display:flex;flex-wrap:wrap;gap:.6rem;font-size:.78rem;margin:.8rem 0}
 .book-meta span{padding:.2rem .6rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc}
-.book-meta .ok{background:rgba(78,205,196,.15);color:#4ecdc4}
-.book-meta .warn{background:rgba(235,77,75,.15);color:#eb4d4b}
 
 table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.78rem}
 th,td{padding:.45rem .6rem;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
@@ -35,7 +33,8 @@ td a{color:#4ecdc4}
 .badge-story{background:rgba(78,205,196,.15);color:#4ecdc4}
 .badge-end{background:rgba(255,255,255,.08);color:#888}
 
-.text-preview{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.text-preview{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.text-preview:hover{color:#4ecdc4}
 .dur{font-family:'SF Mono','Fira Code',monospace;font-size:.75rem}
 .dur-ok{color:#4ecdc4}
 .dur-miss{color:#eb4d4b}
@@ -47,10 +46,47 @@ button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
 .audio-summary{display:flex;flex-wrap:wrap;gap:.6rem;font-size:.78rem;margin:1rem 0;padding:.8rem 1rem;background:rgba(78,205,196,.06);border:1px solid rgba(78,205,196,.15);border-radius:8px}
 .audio-summary span{padding:.2rem .6rem;border-radius:4px}
 
+.nav-bar{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.5rem}
+.nav-bar a{padding:.4rem 1rem;border-radius:6px;font-size:.82rem;text-decoration:none}
+.nav-btn{background:#333;color:#fff;border:1px solid #555}
+.nav-btn:hover{border-color:#4ecdc4;color:#4ecdc4;text-decoration:none}
+.nav-primary{background:#4ecdc4;color:#000;font-weight:600}
+
+/* Page preview */
+.page-preview{max-width:420px;margin:1.5rem auto;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.preview-illust{padding:2rem;text-align:center;font-size:4rem;background:rgba(255,255,255,.04)}
+.preview-text{padding:1.5rem}
+.preview-text .zh{font-size:1rem;color:#e0e0e0;margin-bottom:.8rem;line-height:1.8}
+.preview-text .en{font-size:.9rem;color:#aaa;line-height:1.7}
+
+/* Cover preview */
+.cover-preview{max-width:420px;margin:1.5rem auto;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);text-align:center}
+.cover-preview .illust{padding:2.5rem 1.5rem 1rem;font-size:5rem;background:rgba(255,255,255,.04)}
+.cover-preview .info{padding:1.5rem}
+.cover-preview .title-zh{font-size:2rem;font-weight:900;color:#fff;margin-bottom:.2rem}
+.cover-preview .title-en{font-size:1.1rem;color:#aaa;margin-bottom:.8rem}
+.cover-preview .credits{font-size:.85rem;color:#888;margin-bottom:.8rem}
+.cover-preview .stats{font-size:.82rem;color:#aaa;margin-bottom:1rem}
+.cover-preview .start-btn{display:inline-block;padding:.7rem 2rem;background:#06C755;color:#fff;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:default}
+.cover-preview .version{font-size:.7rem;color:#555;margin-top:.8rem}
+
+/* Detail info */
+.detail-section{margin:1rem 0;padding:1rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px}
+.detail-section h3{font-size:.85rem;color:#888;margin-bottom:.5rem}
+.detail-section .full-text{font-size:.92rem;line-height:1.8;margin-bottom:.3rem}
+.detail-section .stat-row{display:flex;flex-wrap:wrap;gap:.5rem;font-size:.78rem;margin-top:.5rem}
+.detail-section .stat-row span{padding:.2rem .5rem;border-radius:4px;background:rgba(255,255,255,.06);color:#ccc}
+
+.audio-player{margin:.5rem 0}
+.audio-player audio{width:100%;max-width:400px}
+.audio-player .file-info{font-size:.72rem;color:#888;margin-top:.2rem}
+
 @media(max-width:600px){
   table{font-size:.72rem}
   th,td{padding:.35rem .4rem}
   .hide-mobile{display:none}
+  .cover-preview .title-zh{font-size:1.5rem}
+  .page-preview{margin:1rem auto}
 }
 </style>
 </head>
@@ -64,55 +100,24 @@ button.sm:hover{border-color:#4ecdc4;color:#4ecdc4}
 </div>
 </div>
 
-<div class="container">
-  <h1 id="bookTitle">Loading...</h1>
-  <div id="bookSubtitle" style="font-size:.85rem;color:#888;margin-bottom:.5rem"></div>
-  <div class="book-meta" id="bookMeta"></div>
-
-  <h2>Pages & Audio</h2>
-  <div style="overflow-x:auto">
-  <table>
-  <thead><tr>
-    <th>#</th>
-    <th>Type</th>
-    <th>中文</th>
-    <th>字數</th>
-    <th class="hide-mobile">English</th>
-    <th class="hide-mobile">Words</th>
-    <th>ZH MP3</th>
-    <th>EN MP3</th>
-    <th>Emoji</th>
-  </tr></thead>
-  <tbody id="pageTableBody">
-    <tr><td colspan="9" style="color:#888">Loading...</td></tr>
-  </tbody>
-  </table>
-  </div>
-
-  <div class="audio-summary" id="audioSummary" style="display:none"></div>
-
-  <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap">
-    <a id="readLink" href="#" target="_blank" style="padding:.4rem 1rem;background:#4ecdc4;color:#000;border-radius:6px;font-weight:600;font-size:.82rem;text-decoration:none">Read Book</a>
-    <a href="/admin/" style="padding:.4rem 1rem;background:#333;color:#fff;border:1px solid #555;border-radius:6px;font-size:.82rem;text-decoration:none">← Back to Admin</a>
-  </div>
-</div>
+<div class="container" id="main">Loading...</div>
 
 <script>
 const APP_BASE = 'https://app.markluce.ai';
 const API_BASE = 'https://markluce.ai';
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-// Get slug from URL: /admin/{slug}
+// Parse URL: /admin/{slug} or /admin/{slug}/{page}
 const pathParts = location.pathname.split('/').filter(Boolean);
-const slug = pathParts.length >= 2 ? pathParts[pathParts.length - 1] : null;
+// pathParts[0] = 'admin', pathParts[1] = slug, pathParts[2] = page (optional)
+const slug = pathParts[1] || null;
+const pageParam = pathParts[2] || null; // 'cover', number, or null
 
-if (!slug || slug === 'admin') {
-  document.getElementById('bookTitle').textContent = 'No book specified';
-  document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="9">Use /admin/{slug} to view a book</td></tr>';
-} else {
-  document.title = slug + ' — Admin';
-  document.getElementById('readLink').href = APP_BASE + '/' + slug + '/';
-  init();
-}
+const SPEC = {
+  '3-6': { zhMin: 20, zhMax: 40, enMin: 15, enMax: 30 },
+  '7-9': { zhMin: 40, zhMax: 70, enMin: 30, enMax: 50 },
+  '10-12': { zhMin: 60, zhMax: 100, enMin: 50, enMax: 100 },
+};
 
 function fmtDuration(sec) {
   if (!sec || isNaN(sec)) return '—';
@@ -120,8 +125,6 @@ function fmtDuration(sec) {
   const s = Math.round(sec % 60);
   return m + ':' + (s < 10 ? '0' : '') + s;
 }
-
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 async function probeAudio(url) {
   try {
@@ -134,8 +137,7 @@ async function probeAudio(url) {
   } catch { return null; }
 }
 
-async function init() {
-  // Load book info from API
+async function loadBookData() {
   let bookInfo = null;
   try {
     const r = await fetch(API_BASE + '/api/books?status=all&_t=' + Date.now());
@@ -143,80 +145,53 @@ async function init() {
     if (d.ok) bookInfo = (d.books || []).find(b => b.slug === slug);
   } catch (e) {}
 
-  // Load data.js for page content
   let bookData = null;
   try {
     const r = await fetch(APP_BASE + '/' + slug + '/js/data.js?_t=' + Date.now());
     const text = await r.text();
     const fn = new Function(text + '; return BOOK;');
     bookData = fn();
-  } catch (e) {
-    console.error('Failed to load data.js:', e);
-  }
+  } catch (e) {}
 
-  // Header info
+  return { bookInfo, bookData };
+}
+
+// ============================================
+// OVERVIEW MODE
+// ============================================
+async function renderOverview(bookInfo, bookData) {
   const title = bookData?.title || bookInfo?.title_zh || slug;
   const subtitle = bookData?.subtitle || bookInfo?.title_en || '';
-  document.getElementById('bookTitle').textContent = title;
-  document.getElementById('bookSubtitle').textContent = subtitle;
-  document.title = title + ' — Admin';
-
-  // Meta badges
   const age = bookInfo?.age_tier || '—';
-  const status = bookInfo?.status || '—';
-  const month = bookInfo?.published_month || '—';
-  const pageCount = bookData?.pages?.length || bookInfo?.page_count || 0;
-  document.getElementById('bookMeta').innerHTML = `
-    <span>${slug}</span>
-    <span>Age: ${age}</span>
-    <span>Pages: ${pageCount}</span>
-    <span>Month: ${month}</span>
-    <span>Status: ${status}</span>
-  `;
-
-  if (!bookData || !bookData.pages || !bookData.pages.length) {
-    document.getElementById('pageTableBody').innerHTML = '<tr><td colspan="9" style="color:#eb4d4b">Could not load data.js for this book</td></tr>';
-    return;
-  }
-
-  const pages = bookData.pages;
-  const SPEC = {
-    '3-6': { zhMin: 20, zhMax: 40, enMin: 15, enMax: 30 },
-    '7-9': { zhMin: 40, zhMax: 70, enMin: 30, enMax: 50 },
-    '10-12': { zhMin: 60, zhMax: 100, enMin: 50, enMax: 100 },
-  };
+  const pages = bookData?.pages || [];
+  const contentPages = pages.filter(p => p.type !== 'cover' && p.type !== 'end');
   const spec = SPEC[age] || SPEC['7-9'];
 
-  // Render table
+  document.title = title + ' — Admin';
+
   let totalZhChars = 0, totalEnWords = 0;
-  document.getElementById('pageTableBody').innerHTML = pages.map((p, i) => {
+  const tableRows = pages.map((p, i) => {
     const pageNum = i + 1;
     const isCover = p.type === 'cover';
     const isEnd = p.type === 'end';
     const isContent = !isCover && !isEnd;
-
     const zhText = p.zh || '';
     const enText = p.en || '';
     const zhLen = zhText.length;
     const enWords = enText.split(/\s+/).filter(w => w).length;
-
     if (isContent) { totalZhChars += zhLen; totalEnWords += enWords; }
-
     const zhOk = !isContent || (zhLen >= spec.zhMin && zhLen <= spec.zhMax);
     const enOk = !isContent || (enWords >= spec.enMin && enWords <= spec.enMax);
-
     const typeBadge = isCover ? 'badge-cover' : isEnd ? 'badge-end' : 'badge-story';
-    const typeLabel = p.type || 'story';
-
-    // Audio cell: will be filled async. Cover/end = no audio expected
-    const audioId = isContent ? i : null; // content at index i → audio file number i (pageNum-1)
+    const audioId = isContent ? i : null;
+    const detailLink = isCover ? `/admin/${slug}/cover` : `/admin/${slug}/${i}`;
 
     return `<tr>
-      <td>${pageNum}</td>
-      <td><span class="badge ${typeBadge}">${typeLabel}</span></td>
-      <td class="text-preview">${zhText.substring(0, 50) || '—'}</td>
+      <td><a href="${detailLink}">${pageNum}</a></td>
+      <td><span class="badge ${typeBadge}">${p.type || 'story'}</span></td>
+      <td class="text-preview" onclick="location.href='${detailLink}'">${zhText.substring(0, 50) || (isCover ? bookData?.title || '' : '—')}</td>
       <td style="color:${zhOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${isContent ? zhLen : '—'}</td>
-      <td class="hide-mobile text-preview">${enText.substring(0, 50) || '—'}</td>
+      <td class="hide-mobile text-preview" onclick="location.href='${detailLink}'">${enText.substring(0, 50) || (isCover ? bookData?.subtitle || '' : '—')}</td>
       <td class="hide-mobile" style="color:${enOk ? '#4ecdc4' : '#eb4d4b'};font-weight:700">${isContent ? enWords : '—'}</td>
       <td class="dur" id="zh-${pageNum}">${audioId != null ? '<span style="color:#888">...</span>' : '<span class="dur-na">—</span>'}</td>
       <td class="dur" id="en-${pageNum}">${audioId != null ? '<span style="color:#888">...</span>' : '<span class="dur-na">—</span>'}</td>
@@ -224,62 +199,326 @@ async function init() {
     </tr>`;
   }).join('');
 
-  // Probe MP3s — sequential pairs to avoid browser throttling
-  let zhTotal = 0, enTotal = 0, zhCount = 0, enCount = 0, zhMiss = 0, enMiss = 0;
+  document.getElementById('main').innerHTML = `
+    <h1>${title}</h1>
+    <div style="font-size:.85rem;color:#888;margin-bottom:.5rem">${subtitle}</div>
+    <div class="book-meta">
+      <span>${slug}</span>
+      <span>Age: ${age}</span>
+      <span>Pages: ${pages.length}</span>
+      <span>Month: ${bookInfo?.published_month || '—'}</span>
+      <span>Status: ${bookInfo?.status || '—'}</span>
+    </div>
+    <h2>Pages & Audio</h2>
+    <div style="overflow-x:auto">
+    <table>
+    <thead><tr><th>#</th><th>Type</th><th>中文</th><th>字數</th><th class="hide-mobile">English</th><th class="hide-mobile">Words</th><th>ZH MP3</th><th>EN MP3</th><th>Emoji</th></tr></thead>
+    <tbody>${tableRows}</tbody>
+    </table>
+    </div>
+    <div class="audio-summary" id="audioSummary" style="display:none"></div>
+    <div class="nav-bar">
+      <a href="${APP_BASE}/${slug}/" target="_blank" class="nav-primary">Read Book</a>
+      <a href="/admin/" class="nav-btn">← Back to Admin</a>
+    </div>
+  `;
 
+  // Probe MP3s sequentially
+  let zhTotal = 0, enTotal = 0, zhCount = 0, enCount = 0, zhMiss = 0, enMiss = 0;
   for (let i = 0; i < pages.length; i++) {
     const p = pages[i];
     if (p.type === 'cover' || p.type === 'end') continue;
-    const audioNum = i; // cover=0 skipped, first content at index 1 → audio 1
+    const audioNum = i;
     const pageNum = i + 1;
-
-    // Probe zh and en for this page in parallel (just 2 at a time)
     const [zhDur, enDur] = await Promise.all([
       probeAudio(APP_BASE + '/' + slug + '/audio/page-' + audioNum + '-zh.mp3'),
       probeAudio(APP_BASE + '/' + slug + '/audio/page-' + audioNum + '-en.mp3')
     ]);
-
     const zhEl = document.getElementById('zh-' + pageNum);
-    if (zhDur != null) {
-      zhTotal += zhDur; zhCount++;
-      if (zhEl) zhEl.innerHTML = '<span class="dur-ok">' + fmtDuration(zhDur) + '</span>';
-    } else {
-      zhMiss++;
-      if (zhEl) zhEl.innerHTML = '<span class="dur-miss">missing</span>';
-    }
-
+    if (zhDur != null) { zhTotal += zhDur; zhCount++; if (zhEl) zhEl.innerHTML = '<span class="dur-ok">' + fmtDuration(zhDur) + '</span>'; }
+    else { zhMiss++; if (zhEl) zhEl.innerHTML = '<span class="dur-miss">missing</span>'; }
     const enEl = document.getElementById('en-' + pageNum);
-    if (enDur != null) {
-      enTotal += enDur; enCount++;
-      if (enEl) enEl.innerHTML = '<span class="dur-ok">' + fmtDuration(enDur) + '</span>';
-    } else {
-      enMiss++;
-      if (enEl) enEl.innerHTML = '<span class="dur-miss">missing</span>';
-    }
+    if (enDur != null) { enTotal += enDur; enCount++; if (enEl) enEl.innerHTML = '<span class="dur-ok">' + fmtDuration(enDur) + '</span>'; }
+    else { enMiss++; if (enEl) enEl.innerHTML = '<span class="dur-miss">missing</span>'; }
   }
 
-  // Audio summary
   const summaryEl = document.getElementById('audioSummary');
   summaryEl.style.display = 'flex';
-  const contentCount = pages.filter(p => p.type !== 'cover' && p.type !== 'end').length;
+  const cc = contentPages.length;
   summaryEl.innerHTML = `
-    <span style="background:rgba(78,205,196,.1);color:#4ecdc4;font-weight:700">
-      ZH: ${zhCount}/${contentCount} files &middot; ${fmtDuration(Math.round(zhTotal))}
-    </span>
-    <span style="background:rgba(78,205,196,.1);color:#4ecdc4;font-weight:700">
-      EN: ${enCount}/${contentCount} files &middot; ${fmtDuration(Math.round(enTotal))}
-    </span>
-    <span style="background:rgba(255,255,255,.06);color:#ccc">
-      Combined: ${fmtDuration(Math.round(zhTotal + enTotal))}
-    </span>
-    ${zhMiss + enMiss > 0
-      ? '<span style="background:rgba(235,77,75,.15);color:#eb4d4b;font-weight:700">Missing: ' + zhMiss + ' ZH, ' + enMiss + ' EN</span>'
-      : '<span style="background:rgba(78,205,196,.15);color:#4ecdc4">All audio present</span>'}
-    <span style="background:rgba(255,255,255,.06);color:#ccc">
-      Text: ${totalZhChars} 字 / ${totalEnWords} words
-    </span>
+    <span style="background:rgba(78,205,196,.1);color:#4ecdc4;font-weight:700">ZH: ${zhCount}/${cc} files &middot; ${fmtDuration(Math.round(zhTotal))}</span>
+    <span style="background:rgba(78,205,196,.1);color:#4ecdc4;font-weight:700">EN: ${enCount}/${cc} files &middot; ${fmtDuration(Math.round(enTotal))}</span>
+    <span style="background:rgba(255,255,255,.06);color:#ccc">Combined: ${fmtDuration(Math.round(zhTotal + enTotal))}</span>
+    ${zhMiss + enMiss > 0 ? '<span style="background:rgba(235,77,75,.15);color:#eb4d4b;font-weight:700">Missing: ' + zhMiss + ' ZH, ' + enMiss + ' EN</span>' : '<span style="background:rgba(78,205,196,.15);color:#4ecdc4">All audio present</span>'}
+    <span style="background:rgba(255,255,255,.06);color:#ccc">Text: ${totalZhChars} 字 / ${totalEnWords} words</span>
   `;
 }
+
+// ============================================
+// COVER PREVIEW MODE
+// ============================================
+async function renderCover(bookInfo, bookData) {
+  const pages = bookData?.pages || [];
+  const cover = pages[0];
+  const contentPages = pages.filter(p => p.type !== 'cover' && p.type !== 'end');
+  const title = bookData?.title || bookInfo?.title_zh || slug;
+  const subtitle = bookData?.subtitle || bookInfo?.title_en || '';
+  const age = bookInfo?.age_tier || '—';
+
+  document.title = title + ' Cover — Admin';
+
+  document.getElementById('main').innerHTML = `
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem">
+      <a href="/admin/${slug}" style="font-size:.82rem">← ${title}</a>
+      <span style="color:#555;font-size:.78rem">/ Cover</span>
+    </div>
+
+    <h2>Cover Preview — as user sees it</h2>
+    <div class="cover-preview">
+      <div class="illust">${cover?.emoji || '📖'}</div>
+      <div class="info">
+        <div class="title-zh">${title}</div>
+        <div class="title-en">${subtitle}</div>
+        <div class="credits">${bookData?.credits || ''}</div>
+        <div class="stats" id="coverStats">${contentPages.length} pages · loading audio...</div>
+        <div class="start-btn">開始閱讀 Start Reading ▶</div>
+        <div class="version">${bookData?.version || ''}</div>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Book Info</h3>
+      <div class="stat-row">
+        <span>${slug}</span>
+        <span>Age: ${age}</span>
+        <span>Total pages: ${pages.length} (${contentPages.length} content + cover/end)</span>
+        <span>Month: ${bookInfo?.published_month || '—'}</span>
+        <span>Status: ${bookInfo?.status || '—'}</span>
+      </div>
+    </div>
+
+    <div class="audio-summary" id="audioSummary" style="display:none"></div>
+
+    <div class="nav-bar">
+      <a href="/admin/${slug}/1" class="nav-primary">Page 1 →</a>
+      <a href="/admin/${slug}" class="nav-btn">↑ Book Overview</a>
+      <a href="${APP_BASE}/${slug}/" target="_blank" class="nav-btn">Open Reader</a>
+    </div>
+  `;
+
+  // Probe audio for stats
+  let zhCount = 0, enCount = 0, zhTotal = 0, enTotal = 0;
+  for (let i = 0; i < pages.length; i++) {
+    if (pages[i].type === 'cover' || pages[i].type === 'end') continue;
+    const [zhDur, enDur] = await Promise.all([
+      probeAudio(APP_BASE + '/' + slug + '/audio/page-' + i + '-zh.mp3'),
+      probeAudio(APP_BASE + '/' + slug + '/audio/page-' + i + '-en.mp3')
+    ]);
+    if (zhDur != null) { zhCount++; zhTotal += zhDur; }
+    if (enDur != null) { enCount++; enTotal += enDur; }
+  }
+
+  const statsEl = document.getElementById('coverStats');
+  if (statsEl) {
+    const parts = [`${contentPages.length} pages`];
+    if (zhCount) parts.push(`${zhCount} ZH audio`);
+    if (enCount) parts.push(`${enCount} EN audio`);
+    if (zhTotal + enTotal > 0) parts.push(`~${fmtDuration(Math.round(zhTotal + enTotal))} bilingual`);
+    statsEl.textContent = parts.join(' · ');
+  }
+
+  const summaryEl = document.getElementById('audioSummary');
+  summaryEl.style.display = 'flex';
+  const cc = contentPages.length;
+  const zhMiss = cc - zhCount, enMiss = cc - enCount;
+  summaryEl.innerHTML = `
+    <span style="background:rgba(78,205,196,.1);color:#4ecdc4;font-weight:700">ZH: ${zhCount}/${cc} files &middot; ${fmtDuration(Math.round(zhTotal))}</span>
+    <span style="background:rgba(78,205,196,.1);color:#4ecdc4;font-weight:700">EN: ${enCount}/${cc} files &middot; ${fmtDuration(Math.round(enTotal))}</span>
+    <span style="background:rgba(255,255,255,.06);color:#ccc">Combined: ${fmtDuration(Math.round(zhTotal + enTotal))}</span>
+    ${zhMiss + enMiss > 0 ? '<span style="background:rgba(235,77,75,.15);color:#eb4d4b;font-weight:700">Missing: ' + zhMiss + ' ZH, ' + enMiss + ' EN</span>' : '<span style="background:rgba(78,205,196,.15);color:#4ecdc4">All audio present</span>'}
+  `;
+}
+
+// ============================================
+// PAGE DETAIL MODE
+// ============================================
+async function renderPageDetail(bookInfo, bookData, pageIndex) {
+  const pages = bookData?.pages || [];
+  const p = pages[pageIndex];
+  if (!p) {
+    document.getElementById('main').innerHTML = '<h1>Page not found</h1>';
+    return;
+  }
+
+  const title = bookData?.title || bookInfo?.title_zh || slug;
+  const age = bookInfo?.age_tier || '—';
+  const spec = SPEC[age] || SPEC['7-9'];
+  const contentPages = pages.filter(pg => pg.type !== 'cover' && pg.type !== 'end');
+  const contentIndex = pages.slice(0, pageIndex + 1).filter(pg => pg.type !== 'cover' && pg.type !== 'end').length;
+  const totalContent = contentPages.length;
+
+  const isCover = p.type === 'cover';
+  const isEnd = p.type === 'end';
+  const isContent = !isCover && !isEnd;
+
+  const zhText = p.zh || '';
+  const enText = p.en || '';
+  const zhLen = zhText.length;
+  const enWords = enText.split(/\s+/).filter(w => w).length;
+
+  const pageLabel = isCover ? 'Cover' : isEnd ? 'End' : `Page ${contentIndex} of ${totalContent}`;
+  document.title = pageLabel + ' — ' + title + ' — Admin';
+
+  // Navigation links
+  const prevIndex = pageIndex > 0 ? pageIndex - 1 : null;
+  const nextIndex = pageIndex < pages.length - 1 ? pageIndex + 1 : null;
+  const prevLabel = prevIndex != null ? (pages[prevIndex].type === 'cover' ? 'Cover' : 'Page ' + (prevIndex)) : null;
+  const nextLabel = nextIndex != null ? (pages[nextIndex].type === 'end' ? 'End' : 'Page ' + (nextIndex)) : null;
+  const prevHref = prevIndex != null ? (pages[prevIndex].type === 'cover' ? `/admin/${slug}/cover` : `/admin/${slug}/${prevIndex}`) : null;
+  const nextHref = nextIndex != null ? `/admin/${slug}/${nextIndex}` : null;
+
+  // Audio number for content pages
+  const audioNum = isContent ? pageIndex : null;
+  const zhAudioUrl = audioNum != null ? `${APP_BASE}/${slug}/audio/page-${audioNum}-zh.mp3` : null;
+  const enAudioUrl = audioNum != null ? `${APP_BASE}/${slug}/audio/page-${audioNum}-en.mp3` : null;
+
+  // Build page preview
+  let previewHTML = '';
+  if (isCover) {
+    previewHTML = `
+      <div class="cover-preview">
+        <div class="illust">${p.emoji || '📖'}</div>
+        <div class="info">
+          <div class="title-zh">${bookData?.title || ''}</div>
+          <div class="title-en">${bookData?.subtitle || ''}</div>
+          <div class="credits">${bookData?.credits || ''}</div>
+          <div class="version">${bookData?.version || ''}</div>
+        </div>
+      </div>`;
+  } else {
+    previewHTML = `
+      <div class="page-preview">
+        <div class="preview-illust">${p.emoji || ''}</div>
+        <div class="preview-text">
+          <div class="zh">${zhText}</div>
+          <div class="en">${enText}</div>
+        </div>
+      </div>`;
+  }
+
+  // Spec check for content pages
+  let specHTML = '';
+  if (isContent) {
+    const zhOk = zhLen >= spec.zhMin && zhLen <= spec.zhMax;
+    const enOk = enWords >= spec.enMin && enWords <= spec.enMax;
+    specHTML = `
+      <div class="detail-section">
+        <h3>Text Analysis</h3>
+        <div class="stat-row">
+          <span style="color:${zhOk ? '#4ecdc4' : '#eb4d4b'}">中文: ${zhLen} 字 (spec: ${spec.zhMin}-${spec.zhMax})</span>
+          <span style="color:${enOk ? '#4ecdc4' : '#eb4d4b'}">English: ${enWords} words (spec: ${spec.enMin}-${spec.enMax})</span>
+        </div>
+        <h3 style="margin-top:.8rem">Full Chinese Text</h3>
+        <div class="full-text" style="color:#e0e0e0">${zhText}</div>
+        <h3 style="margin-top:.8rem">Full English Text</h3>
+        <div class="full-text" style="color:#aaa">${enText}</div>
+      </div>`;
+  } else if (isEnd) {
+    specHTML = `
+      <div class="detail-section">
+        <h3>End Page Text</h3>
+        <div class="full-text" style="color:#e0e0e0">${zhText}</div>
+        <div class="full-text" style="color:#aaa;margin-top:.5rem">${enText}</div>
+      </div>`;
+  }
+
+  // Audio section
+  let audioHTML = '';
+  if (isContent) {
+    audioHTML = `
+      <div class="detail-section">
+        <h3>Audio</h3>
+        <div class="audio-player">
+          <div style="font-size:.78rem;color:#888;margin-bottom:.3rem">ZH MP3 — <code>page-${audioNum}-zh.mp3</code> <span id="zhDur" class="dur" style="margin-left:.5rem">...</span></div>
+          <audio controls preload="metadata" src="${zhAudioUrl}" id="zhAudio" style="width:100%;max-width:400px"></audio>
+        </div>
+        <div class="audio-player">
+          <div style="font-size:.78rem;color:#888;margin-bottom:.3rem">EN MP3 — <code>page-${audioNum}-en.mp3</code> <span id="enDur" class="dur" style="margin-left:.5rem">...</span></div>
+          <audio controls preload="metadata" src="${enAudioUrl}" id="enAudio" style="width:100%;max-width:400px"></audio>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('main').innerHTML = `
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem">
+      <a href="/admin/${slug}" style="font-size:.82rem">← ${title}</a>
+      <span style="color:#555;font-size:.78rem">/ ${pageLabel}</span>
+    </div>
+
+    <h1>${pageLabel}</h1>
+    <div class="book-meta">
+      <span>${slug}</span>
+      <span>Age: ${age}</span>
+      <span>Type: ${p.type || 'story'}</span>
+      ${p.emoji ? '<span>Emoji: ' + p.emoji + '</span>' : ''}
+    </div>
+
+    ${previewHTML}
+    ${specHTML}
+    ${audioHTML}
+
+    <div class="nav-bar">
+      ${prevHref ? '<a href="' + prevHref + '" class="nav-btn">← ' + prevLabel + '</a>' : ''}
+      ${nextHref ? '<a href="' + nextHref + '" class="nav-primary">' + nextLabel + ' →</a>' : ''}
+      <a href="/admin/${slug}" class="nav-btn">↑ Book Overview</a>
+      <a href="${APP_BASE}/${slug}/${isCover ? '' : pageIndex + 1}" target="_blank" class="nav-btn">Open in Reader</a>
+    </div>
+  `;
+
+  // Probe audio durations
+  if (isContent) {
+    const [zhDur, enDur] = await Promise.all([probeAudio(zhAudioUrl), probeAudio(enAudioUrl)]);
+    const zhEl = document.getElementById('zhDur');
+    const enEl = document.getElementById('enDur');
+    if (zhEl) zhEl.innerHTML = zhDur != null ? '<span class="dur-ok">' + fmtDuration(zhDur) + '</span>' : '<span class="dur-miss">missing</span>';
+    if (enEl) enEl.innerHTML = enDur != null ? '<span class="dur-ok">' + fmtDuration(enDur) + '</span>' : '<span class="dur-miss">missing</span>';
+  }
+}
+
+// ============================================
+// INIT
+// ============================================
+async function init() {
+  if (!slug || slug === 'admin') {
+    document.getElementById('main').innerHTML = '<h1>No book specified</h1><p>Use /admin/{slug} to view a book</p>';
+    return;
+  }
+
+  const { bookInfo, bookData } = await loadBookData();
+
+  if (!bookData || !bookData.pages || !bookData.pages.length) {
+    document.getElementById('main').innerHTML = '<h1>Could not load book data</h1><p>Failed to load data.js for ' + slug + '</p>';
+    return;
+  }
+
+  if (pageParam === null) {
+    // Overview mode
+    await renderOverview(bookInfo, bookData);
+  } else if (pageParam === 'cover') {
+    // Cover preview
+    await renderCover(bookInfo, bookData);
+  } else {
+    // Page detail — pageParam is the array index (1 = first content page)
+    const idx = parseInt(pageParam);
+    if (isNaN(idx) || idx < 0 || idx >= bookData.pages.length) {
+      document.getElementById('main').innerHTML = '<h1>Page not found</h1><a href="/admin/' + slug + '">← Back to book</a>';
+      return;
+    }
+    await renderPageDetail(bookInfo, bookData, idx);
+  }
+}
+
+init();
 </script>
 
 </body>
