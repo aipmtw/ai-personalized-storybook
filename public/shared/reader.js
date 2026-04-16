@@ -429,6 +429,8 @@ function toggleAutoplay() {
   }
 }
 autoplayBtn.addEventListener('click', toggleAutoplay);
+// Override autoplay button text with i18n
+if (autoplayBtn) autoplayBtn.innerHTML = '&#9654;&#9654; <span class="i18n-zh">自動讀整本書</span><span class="i18n-en">Auto-Read Book</span><span class="i18n-both">自動讀整本書</span>';
 
 // ---- Demo gate ----
 function showDemoGate() {
