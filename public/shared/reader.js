@@ -243,9 +243,13 @@ function goToPage(pageNum) {
 }
 
 function goToPageAndPlay(pageNum) {
+  if (audioPlaying) stopAudio();
   goToPage(pageNum);
   if (pageNum > 0 && pageNum !== END_PAGE) {
-    setTimeout(() => playPageAudio(pageNum), 500);
+    // Wait for fade transition (150ms) + render to complete
+    setTimeout(() => {
+      if (currentPage === pageNum && !audioPlaying) playPageAudio(pageNum);
+    }, 600);
   }
 }
 window.goToPageAndPlay = goToPageAndPlay;
@@ -486,8 +490,7 @@ document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscr
 
 // ---- Cover stats & Start Reading ----
 function startReading() {
-  goToPage(1); // page 1 = first content page — aligned with admin and audio
-  setTimeout(() => playPageAudio(1), 500);
+  goToPageAndPlay(1);
 }
 
 async function probeCoverStats(contentPages) {
