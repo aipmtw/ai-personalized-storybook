@@ -157,7 +157,7 @@ const BOOK = {
     en: 'That night, Xiao Zhen sat at her desk and opened her diary. Moonlight poured in through the window, and Xiao Lan\'s blue light flickered quietly on the tablet. She picked up her pen and wrote carefully: "A true partner helps you grow, not just win. Scores can be earned through shortcuts, but real knowledge can only be built step by step on your own. Thank you, Xiao Lan, for being willing to walk the harder path with me."'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-20',
     illustBg: 'illust-bg-20',
     emoji: '🤝🌱📖',

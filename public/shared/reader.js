@@ -53,6 +53,35 @@ function updateURL(pageNum) {
 
 // ---- Page rendering ----
 function renderPage(pageNum) {
+  // Universal end screen — after the last data page
+  if (pageNum > BOOK.pages.length) {
+    currentPage = pageNum;
+    const container = pageContainer;
+    container.className = 'page-container page page-bg-1';
+    container.scrollTop = 0;
+    container.innerHTML = `
+      <div class="page-illustration" style="background:rgba(255,255,255,.04)">
+        <div class="emoji-scene">📚</div>
+      </div>
+      <div class="page-text">
+        <div class="end-divider">— 故事結束 The End —</div>
+        <div class="end-actions">
+          <a href="https://app.markluce.ai/" class="end-cta">
+            <span class="end-cta-icon">📚</span>
+            <span class="end-cta-text">回到書架<small>探索更多繪本</small></span>
+          </a>
+        </div>
+        <div class="end-credits">
+          故事由 Luce (AI) 共同編輯 · 審閱：Mark<br>
+          <span class="end-brand">由 <a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a> 出品</span>
+        </div>
+      </div>
+    `;
+    pageIndicator.textContent = 'The End';
+    applyLangMode(langMode);
+    return;
+  }
+
   const p = BOOK.pages[pageNum - 1];
   if (!p) return;
 
@@ -80,27 +109,6 @@ function renderPage(pageNum) {
     `;
     // Probe audio counts async
     probeCoverStats(contentPages);
-  } else if (p.type === 'end') {
-    container.innerHTML = `
-      <div class="page-illustration ${p.illustBg}">
-        <div class="emoji-scene">${p.emoji}</div>
-      </div>
-      <div class="page-text">
-        <div class="text-zh">${p.zh}</div>
-        <div class="text-en">${p.en}</div>
-        <div class="end-divider">— 故事結束 —</div>
-        <div class="end-actions">
-          <a href="https://app.markluce.ai/" class="end-cta">
-            <span class="end-cta-icon">📚</span>
-            <span class="end-cta-text">回到書架<small>探索更多繪本</small></span>
-          </a>
-        </div>
-        <div class="end-credits">
-          故事由 Luce (AI) 共同編輯 · 審閱：Mark<br>
-          <span class="end-brand">由 <a href="https://markluce.ai/" style="color:inherit;text-decoration:underline">MarkLuce.ai</a> 出品</span>
-        </div>
-      </div>
-    `;
   } else {
     container.innerHTML = `
       <div class="page-illustration ${p.illustBg}">
@@ -128,7 +136,7 @@ function renderPage(pageNum) {
 
 // ---- Navigation ----
 function goToPage(pageNum) {
-  if (pageNum < 1 || pageNum > BOOK.pages.length) return;
+  if (pageNum < 1 || pageNum > BOOK.pages.length + 1) return; // +1 for universal end screen
 
   // Demo gate
   if (!isAuthenticated && pageNum > DEMO_MAX) {
@@ -298,9 +306,16 @@ async function playPageAudio(pageNum) {
     setTimeout(() => {
       goToPage(currentPage + 1);
       setTimeout(() => {
-        if (autoplayOn) playPageAudio(currentPage);
+        // Play audio if next page is a content page, otherwise stop
+        const nextP = BOOK.pages[currentPage - 1];
+        if (autoplayOn && nextP && nextP.type !== 'cover') playPageAudio(currentPage);
       }, 800);
     }, 1000);
+  } else if (autoplayOn && currentPage === BOOK.pages.length) {
+    // Last story page done — show end screen, stop autoplay
+    setTimeout(() => goToPage(BOOK.pages.length + 1), 1000);
+    autoplayOn = false;
+    if (autoplayBtn) autoplayBtn.classList.remove('active');
   } else if (autoplayOn) {
     autoplayOn = false;
     if (autoplayBtn) autoplayBtn.classList.remove('active');

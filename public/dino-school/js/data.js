@@ -93,7 +93,7 @@ const BOOK = {
     en: 'The rain stopped and a rainbow appeared in the sky. Little Dino wiped his tears and smiled: "With friends by my side, I\'m not afraid of anything!"'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-12',
     illustBg: 'illust-bg-12',
     emoji: '🌟🦕🐊🐢🎒',

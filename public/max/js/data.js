@@ -157,7 +157,7 @@ const BOOK = {
     en: 'Back on Earth, Max sat at his desk and carefully recorded every discovery from the adventure in his space journal. The geometric patterns of the Martian ruins, the light-language codes of Europa\'s creatures, the atmospheric data of the purple planet — every page carried a brand new discovery. Nova floated quietly beside his desk, glowing with a warm blue light, like a faithful friend keeping watch nearby.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-20',
     illustBg: 'illust-bg-20',
     emoji: '🌟🚀🔭',

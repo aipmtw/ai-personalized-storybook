@@ -125,7 +125,7 @@ const BOOK = {
     en: 'The whole forest created a perfect symphony unlike anything heard before. Xiao Lin stood up and spread her arms wide, conducting every sound like a maestro. Butterflies danced around her, flowers bloomed even more brilliantly, and the forest was filled with joy.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-16',
     illustBg: 'illust-bg-16',
     emoji: '🎼🌲👧',

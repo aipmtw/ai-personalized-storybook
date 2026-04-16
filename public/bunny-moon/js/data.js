@@ -93,7 +93,7 @@ const BOOK = {
     en: 'Little bunny nodded — she finally understood! She happily hopped toward home, and the moon followed her all the way.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-12',
     illustBg: 'illust-bg-12',
     emoji: '🐰🛏️🌙',

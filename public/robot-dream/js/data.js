@@ -125,7 +125,7 @@ const BOOK = {
     en: 'Gradually, the other robots in the factory began to have their own dreams too. Some wanted to see the ocean, some wanted to learn painting, some wanted to write a song, and some wanted to grow a flower. Xiao Tie helped each friend, just as books had once helped him.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-16',
     illustBg: 'illust-bg-16',
     emoji: '🤖🤖🤖🪽⭐🌈',

@@ -117,7 +117,7 @@ const BOOK = {
     en: 'Xiao An ran downstairs and hugged Grandpa, who was making tea. "Grandpa, Taiwan in the old days was so beautiful and warm!" Grandpa smiled and said, "Those beautiful things have always been in our hearts." Xiao An placed the bamboo dragonfly on his desk, deciding to treasure every person and every moment around him.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-15',
     illustBg: 'illust-bg-15',
     emoji: '\u270D\uFE0F\uD83D\uDCD6\uD83D\uDE0A',

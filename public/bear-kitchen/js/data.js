@@ -93,7 +93,7 @@ const BOOK = {
     en: '"Of course!" said Little Bear with a smile. Everyone ate the cake together. Every bite was sweet, and everyone was so happy.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-12',
     illustBg: 'illust-bg-12',
     emoji: '🧁💛🐻',

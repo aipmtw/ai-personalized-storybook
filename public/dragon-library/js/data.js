@@ -157,7 +157,7 @@ const BOOK = {
     en: 'From that day on, Ink Star became Little Flame\'s companion, and together they guarded the Dragon\'s Library. Little Flame also came to understand a profound truth: stories don\'t just live on pages — they truly live in the hearts of everyone who reads them. Every time someone opens a book and reads each word with care, that story\'s world becomes more real, more luminous. Because every reader is a story\'s greatest guardian.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-20',
     illustBg: 'illust-bg-20',
     emoji: '📚🐉🌟',

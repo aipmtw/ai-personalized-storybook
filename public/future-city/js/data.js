@@ -157,7 +157,7 @@ const BOOK = {
     en: 'Construction took ten years. The bio-concrete grew slowly under sunlight, solar leaves were installed one by one, and rivers were channeled into every street. Xiao Cheng grew from a girl into a young architect, witnessing her dream become reality piece by piece.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-20',
     illustBg: 'illust-bg-20',
     emoji: '🌆🌿✨',

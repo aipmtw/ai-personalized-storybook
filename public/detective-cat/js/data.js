@@ -125,7 +125,7 @@ const BOOK = {
     en: 'Back at her agency, Mao Mao wrote today\'s lesson in her notebook: "A good detective follows the evidence, not assumptions. Every footprint and every crumb is telling us the truth."'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-16',
     illustBg: 'illust-bg-16',
     emoji: '\uD83D\uDC31\uD83D\uDCDA\uD83C\uDF1F',

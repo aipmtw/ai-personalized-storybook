@@ -93,7 +93,7 @@ const BOOK = {
       en: 'The sun went down and Xiao Lu flew Mei back home. "Thank you, Xiao Lu! Today was the best day ever!" Mei hugged Xiao Lu tightly.'
     },
     {
-      type: 'end',
+      type: 'story',
       bg: 'page-bg-12',
       illustBg: 'illust-bg-12',
       emoji: '🌙⭐🦕',

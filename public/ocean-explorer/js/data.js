@@ -157,7 +157,7 @@ const BOOK = {
     en: 'The submersible surfaced safely, returning to warm sunlight. Back on the research ship, Dr. Lin and Xiao Hai immediately uploaded all video footage, sensor data, and DNA sample information to the international marine biodiversity database. Within hours, the discovery of the Starlight Octopus captured the attention of scientists worldwide. Marine research teams from the United States, Japan, and France sent messages congratulating them on the find.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-20',
     illustBg: 'illust-bg-20',
     emoji: '\u{1F469}\u200D\u{1F52C}\u{1F30A}\u{1F31F}',

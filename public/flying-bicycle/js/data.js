@@ -125,7 +125,7 @@ const BOOK = {
     en: 'The sun slowly turned orange-red, painting the sky with beautiful sunset colors. Xiao Fei knew it was time to go home. She gently lowered her altitude and aimed for a golden rice field. "Thud!" The tires touched the dirt, drawing two long lines. The cardboard wings were all crumpled, but Xiao Fei thought they were the most beautiful wings in the whole world.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-16',
     illustBg: 'illust-bg-16',
     emoji: '\uD83D\uDCA1\uD83D\uDEB2\u2728',

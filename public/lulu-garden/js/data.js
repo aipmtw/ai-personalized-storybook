@@ -93,7 +93,7 @@ const BOOK = {
     en: 'The sun was setting, and the flowers gently swayed goodbye. Lulu said, "I will come back tomorrow to take care of you!"'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-12',
     illustBg: 'illust-bg-12',
     emoji: '📓🌸🌍',

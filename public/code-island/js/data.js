@@ -157,7 +157,7 @@ const BOOK = {
     en: 'From that day on, Xiao Kai started using code to change his life. He built an automatic grouping program for his classmates, wrote a meal planner for his mom, and even made an automatic feeder for the neighbor\'s cat! Whenever he faced a challenge, he remembered everything he learned on Code Island — analyze the problem, break it into steps, test, debug, and try again.'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-20',
     illustBg: 'illust-bg-20',
     emoji: '💻🌍🚀',

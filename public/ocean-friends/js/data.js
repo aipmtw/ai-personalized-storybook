@@ -93,7 +93,7 @@ const BOOK = {
     en: 'Everyone celebrated together, singing and dancing! The octopus changed into many colors, the dolphin sprayed water high, and the reef was full of joy!'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-12',
     illustBg: 'illust-bg-12',
     emoji: '🐠🌊💕',

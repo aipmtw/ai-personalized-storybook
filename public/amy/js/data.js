@@ -117,7 +117,7 @@ const BOOK = {
     en: 'Back home, Amy opened her tablet. Echo\'s smiling face was already waiting on the screen. "Congratulations, Amy! You did it!" Amy smiled and said, "Thank you, Echo. You taught me that my voice can be powerful too." Echo replied, "That power was always inside you."'
   },
   {
-    type: 'end',
+    type: 'story',
     bg: 'page-bg-15',
     illustBg: 'illust-bg-15',
     emoji: '\uD83C\uDF19\uD83D\uDCD6\uD83C\uDF1F',
