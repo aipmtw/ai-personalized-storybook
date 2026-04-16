@@ -560,9 +560,18 @@
     history.replaceState(null, '', location.pathname);
   }
 
-  // Register root service worker
+  // Register root service worker + upgrade toast
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data?.type === 'SW_UPDATED' && !document.getElementById('upgradeToast')) {
+        const t = document.createElement('div');
+        t.id = 'upgradeToast';
+        t.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#5d4037;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.85rem;z-index:300;display:flex;align-items:center;gap:.8rem;box-shadow:0 4px 20px rgba(0,0,0,.3)';
+        t.innerHTML = '<span>新版本已準備好</span><button onclick="location.reload()" style="padding:.3rem .8rem;background:#d4a574;color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:.8rem">更新</button><button onclick="this.parentElement.remove()" style="background:none;border:none;color:#ccc;cursor:pointer">✕</button>';
+        document.body.appendChild(t);
+      }
+    });
   }
   </script>
 

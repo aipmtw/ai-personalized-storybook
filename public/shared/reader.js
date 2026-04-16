@@ -585,6 +585,33 @@ renderPage(currentPage);
 pageContainer.style.opacity = '1';
 history.replaceState({ page: currentPage }, '', currentPage === 0 ? `/${SLUG}/` : `/${SLUG}/${currentPage}`);
 
+// ---- Service Worker registration + upgrade toast ----
+if ('serviceWorker' in navigator) {
+  // Register per-book SW for offline audio caching
+  navigator.serviceWorker.register(`/${SLUG}/sw.js`, { updateViaCache: 'none' })
+    .catch(() => {}); // OK if no per-book sw.js
+
+  // Listen for SW update notification
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data?.type === 'SW_UPDATED') showUpgradeToast();
+  });
+}
+
+function showUpgradeToast() {
+  if (document.getElementById('upgradeToast')) return;
+  const toast = document.createElement('div');
+  toast.id = 'upgradeToast';
+  toast.style.cssText = 'position:fixed;bottom:4rem;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:.6rem 1.2rem;border-radius:10px;font-size:.85rem;z-index:300;display:flex;align-items:center;gap:.8rem;box-shadow:0 4px 20px rgba(0,0,0,.4);border:1px solid rgba(78,205,196,.3)';
+  toast.innerHTML = `
+    <span><span class="i18n-zh">新版本已準備好</span><span class="i18n-en">New version ready</span><span class="i18n-both">新版本已準備好</span></span>
+    <button onclick="location.reload()" style="padding:.3rem .8rem;background:#4ecdc4;color:#000;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:.8rem">
+      <span class="i18n-zh">更新</span><span class="i18n-en">Update</span><span class="i18n-both">更新</span>
+    </button>
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#888;cursor:pointer;font-size:1rem">✕</button>
+  `;
+  document.body.appendChild(toast);
+}
+
 // Expose for inline handlers
 window.goToPage = goToPage;
 window.lineLoginFromGate = lineLoginFromGate;

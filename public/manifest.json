@@ -1,21 +1,21 @@
 {
-  "name": "小美的恐龍冒險",
-  "short_name": "恐龍冒險",
-  "description": "AI 個人化雙語兒童繪本 — Mei's Dinosaur Adventure",
-  "start_url": "/book.html",
+  "name": "Luce 繪本誌",
+  "short_name": "Luce 繪本誌",
+  "description": "兒童雙語繪本月刊 — Bilingual Storybook Magazine for Kids",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#ff6f61",
-  "background_color": "#fff8e1",
+  "theme_color": "#5d4037",
+  "background_color": "#fdf6ec",
   "lang": "zh-Hant",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%23ff6f61'/><text x='96' y='130' font-size='120' text-anchor='middle'>🦕</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%235d4037'/><text x='96' y='130' font-size='100' text-anchor='middle'>📚</text></svg>",
       "sizes": "192x192",
       "type": "image/svg+xml"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23ff6f61'/><text x='256' y='350' font-size='320' text-anchor='middle'>🦕</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%235d4037'/><text x='256' y='350' font-size='280' text-anchor='middle'>📚</text></svg>",
       "sizes": "512x512",
       "type": "image/svg+xml"
     }
