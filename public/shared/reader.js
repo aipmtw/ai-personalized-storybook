@@ -117,8 +117,8 @@ function renderPage(pageNum) {
         <div class="emoji-scene">${p.emoji}</div>
       </div>
       <div class="page-text">
-        <div class="i18n-zh">${p.zh}</div>
-        <div class="i18n-en">${p.en}</div>
+        <div class="text-zh">${p.zh}</div>
+        <div class="text-en">${p.en}</div>
       </div>
     `;
   }
