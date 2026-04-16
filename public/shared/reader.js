@@ -463,11 +463,12 @@ async function probeCoverStats(contentPages) {
 
 window.startReading = startReading;
 
-// ---- Version display ----
+// ---- Version display in toolbar footer ----
 const versionEl = document.createElement('span');
-versionEl.style.cssText = 'font-size:.6rem;color:rgba(255,255,255,0.3);margin-left:.5rem';
+versionEl.style.cssText = 'font-size:.55rem;color:rgba(255,255,255,0.25);margin-left:auto;padding-left:.5rem;white-space:nowrap';
 versionEl.textContent = BOOK.version || '';
-if (autoplayBtn) autoplayBtn.parentNode.insertBefore(versionEl, autoplayBtn.nextSibling);
+const toolbar = document.querySelector('.toolbar');
+if (toolbar) toolbar.appendChild(versionEl);
 
 // ---- Inject styles ----
 const readerStyle = document.createElement('style');
