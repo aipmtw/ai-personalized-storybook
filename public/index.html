@@ -164,11 +164,14 @@
 </head>
 <body>
 
+  <!-- Login status -->
+  <div id="loginStatus" style="position:fixed;top:10px;right:14px;z-index:100;font-size:.78rem;color:#6c757d;background:rgba(255,255,255,.85);padding:4px 10px;border-radius:8px;backdrop-filter:blur(4px);cursor:default"></div>
+
   <!-- Dynamic bookshelf — loads all books from API -->
   <div class="demo-section" style="padding-top:2rem">
     <div class="issue-badge">2026 四月號</div>
     <h2 style="font-size:1.8rem;margin-bottom:.2rem">繪本書架</h2>
-    <div class="demo-sub">前 3 頁免費試閱 · 訂閱後無限閱讀</div>
+    <div class="demo-sub" id="tierSub">免費 3 頁 · 登入 6 頁 · 訂閱完整閱讀</div>
 
     <div class="age-filters" id="ageFilters">
       <button class="age-pill" data-key="young" onclick="filterBooks('young')">3–6 歲</button>
@@ -579,6 +582,48 @@
     localStorage.setItem('ml_user', urlParams.get('ml_user') || '');
     history.replaceState(null, '', location.pathname);
   }
+
+  // Login status indicator + tier highlight
+  (function() {
+    var el = document.getElementById('loginStatus');
+    var sub = document.getElementById('tierSub');
+    var token = localStorage.getItem('ml_token') || new URLSearchParams(location.search).get('ml_token');
+    var user = localStorage.getItem('ml_user') || new URLSearchParams(location.search).get('ml_user') || '';
+
+    function setTier(tier) {
+      // tier: 'anon', 'login', 'sub'
+      var parts = [
+        tier === 'anon' ? '<strong style="color:#e91e63">▸ 免費 3 頁</strong>' : '免費 3 頁',
+        tier === 'login' ? '<strong style="color:#06C755">▸ 登入 6 頁</strong>' : '登入 6 頁',
+        tier === 'sub' ? '<strong style="color:#e91e63">▸ 訂閱完整閱讀</strong>' : '訂閱完整閱讀'
+      ];
+      sub.innerHTML = parts.join(' · ');
+    }
+
+    if (!token) {
+      el.textContent = '未登入';
+      el.style.cursor = 'pointer';
+      el.onclick = function() {
+        location.href = 'https://liff.line.me/' + LIFF_ID + '?returnTo=' + encodeURIComponent('/');
+      };
+      setTier('anon');
+      return;
+    }
+    var name = decodeURIComponent(user) || '已登入';
+    el.textContent = name;
+    el.style.color = '#06C755';
+    setTier('login');
+    // Check subscription
+    fetch('https://markluce.ai/api/user-books', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d.ok && d.books && d.books.length > 0) {
+          el.textContent = name + ' · 訂閱中';
+          el.style.color = '#e91e63';
+          setTier('sub');
+        }
+      }).catch(function() {});
+  })();
 
   // Register root service worker + upgrade toast
   if ('serviceWorker' in navigator) {

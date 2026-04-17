@@ -7,7 +7,8 @@
 
 // ---- Config ----
 const SLUG = BOOK.slug;
-const DEMO_MAX = 3; // content pages 1-3 free
+const DEMO_MAX_ANON = 3;  // not logged in: pages 1-3
+const DEMO_MAX_LOGIN = 6; // logged in, no subscription: pages 1-6
 const LINE_CHANNEL_ID = '2009822261';
 const LIFF_ID = '2009822261-l24IkYdp';
 const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
@@ -57,6 +58,7 @@ const isAuthenticated = (function() {
 })();
 // Cache user name
 if (userName) try { localStorage.setItem('ml_user_name', userName); } catch(e) {}
+const DEMO_MAX = isAuthenticated ? DEMO_MAX_LOGIN : DEMO_MAX_ANON;
 
 // ---- URL helpers ----
 // URL: /slug/ = cover (page 0), /slug/1 = page 1, /slug/end = end screen
@@ -488,15 +490,17 @@ async function showDemoGate() {
   gate = document.createElement('div');
   gate.id = 'demoGate';
   gate.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
-  gate.innerHTML = `<div style="background:#fff;border-radius:20px;padding:2.5rem;max-width:380px;text-align:center;margin:1rem">
-    <div style="font-size:2.5rem;margin-bottom:.8rem">\u{1F512}</div>
-    <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:.5rem;color:#212529">試閱結束</h2>
-    <p style="font-size:1rem;color:#6c757d;line-height:1.7;margin-bottom:1rem">免費試閱前 3 頁已結束。<br>登入即可閱讀完整繪本！</p>
+  gate.innerHTML = `<div style="background:#fff;border-radius:20px;padding:1.5rem;max-width:340px;width:90vw;text-align:center;margin:1rem;box-sizing:border-box;overflow:hidden">
+    <div style="font-size:2.5rem;margin-bottom:.5rem">\u{1F512}</div>
+    <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:.4rem;color:#212529">試閱結束</h2>
+    <p style="font-size:.9rem;color:#6c757d;line-height:1.6;margin-bottom:.8rem">${isAuthenticated
+      ? '已試閱 ' + DEMO_MAX + ' 頁。<br>訂閱即可閱讀完整繪本！'
+      : '免費試閱前 ' + DEMO_MAX + ' 頁已結束。<br>登入可看 ' + DEMO_MAX_LOGIN + ' 頁，訂閱無限閱讀！'}</p>
     <a id="demoGateQrLink" href="${liffUrl}" style="display:inline-block;cursor:pointer">
-      <canvas id="demoGateQrCanvas" style="width:200px;height:200px;border-radius:12px"></canvas>
+      <canvas id="demoGateQrCanvas" style="width:180px;height:180px;border-radius:12px"></canvas>
     </a>
-    <p style="font-size:.85rem;color:#6c757d;margin-top:.8rem">${hint}</p>
-    <br><a href="#" onclick="document.getElementById('demoGate').style.display='none';goToPage(0);return false" style="font-size:.85rem;color:#adb5bd;text-decoration:underline">返回封面</a>
+    <p style="font-size:.8rem;color:#6c757d;margin-top:.6rem">${hint}</p>
+    <div style="margin-top:.5rem"><a href="#" onclick="document.getElementById('demoGate').style.display='none';goToPage(0);return false" style="font-size:.8rem;color:#adb5bd;text-decoration:underline">返回封面</a></div>
   </div>`;
   document.body.appendChild(gate);
 

@@ -146,7 +146,8 @@
   let hasAccess = false;
   let isDemo = false;
   let currentUser = null;
-  const FREE_PAGES = 3;
+  const FREE_PAGES_ANON = 3;
+  const FREE_PAGES_LOGIN = 6;
 
   function goBack() {
     if (history.length > 1) history.back();
@@ -182,8 +183,9 @@
         if (hasAccess || isDemo) {
           pages = allPages;
         } else {
-          // Free preview: first 3 pages only
-          pages = allPages.slice(0, FREE_PAGES);
+          // Free preview: 3 pages anon, 6 pages logged in
+          var freeLimit = currentUser ? FREE_PAGES_LOGIN : FREE_PAGES_ANON;
+          pages = allPages.slice(0, freeLimit);
         }
         renderPage(0);
       } else {
