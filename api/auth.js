@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const LINE_CHANNEL_ID = process.env.LINE_CHANNEL_ID || '2009738746';
+const LINE_CHANNEL_ID = process.env.LINE_CHANNEL_ID || '2009822261';
 const LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET || '';
 const COOKIE_SECRET = process.env.COOKIE_SECRET || 'storybook-demo-secret-key';
 

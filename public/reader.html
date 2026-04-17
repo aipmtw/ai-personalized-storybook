@@ -131,13 +131,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
-  const LIFF_ID = '2009738746-2qigSpHh';
+  const LIFF_ID = '2009822261-l24IkYdp';
   const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
   const params = new URLSearchParams(location.search);
   // Support both ?book=slug and direct /slug paths (via vercel rewrite)
   const pathSlug = location.pathname.replace(/^\/app\/reader\.html$/, '').replace(/^\//, '').replace(/\/.*/, '');
   const bookSlug = params.get('book') || params.get('slug') || pathSlug || '';
-  const LINE_CHANNEL_ID = '2009738746';
+  const LINE_CHANNEL_ID = '2009822261';
   const APP_URL = location.origin;
   let pages = [];
   let allPages = []; // full set before paywall trim

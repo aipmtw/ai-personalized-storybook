@@ -266,7 +266,7 @@ function showDemoGate() {
 }
 
 function lineLoginFromGate() {
-  const channelId = '2009738746';
+  const channelId = '2009822261';
   const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
   const returnUrl = encodeURIComponent(window.location.origin + '/detective-cat/book.html');
   window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id='+channelId+'&redirect_uri='+redirectUri+'&state='+returnUrl+'&scope=profile%20openid';

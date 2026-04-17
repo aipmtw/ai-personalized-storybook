@@ -8,8 +8,8 @@
 // ---- Config ----
 const SLUG = BOOK.slug;
 const DEMO_MAX = 3; // content pages 1-3 free
-const LINE_CHANNEL_ID = '2009738746';
-const LIFF_ID = '2009738746-2qigSpHh';
+const LINE_CHANNEL_ID = '2009822261';
+const LIFF_ID = '2009822261-l24IkYdp';
 const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 const totalContentPages = BOOK.pages.filter(p => p.type === 'cover' ? false : true).length;
 
