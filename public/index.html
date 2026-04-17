@@ -370,8 +370,10 @@
       <p style="font-size:.95rem;color:#6c757d;margin-bottom:1.5rem">用 LINE 登入後留言，我們會盡快回覆您。</p>
 
       <div id="inquiryLogin" style="text-align:center;padding:1.5rem 0">
-        <a href="#" onclick="lineLoginForInquiry();return false" style="display:inline-block;background:#06C755;color:#fff;padding:.7rem 2rem;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none">用 LINE 登入</a>
-        <p style="font-size:.82rem;color:#adb5bd;margin-top:.8rem">登入後即可留言</p>
+        <a id="inquiryQrLink" style="display:inline-block;cursor:pointer">
+          <canvas id="inquiryQrCanvas" style="width:180px;height:180px;border-radius:12px"></canvas>
+        </a>
+        <p id="inquiryQrHint" style="font-size:.85rem;color:#6c757d;margin-top:.8rem"></p>
       </div>
 
       <form id="inquiryForm" style="display:none" onsubmit="submitInquiry(event)">
@@ -395,13 +397,17 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
   <script>
+    var LIFF_ID = '2009738746-2qigSpHh';
+    var isMobileDevice = /iPhone|iPad|Android/i.test(navigator.userAgent);
 
     // Inquiry form
     let inquiryUser = null;
 
     function showInquiryForm() {
       document.getElementById('inquiryModal').style.display = 'flex';
+      generateInquiryQR();
       // Check if already logged in
       const params = new URLSearchParams(location.search);
       const token = params.get('ml_token');
@@ -424,11 +430,27 @@
       document.getElementById('inquiryUserName').textContent = inquiryUser.displayName;
     }
 
+    function generateInquiryQR() {
+      var returnTo = '/?inquiry=1';
+      var liffUrl = 'https://liff.line.me/' + LIFF_ID + '?returnTo=' + encodeURIComponent(returnTo);
+      var link = document.getElementById('inquiryQrLink');
+      var canvas = document.getElementById('inquiryQrCanvas');
+      var hint = document.getElementById('inquiryQrHint');
+      if (link) link.href = liffUrl;
+      if (hint) hint.textContent = isMobileDevice
+        ? '👆 點擊 QR Code，用 LINE 開啟登入'
+        : '📱 用手機 LINE 掃描 QR Code 登入';
+      if (window.QRCode && canvas) {
+        QRCode.toCanvas(canvas, liffUrl, {
+          width: 360, margin: 2,
+          color: { dark: '#06C755', light: '#ffffff' }
+        });
+      }
+    }
+
     function lineLoginForInquiry() {
-      const channelId = '2009738746';
-      const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
-      const returnUrl = encodeURIComponent(window.location.origin + '/?inquiry=1');
-      window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id='+channelId+'&redirect_uri='+redirectUri+'&state='+returnUrl+'&scope=profile%20openid';
+      var returnTo = '/?inquiry=1';
+      window.location.href = 'https://liff.line.me/' + LIFF_ID + '?returnTo=' + encodeURIComponent(returnTo);
     }
 
     async function submitInquiry(e) {
@@ -527,11 +549,9 @@
   function startSubscribe() {
     const token = localStorage.getItem('ml_token') || new URLSearchParams(location.search).get('ml_token');
     if (!token) {
-      // Need LINE login first
-      const channelId = '2009738746';
-      const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
-      const returnUrl = encodeURIComponent(location.origin + '/?subscribe=1');
-      location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id='+channelId+'&redirect_uri='+redirectUri+'&state='+returnUrl+'&scope=profile%20openid';
+      // Need LINE login first — redirect via LIFF
+      var returnTo = '/?subscribe=1';
+      location.href = 'https://liff.line.me/' + LIFF_ID + '?returnTo=' + encodeURIComponent(returnTo);
       return;
     }
     // Call ECPay create for subscription

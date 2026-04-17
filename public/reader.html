@@ -110,7 +110,12 @@
     <p>免費試閱前 3 頁，購買後即可閱讀全部內容並下載離線使用</p>
     <div class="price">NT$99</div>
     <button class="paywall-btn buy" id="paywallBuy" onclick="buyBook()">購買此繪本</button>
-    <button class="paywall-btn login" id="paywallLogin" onclick="paywallLineLogin()" style="display:none">LINE 登入後購買</button>
+    <div id="paywallLogin" style="display:none;text-align:center">
+      <a id="paywallQrLink" style="display:inline-block;cursor:pointer">
+        <canvas id="paywallQrCanvas" style="width:180px;height:180px;border-radius:12px"></canvas>
+      </a>
+      <p id="paywallQrHint" style="font-size:13px;color:var(--gray-500);margin-top:8px"></p>
+    </div>
     <button class="paywall-btn back" onclick="location.href='/'">回到書架</button>
   </div>
 </div>
@@ -124,7 +129,10 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 <script>
+  const LIFF_ID = '2009738746-2qigSpHh';
+  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
   const params = new URLSearchParams(location.search);
   // Support both ?book=slug and direct /slug paths (via vercel rewrite)
   const pathSlug = location.pathname.replace(/^\/app\/reader\.html$/, '').replace(/^\//, '').replace(/\/.*/, '');
@@ -200,9 +208,10 @@
     if (token) currentUser = { token, name: userName };
 
     if (!currentUser) {
-      // Not logged in — show login button on paywall
+      // Not logged in — show QR code login on paywall
       document.getElementById('paywallLogin').style.display = 'block';
       document.getElementById('paywallBuy').style.display = 'none';
+      generatePaywallQR();
       return;
     }
 
@@ -287,9 +296,27 @@
   }
 
   function paywallLineLogin() {
-    const returnUrl = encodeURIComponent(APP_URL + '/reader.html?book=' + bookSlug);
-    const lineUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CHANNEL_ID}&redirect_uri=${encodeURIComponent('https://markluce.ai/api/line-auth')}&state=${returnUrl}&scope=profile%20openid`;
-    location.href = lineUrl;
+    const returnTo = '/reader.html?book=' + bookSlug;
+    const liffUrl = 'https://liff.line.me/' + LIFF_ID + '?returnTo=' + encodeURIComponent(returnTo);
+    location.href = liffUrl;
+  }
+
+  function generatePaywallQR() {
+    const returnTo = '/reader.html?book=' + bookSlug;
+    const liffUrl = 'https://liff.line.me/' + LIFF_ID + '?returnTo=' + encodeURIComponent(returnTo);
+    const link = document.getElementById('paywallQrLink');
+    const canvas = document.getElementById('paywallQrCanvas');
+    const hint = document.getElementById('paywallQrHint');
+    if (link) link.href = liffUrl;
+    if (hint) hint.textContent = isMobile
+      ? '👆 點擊 QR Code，用 LINE 開啟登入'
+      : '📱 用手機 LINE 掃描 QR Code 登入';
+    if (window.QRCode && canvas) {
+      QRCode.toCanvas(canvas, liffUrl, {
+        width: 360, margin: 2,
+        color: { dark: '#06C755', light: '#ffffff' }
+      });
+    }
   }
 
   // Keyboard navigation

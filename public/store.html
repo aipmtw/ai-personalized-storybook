@@ -158,10 +158,9 @@
   function buyBook(slug) {
     const token = localStorage.getItem('ml_token');
     if (!token) {
-      // Need login first
-      const LINE_CHANNEL_ID = '2009738746';
-      const returnUrl = encodeURIComponent(location.origin + '/store.html');
-      location.href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CHANNEL_ID}&redirect_uri=${encodeURIComponent('https://markluce.ai/api/line-auth')}&state=${returnUrl}&scope=profile%20openid`;
+      // Need login first — redirect via LIFF
+      var returnTo = '/store.html';
+      location.href = 'https://liff.line.me/2009738746-2qigSpHh?returnTo=' + encodeURIComponent(returnTo);
       return;
     }
     fetch('https://markluce.ai/api/ecpay-create', {

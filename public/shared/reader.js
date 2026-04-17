@@ -9,6 +9,8 @@
 const SLUG = BOOK.slug;
 const DEMO_MAX = 3; // content pages 1-3 free
 const LINE_CHANNEL_ID = '2009738746';
+const LIFF_ID = '2009738746-2qigSpHh';
+const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 const totalContentPages = BOOK.pages.filter(p => p.type === 'cover' ? false : true).length;
 
 // ---- State ----
@@ -454,28 +456,62 @@ autoplayBtn.addEventListener('click', toggleAutoplay);
 // Override autoplay button text with i18n
 if (autoplayBtn) autoplayBtn.innerHTML = '&#9654;&#9654; <span class="i18n-zh">自動讀整本書</span><span class="i18n-en">Auto-Read Book</span><span class="i18n-both">自動讀整本書</span>';
 
-// ---- Demo gate ----
-function showDemoGate() {
+// ---- Demo gate (QR Code LINE login) ----
+function loadQRCodeLib() {
+  return new Promise((resolve) => {
+    if (window.QRCode) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js';
+    s.onload = resolve;
+    s.onerror = resolve; // fallback to direct link if CDN fails
+    document.head.appendChild(s);
+  });
+}
+
+function getDemoGateLiffUrl() {
+  const nextPage = currentPage > DEMO_MAX ? currentPage : DEMO_MAX + 1;
+  const returnTo = '/' + SLUG + '/' + nextPage;
+  return 'https://liff.line.me/' + LIFF_ID + '?returnTo=' + encodeURIComponent(returnTo);
+}
+
+async function showDemoGate() {
   let gate = document.getElementById('demoGate');
   if (gate) { gate.style.display = 'flex'; return; }
+
+  await loadQRCodeLib();
+
+  const liffUrl = getDemoGateLiffUrl();
+  const hint = isMobile
+    ? '👆 點擊 QR Code，用 LINE 開啟登入'
+    : '📱 用手機 LINE 掃描 QR Code 登入';
+
   gate = document.createElement('div');
   gate.id = 'demoGate';
   gate.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)';
   gate.innerHTML = `<div style="background:#fff;border-radius:20px;padding:2.5rem;max-width:380px;text-align:center;margin:1rem">
     <div style="font-size:2.5rem;margin-bottom:.8rem">\u{1F512}</div>
     <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:.5rem;color:#212529">試閱結束</h2>
-    <p style="font-size:1rem;color:#6c757d;line-height:1.7;margin-bottom:1.5rem">免費試閱前 3 頁已結束。<br>訂閱即可閱讀完整繪本！</p>
-    <a href="#" onclick="lineLoginFromGate()" style="display:inline-block;background:#06C755;color:#fff;padding:.7rem 2rem;border-radius:12px;font-size:1rem;font-weight:700;text-decoration:none;margin-bottom:.8rem">用 LINE 登入</a>
+    <p style="font-size:1rem;color:#6c757d;line-height:1.7;margin-bottom:1rem">免費試閱前 3 頁已結束。<br>登入即可閱讀完整繪本！</p>
+    <a id="demoGateQrLink" href="${liffUrl}" style="display:inline-block;cursor:pointer">
+      <canvas id="demoGateQrCanvas" style="width:200px;height:200px;border-radius:12px"></canvas>
+    </a>
+    <p style="font-size:.85rem;color:#6c757d;margin-top:.8rem">${hint}</p>
     <br><a href="#" onclick="document.getElementById('demoGate').style.display='none';goToPage(0);return false" style="font-size:.85rem;color:#adb5bd;text-decoration:underline">返回封面</a>
   </div>`;
   document.body.appendChild(gate);
+
+  // Generate QR code on canvas
+  const canvas = document.getElementById('demoGateQrCanvas');
+  if (window.QRCode && canvas) {
+    QRCode.toCanvas(canvas, liffUrl, {
+      width: 400, margin: 2,
+      color: { dark: '#06C755', light: '#ffffff' }
+    });
+  }
 }
 
 function lineLoginFromGate() {
-  const redirectUri = encodeURIComponent('https://markluce.ai/api/line-auth');
-  const nextPage = currentPage > DEMO_MAX ? currentPage : DEMO_MAX + 1;
-  const returnUrl = encodeURIComponent(window.location.origin + '/' + SLUG + '/' + nextPage);
-  window.location.href = 'https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=' + LINE_CHANNEL_ID + '&redirect_uri=' + redirectUri + '&state=' + returnUrl + '&scope=profile%20openid';
+  window.location.href = getDemoGateLiffUrl();
 }
 
 // ---- Fullscreen ----
