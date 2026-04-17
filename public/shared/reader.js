@@ -461,7 +461,7 @@ function loadQRCodeLib() {
   return new Promise((resolve) => {
     if (window.QRCode) { resolve(); return; }
     const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js';
+    s.src = 'https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js';
     s.onload = resolve;
     s.onerror = resolve; // fallback to direct link if CDN fails
     document.head.appendChild(s);
